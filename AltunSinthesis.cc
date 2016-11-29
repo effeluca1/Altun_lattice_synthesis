@@ -73,14 +73,14 @@ int main(int argc, char *argv[])
   Command = (char*)malloc(sizeof(char)*512);
 
   // Synthesis of function
-  sprintf(Command,"espresso -Dexact -Dso %s > f.eq", inFile.c_str()); 
+  sprintf(Command,"./espresso -Dexact -Dso %s > f.eq", inFile.c_str()); 
   system(Command);
 
   // compute the dual function
   dual(inFile, inFile+"_dual");
 
   // Synthesis of the dual function
-  sprintf(Command,"espresso -Dexact -Dso -epos %s > f_dual.eq", (inFile+"_dual").c_str());
+  sprintf(Command,"./espresso -Dexact -Dso -epos %s > f_dual.eq", (inFile+"_dual").c_str());
   system(Command); 
 
   cout << "Espresso done"<<endl;
