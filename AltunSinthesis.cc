@@ -5,6 +5,10 @@
 #include <sstream>
 using namespace std;
 
+//function prototypes
+int readX(string FileName);
+int readY(string FileName);
+
 //class declaration
 class AElement;
 
@@ -21,7 +25,6 @@ private:
   vector< vector<AElement> > equation_dual;
   AElement FindCommonLiteral(vector<AElement> term, vector<AElement> termD);
 
-  
 public:
   void setNumVar(int num);
   void setNumOut(int);
@@ -41,8 +44,7 @@ class AElement
 
 private:
   int lit;
-  bool sign;
-  
+  bool sign;  
 
 public:
   int getLit() {return lit;}
@@ -58,6 +60,13 @@ int main(int argc, char *argv[])
 {
   fstream inputfile;
   string inFile(argv[1]);
+  string outFile(argv[2]);
+
+  if (inFile.size()< 1 || outFile.size() < 1 )
+    {
+      cout << "Error!" << endl << "usage: ./AltunSinthesis [input.pla] [output.lattice]" << endl;
+    }
+   
   const char *inFileChar = inFile.c_str();
   // string outFile = "";
   char a;
@@ -118,18 +127,49 @@ int main(int argc, char *argv[])
       ostringstream i_str;	// stream used for the conversion
       i_str << i;
       
-      app.Print2File(inFile+".lattice"+i_str.str());
+      app.Print2File(outFile);
       lattices.push_back(app);
     }
 
-
-
+  // dimension x y area
+  // time 
 
   return 0;
 }
 
 
 // ***FUNCTIONS***
+
+int readY(string FileName)
+{
+  fstream f;
+  f.open(FileName.c_str(), ios::in);
+  int Y=0;
+ while(!f.eof())
+    {
+      Y++;
+      string line;
+      getline(f,line);
+    }
+ return Y;
+}
+int readX(string FileName)
+{
+  fstream f;
+  f.open(FileName.c_str(), ios::in);
+  int X=0;
+  string line;
+  getline(f,line);
+  for( int i=0; i<line.length();i++)
+    {
+      if (line[i]=='|')
+	X++;
+    }
+ return X;
+}
+
+
+
 void dual( string inFile, string outFile) // compute the input for the synthesis of the dual function
 {
   string line;
@@ -282,7 +322,7 @@ void ALattice::read_synth_file(string InFileName, int NumOut, int NumIn, bool tr
 		  if(true_if_dual)
 		    {
 		      equation_dual.push_back(minterm);
-		       for(int t=0; t < minterm.size(); t++) 
+		      for(int t=0; t < minterm.size(); t++) 
   		       	cout <<"D"<< minterm[t].getLit();
 		      cout << endl;
 		    }
@@ -307,7 +347,7 @@ void ALattice::read_synth_file(string InFileName, int NumOut, int NumIn, bool tr
 void ALattice::BuildLattice()
 {
   
-      vector<AElement> appRow;
+  vector<AElement> appRow;
   for (int Di=0; Di<equation_dual.size();Di++)  // for each row
     {
       appRow.clear();
@@ -342,17 +382,17 @@ void ALattice::PrintLattice()
 {
   for(int j=0; j<Content.size();j++) //for each row
     {
-       for(int i=0; i<Content[j].size();i++) //for each column
-	 {
+      for(int i=0; i<Content[j].size();i++) //for each column
+	{
 	 
-	   if (i!=0) cout << " | ";
-	   if(!Content[j][i].getSign())
-	     cout << "-";
-	   else
-	     cout << " ";
-	   cout << Content[j][i].getLit();
-	 }
-       cout<<endl;
+	  if (i!=0) cout << " | ";
+	  if(!Content[j][i].getSign())
+	    cout << "-";
+	  else
+	    cout << " ";
+	  cout << Content[j][i].getLit();
+	}
+      cout<<endl;
     }
   cout<<endl<<endl;
 }
@@ -363,17 +403,15 @@ void ALattice::Print2File(string FileName)
   outputfile.open(FileName.c_str() , ios::out); // read dimension of .i e .o 
   for(int j=0; j<Content.size();j++) //for each row
     {
-       for(int i=0; i<Content[j].size();i++) //for each column
-	 {
-	 
-	   if (i!=0) outputfile << " | ";
-	   if(!Content[j][i].getSign())
-	     outputfile << "-";
-	   else
-	     outputfile << " ";
-	   outputfile << Content[j][i].getLit();
-	 }
-       outputfile<<endl;
+      for(int i=0; i<Content[j].size();i++) //for each column
+	{
+	  if (i!=0) outputfile << " | ";
+	  if(!Content[j][i].getSign())
+	    outputfile << "-";
+	  else
+	    outputfile << " ";
+	  outputfile << Content[j][i].getLit();
+	}
+      outputfile<<endl;
     }
-  outputfile<<endl<<endl;
 }
