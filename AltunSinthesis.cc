@@ -9,7 +9,7 @@ using namespace std;
 int readX(string FileName);
 int readY(string FileName);
 double Parse_Espresso_time(string inF);
-
+string Int2String (int i);
 
 //class declaration
 class AElement;
@@ -129,16 +129,17 @@ int main(int argc, char *argv[])
       app.print_equations();
       app.BuildLattice();
       app.PrintLattice();
+
+      // cout << "----->" <<Int2String(i)<<endl; 
       
-      ostringstream i_str;	// stream used for the conversion
-      i_str << i;
-      string index;
-      instringstream qqd (index);
-      qqd << i;
-      string Out = outFile + index;
-      app.Print2File(outFile);
+      app.Print2File(outFile + Int2String(i));
       lattices.push_back(app);
-      cout << readX(outFile) << endl << readY(outFile) << endl <<time<< endl;
+      // cout << readX(outFile) << endl << readY(outFile) << endl <<time<< endl;
+
+      fstream out;
+      out.open((outFile + Int2String(i) + ".dat").c_str() , ios::out);
+      out  << readX(outFile) << endl << readY(outFile) << endl <<time<< endl;
+      out.close();
     }
 
  
@@ -151,6 +152,15 @@ int main(int argc, char *argv[])
 
 // ***FUNCTIONS***
 
+
+string Int2String (int i)
+{
+
+  stringstream ss;
+  ss << i;
+  return ss.str();
+}
+
 double Parse_Espresso_time(string inF)
 {
   double time=0;
@@ -162,16 +172,16 @@ double Parse_Espresso_time(string inF)
       getline(input,line); //read a line of input
       if (line[0]=='#' && line[2]=='s')
 	{
-	  cout<<line<<endl;
+	  //cout<<line<<endl;
 	  size_t found = line.find("sec");
 	  app = line.substr (14,found-14);
-	  cout << app <<"! " << endl;
+	  //cout << app <<"! " << endl;
 	}
 	    
 	  
     }
   input.close();
-  cout<<strtod(app.c_str(), NULL)<<endl;
+  //cout<<strtod(app.c_str(), NULL)<<endl;
   return strtod(app.c_str(), NULL);
 }
 
