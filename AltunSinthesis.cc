@@ -8,6 +8,8 @@ using namespace std;
 //function prototypes
 int readX(string FileName);
 int readY(string FileName);
+double Parse_Espresso_time(string inF);
+
 
 //class declaration
 class AElement;
@@ -61,7 +63,8 @@ int main(int argc, char *argv[])
   fstream inputfile;
   string inFile(argv[1]);
   string outFile(argv[2]);
-
+  double time=0;
+  
   if (inFile.size()< 1 || outFile.size() < 1 )
     {
       cout << "Error!" << endl << "usage: ./AltunSinthesis [input.pla] [output.lattice]" << endl;
@@ -82,15 +85,18 @@ int main(int argc, char *argv[])
   Command = (char*)malloc(sizeof(char)*512);
 
   // Synthesis of function
-  sprintf(Command,"./espresso -Dexact -Dso %s > f.eq", inFile.c_str()); 
+  sprintf(Command,"./espresso -Dexact -Dso -t %s > f.eq", inFile.c_str()); 
   system(Command);
+  time = time + Parse_Espresso_time("f.eq");
 
   // compute the dual function
   dual(inFile, inFile+"_dual");
 
   // Synthesis of the dual function
-  sprintf(Command,"./espresso -Dexact -Dso -epos %s > f_dual.eq", (inFile+"_dual").c_str());
-  system(Command); 
+  sprintf(Command,"./espresso -Dexact -Dso -epos -t %s > f_dual.eq", (inFile+"_dual").c_str());
+  system(Command);
+  time = time + Parse_Espresso_time("f_dual.eq");
+  
 
   cout << "Espresso done"<<endl;
   
@@ -126,12 +132,17 @@ int main(int argc, char *argv[])
       
       ostringstream i_str;	// stream used for the conversion
       i_str << i;
-      
+      string index;
+      instringstream qqd (index);
+      qqd << i;
+      string Out = outFile + index;
       app.Print2File(outFile);
       lattices.push_back(app);
+      cout << readX(outFile) << endl << readY(outFile) << endl <<time<< endl;
     }
 
-  // dimension x y area
+ 
+
   // time 
 
   return 0;
@@ -139,6 +150,33 @@ int main(int argc, char *argv[])
 
 
 // ***FUNCTIONS***
+
+double Parse_Espresso_time(string inF)
+{
+  double time=0;
+  fstream input;
+  string line, app;
+  input.open(inF.c_str(), ios::in);
+  while (!input.eof())
+    {
+      getline(input,line); //read a line of input
+      if (line[0]=='#' && line[2]=='s')
+	{
+	  cout<<line<<endl;
+	  size_t found = line.find("sec");
+	  app = line.substr (14,found-14);
+	  cout << app <<"! " << endl;
+	}
+	    
+	  
+    }
+  input.close();
+  cout<<strtod(app.c_str(), NULL)<<endl;
+  return strtod(app.c_str(), NULL);
+}
+
+
+
 
 int readY(string FileName)
 {
@@ -151,7 +189,7 @@ int readY(string FileName)
       string line;
       getline(f,line);
     }
- return Y;
+ return Y-1;
 }
 int readX(string FileName)
 {
@@ -165,7 +203,7 @@ int readX(string FileName)
       if (line[i]=='|')
 	X++;
     }
- return X;
+ return X+1;
 }
 
 
