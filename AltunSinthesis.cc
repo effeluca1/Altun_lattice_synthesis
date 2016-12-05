@@ -498,6 +498,7 @@ void ALattice::Print2File(string FileName)
 	    outputfile << " ";
 	  outputfile << Content[j][i].getLit();
 	}
-      outputfile<<endl;
+      if (Content[j].size()>0)
+	outputfile<<endl;
     }
 }
