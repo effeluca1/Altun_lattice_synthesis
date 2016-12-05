@@ -119,6 +119,7 @@ int main(int argc, char *argv[])
     }
   inputfile.close();
 
+  
   // create the vector of lattices and write output number
   for(int i=0; i<outputNum;i++)
     {
@@ -137,9 +138,12 @@ int main(int argc, char *argv[])
       // cout << readX(outFile) << endl << readY(outFile) << endl <<time<< endl;
 
       fstream out;
-      out.open((outFile + Int2String(i) + ".dat").c_str() , ios::out);
-      out  << readX(outFile) << endl << readY(outFile) << endl <<time<< endl;
+      string OF=outFile;
+      OF=OF+Int2String(i) + ".dat";
+      out.open(OF.c_str() , ios::out);
+      out  << readX(outFile + Int2String(i)) << endl << readY(outFile + Int2String(i)) << endl <<time<< endl;
       out.close();
+    cout <<"AAA"<<endl;
     }
 
  
@@ -188,24 +192,57 @@ double Parse_Espresso_time(string inF)
 
 
 
+// int readY(string FileName)
+// {
+//   fstream f;
+//   f.open(FileName.c_str(), ios::in);
+//   int Y=0;
+//  while(!f.eof())
+//     {
+//       Y++;
+//       string line;
+//       getline(f,line);
+//     }
+//  return Y-1;
+// }
 int readY(string FileName)
 {
   fstream f;
   f.open(FileName.c_str(), ios::in);
+  
+  if(f.peek() == std::ifstream::traits_type::eof())
+    {
+      f.close();
+      return 0;
+    }
+  
+  
   int Y=0;
- while(!f.eof())
+  cout << "s"<<FileName << endl;
+  while(!f.eof())
     {
       Y++;
       string line;
+      cout << line;
       getline(f,line);
     }
- return Y-1;
+  f.close();
+  return Y-1;
 }
 int readX(string FileName)
 {
   fstream f;
   f.open(FileName.c_str(), ios::in);
   int X=0;
+
+  if(f.peek() == std::ifstream::traits_type::eof())
+    {
+      f.close();
+      return 0;
+    }
+  
+
+
   string line;
   getline(f,line);
   for( int i=0; i<line.length();i++)
@@ -213,6 +250,7 @@ int readX(string FileName)
       if (line[i]=='|')
 	X++;
     }
+  f.close();
  return X+1;
 }
 
