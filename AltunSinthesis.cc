@@ -87,14 +87,16 @@ int main(int argc, char *argv[])
   // Synthesis of function
   sprintf(Command,"./espresso -Dexact -Dso -t %s > f.eq", inFile.c_str()); 
   system(Command);
+  cout <<Command<<endl;
   time = time + Parse_Espresso_time("f.eq");
 
   // compute the dual function
-  dual(inFile, inFile+"_dual");
+  dual("f.eq", inFile+"_dual");
 
   // Synthesis of the dual function
   sprintf(Command,"./espresso -Dexact -Dso -epos -t %s > f_dual.eq", (inFile+"_dual").c_str());
   system(Command);
+  cout <<Command<<endl;
   time = time + Parse_Espresso_time("f_dual.eq");
   
 
