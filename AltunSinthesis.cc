@@ -10,7 +10,7 @@ int readX(string FileName);
 int readY(string FileName);
 double Parse_Espresso_time(string inF);
 string Int2String (int i);
-
+bool check_at (string inF, int numIn, int outN);
 //class declaration
 class AElement;
 
@@ -47,6 +47,7 @@ class AElement
 private:
   int lit;
   bool sign;  
+  bool always_true ;
 
 public:
   int getLit() {return lit;}
@@ -131,11 +132,20 @@ int main(int argc, char *argv[])
       app.read_synth_file("f_dual.eq", i , inputNum , true);
       app.print_equations();
       app.BuildLattice();
+ 
       app.PrintLattice();
 
       // cout << "----->" <<Int2String(i)<<endl; 
-      
-      app.Print2File(outFile + Int2String(i));
+      if(check_at("f.eq", inputNum,i ))
+	{
+	  string nstr=outFile + Int2String(i);
+	  fstream outputfile;
+	  outputfile.open(nstr.c_str() , ios::out); 
+	  outputfile << "T"<<endl;
+	  outputfile.close();
+	}
+      else
+	app.Print2File(outFile + Int2String(i));
       lattices.push_back(app);
       // cout << readX(outFile) << endl << readY(outFile) << endl <<time<< endl;
 
@@ -157,6 +167,31 @@ int main(int argc, char *argv[])
 
 
 // ***FUNCTIONS***
+
+bool check_at (string inF, int numIn, int outN)
+{
+  fstream input;
+  input.open(inF.c_str(), ios::in);
+  while (!input.eof())
+    {
+      string line;
+      getline(input,line); //read a line of input
+      if(line[0]=='0' ||line[0]=='1' ||line[0]=='-' )
+	{
+	  string res= line.substr(numIn);
+	  res=res.substr(res.find_first_not_of(' '));
+	  cout << res << endl;
+	  cout << line.find_first_not_of('-')<<" "<<numIn << " "<<outN<<endl;
+	  if ( line.find_first_not_of('-')==numIn && res[outN]=='1')
+	    {
+	      cout <<"HERE"<<endl;
+	      return true;	
+	    }
+	}
+    }
+  return false;	
+  input.close();
+}
 
 
 string Int2String (int i)
