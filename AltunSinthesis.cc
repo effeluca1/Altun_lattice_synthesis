@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <fstream>
 #include <algorithm>
@@ -6,13 +7,22 @@
 using namespace std;
 
 //class declaration
+
+//how it works
+// ./AltunSinthesis z4.pla z4.plalattice -m
+// -m for multi -a for first match
+
+
+
 class AElement;
 
 class ALattice
 {
 private:
   string Name;                  // name of the lattice
-  vector < vector <AElement> > Content; // vector of all elements (Column x Row)
+  vector< vector<AElement> > Content; // vector osf all elements (Column x Row)
+  vector< vector< vector <AElement> > > ContentMulti; // vector osf all elements (Column x Row)
+
   int dimension[2];             // Col Row dimensions
   int NumVar;                   // Number of literals
   int NumOut;                   // Number of outputs
@@ -20,7 +30,7 @@ private:
   vector< vector<AElement> > equation;
   vector< vector<AElement> > equation_dual;
   AElement FindCommonLiteral(vector<AElement> term, vector<AElement> termD);
-
+  vector< AElement> FindCommonLiteral_multi(vector<AElement> term, vector<AElement> termD);
   
 public:
   void setNumVar(int num);
@@ -32,17 +42,17 @@ public:
   void read_synth_file(string InFileName, int NumOut,int NumIn, bool true_if_dual);
   void print_equations();
   void BuildLattice();
+  void BuildLattice_multi();
   void PrintLattice();
+  void PrintLattice_multi();
   void Print2File(string FileName);
 };
 
 class AElement
 {
-
 private:
   int lit;
   bool sign;
-  
 
 public:
   int getLit() {return lit;}
@@ -54,20 +64,21 @@ public:
 // function prototype declaration
 void dual( string inFile, string outFile);
 
+
 int main(int argc, char *argv[])
 {
+  cout << "usage -m is for multi variables -u for unary" << endl;
+  (void)argc;
   fstream inputfile;
   string inFile(argv[1]);
-  const char *inFileChar = inFile.c_str();
-  // string outFile = "";
-  char a;
-  char b;
+  string MultiUnary(argv[3]);
   string line;
+
+  
+
   vector<ALattice> lattices;  
 
-  int inputNum=0, outputNum=0;
-  // ifstream inputfile(argv[1]);   //open input file
-  // ostream outputfile(argv[2]);   //open input file
+  unsigned int inputNum=0, outputNum=0;
 
   char* Command;	 
   Command = (char*)malloc(sizeof(char)*512);
@@ -105,25 +116,33 @@ int main(int argc, char *argv[])
   inputfile.close();
 
   // create the vector of lattices and write output number
-  for(int i=0; i<outputNum;i++)
+  for(unsigned int i=0; i<outputNum; i++)
     {
       ALattice app;
       app.setNumOut(i); 
       app.read_synth_file("f.eq", i , inputNum , false);
       app.read_synth_file("f_dual.eq", i , inputNum , true);
       app.print_equations();
-      app.BuildLattice();
-      app.PrintLattice();
       
+      cout <<"MULTIUNARY: " << MultiUnary << endl;
+      if (MultiUnary == "-m")
+        {
+          cout << "MULTI" << endl;
+          app.BuildLattice_multi();
+          app.PrintLattice_multi();
+        }
+      else
+        {
+          cout << "SINGLETON" << endl;
+          app.BuildLattice();
+          app.PrintLattice();
+        }
       ostringstream i_str;	// stream used for the conversion
       i_str << i;
       
       app.Print2File(inFile+".lattice"+i_str.str());
       lattices.push_back(app);
     }
-
-
-
 
   return 0;
 }
@@ -210,11 +229,11 @@ void ALattice::SetName(string s)
 void ALattice::print_equations()
 {
   cout << "f"<<getNumOut()<<"= ";
-  for (int i=0; i<equation.size();i++)
+  for (unsigned int i=0; i<equation.size();i++)
     {
       if (i!=0)
 	cout << " +";
-      for(int j=0; j<equation[i].size(); j++)
+      for(unsigned int j=0; j<equation[i].size(); j++)
 	{
 	  if (equation[i][j].getSign())
 	    cout <<" x"<< equation[i][j].getLit();
@@ -225,11 +244,11 @@ void ALattice::print_equations()
     }
   cout<<endl<<"fd"<<getNumOut()<<"= ";
   
-  for (int i=0; i<equation_dual.size();i++)
+  for (unsigned int i=0; i<equation_dual.size();i++)
     {
       if (i!=0)
 	cout << " +";
-      for(int j=0; j<equation_dual[i].size(); j++)
+      for(unsigned int j=0; j<equation_dual[i].size(); j++)
 	{
 	  if (equation_dual[i][j].getSign())
 	    cout <<" x"<< equation_dual[i][j].getLit();
@@ -245,9 +264,9 @@ void ALattice::read_synth_file(string InFileName, int NumOut, int NumIn, bool tr
   fstream inputfile, outputfile;
   
   //outputfile.open(OutFileName.c_str(), ios::out);
-  char firstChar;
+  // char firstChar;
   string line;
-  int outputNum=0, inputNum=0;
+  //int outputNum=0, inputNum=0;
   AElement appLit; 		// AElement used to write inside vector
   vector< AElement > minterm;
 
@@ -282,7 +301,7 @@ void ALattice::read_synth_file(string InFileName, int NumOut, int NumIn, bool tr
 		  if(true_if_dual)
 		    {
 		      equation_dual.push_back(minterm);
-		       for(int t=0; t < minterm.size(); t++) 
+                      for(unsigned int t=0; t < minterm.size(); t++) 
   		       	cout <<"D"<< minterm[t].getLit();
 		      cout << endl;
 		    }
@@ -306,12 +325,11 @@ void ALattice::read_synth_file(string InFileName, int NumOut, int NumIn, bool tr
 
 void ALattice::BuildLattice()
 {
-  
-      vector<AElement> appRow;
-  for (int Di=0; Di<equation_dual.size();Di++)  // for each row
+  vector<AElement> appRow;
+  for (unsigned int Di=0; Di<equation_dual.size();Di++)  // for each row
     {
       appRow.clear();
-      for  (int i=0; i<equation.size();i++)
+      for  (unsigned int i=0; i<equation.size();i++)
 	{
 	  appRow.push_back(FindCommonLiteral(equation[i], equation_dual[Di]));
 	}
@@ -321,38 +339,95 @@ void ALattice::BuildLattice()
   
 }
 
+void ALattice::BuildLattice_multi()
+{
+  vector< vector< AElement > > appRow;
+  for (unsigned int Di=0; Di<equation_dual.size();Di++)  // for each row
+    {
+      appRow.clear();
+      for  (unsigned int i=0; i<equation.size();i++)
+	{
+	  appRow.push_back(FindCommonLiteral_multi(equation[i], equation_dual[Di]));
+	}
+      //  cout <<"write new row"<<endl;
+      ContentMulti.push_back(appRow);
+    }
+}
+
 AElement ALattice::FindCommonLiteral(vector<AElement> term, vector<AElement> termD)
 {
-  for(int i=0; i<term.size(); i++)
-    for(int j=0; j<termD.size(); j++)
+  for(unsigned int i=0; i<term.size(); i++)
+    for(unsigned int j=0; j<termD.size(); j++)
       {
 	//	cout << "termD"<<termD[j].getSign()<<" "<<termD[j].getLit()<<" ---"<<"term"<<term[i].getSign()<<" "<<term[i].getLit()<<endl;
 	if (term[i].getLit()==termD[j].getLit() && term[i].getSign()==termD[j].getSign())
 	  {
 	    //cout << endl;
-	    return term[i];
-	   
-	  }
-	
+	    return term[i]; 
+          }
       }
-    
+  return term[0];
+}
+
+
+vector<AElement> ALattice::FindCommonLiteral_multi(vector<AElement> term, vector<AElement> termD)
+{
+  vector<AElement> MatchVector;
+  MatchVector.clear();
+  for(unsigned int i=0; i<term.size(); i++)
+    for(unsigned int j=0; j<termD.size(); j++)
+      {
+	//	cout << "termD"<<termD[j].getSign()<<" "<<termD[j].getLit()<<" ---"<<"term"<<term[i].getSign()<<" "<<term[i].getLit()<<endl;
+	if (term[i].getLit()==termD[j].getLit() && term[i].getSign()==termD[j].getSign())
+	  {
+	    //cout << endl;
+	    MatchVector.push_back(term[i]);
+          }
+      }
+  return MatchVector;
 }
 
 void ALattice::PrintLattice()
 {
-  for(int j=0; j<Content.size();j++) //for each row
+  for(unsigned int j=0; j<Content.size();j++) //for each row
     {
-       for(int i=0; i<Content[j].size();i++) //for each column
-	 {
+      for(unsigned int i=0; i<Content[j].size();i++) //for each column
+        {
 	 
-	   if (i!=0) cout << " | ";
-	   if(!Content[j][i].getSign())
-	     cout << "-";
-	   else
-	     cout << " ";
-	   cout << Content[j][i].getLit();
-	 }
-       cout<<endl;
+          if (i!=0) cout << " | ";
+          if(!Content[j][i].getSign())
+            cout << "-";
+          else
+            cout << " ";
+          cout << Content[j][i].getLit();
+        }
+      cout<<endl;
+    }
+  cout<<endl<<endl;
+}
+
+void ALattice::PrintLattice_multi()
+{
+  for(unsigned int j=0; j<ContentMulti.size();j++) //for each row
+    {
+      for(unsigned int i=0; i<ContentMulti[j].size();i++) //for each column
+        {	 
+          if (i!=0) cout << " | ";
+          for(unsigned int k=0; k
+                <ContentMulti[j][i].size();k++) //for each site
+            {
+              if(!ContentMulti[j][i][k].getSign())
+                cout << "-";
+              else
+                cout << " ";
+              
+              cout << ContentMulti[j][i][k].getLit();
+              if (k<(ContentMulti[j][i].size() - 1 ))
+                cout << " ; " ; 
+                
+            }
+        }
+      cout<<endl;
     }
   cout<<endl<<endl;
 }
@@ -361,19 +436,20 @@ void ALattice::Print2File(string FileName)
 {
   fstream outputfile;
   outputfile.open(FileName.c_str() , ios::out); // read dimension of .i e .o 
-  for(int j=0; j<Content.size();j++) //for each row
+  for(unsigned int j=0; j<Content.size();j++) //for each row
     {
-       for(int i=0; i<Content[j].size();i++) //for each column
-	 {
+      for(unsigned int i=0; i<Content[j].size();i++) //for each column
+        {
 	 
-	   if (i!=0) outputfile << " | ";
-	   if(!Content[j][i].getSign())
-	     outputfile << "-";
-	   else
-	     outputfile << " ";
-	   outputfile << Content[j][i].getLit();
-	 }
-       outputfile<<endl;
+          if (i!=0) outputfile << " | ";
+          if(!Content[j][i].getSign())
+            outputfile << "-";
+          else
+            outputfile << " ";
+          outputfile << Content[j][i].getLit();
+        }
+      outputfile<<endl;
     }
   outputfile<<endl<<endl;
 }
+     
