@@ -55,7 +55,7 @@ public:
   void print_data(string FileName);
   bool FindOptPos(string lit,int r, int c);
   void Recompose_optimized(string FileName);
-  void optimized_vec(string FileName);
+  void optimized_vec(string FileName, string FileName2);
 };
 
 class AElement
@@ -186,7 +186,7 @@ int main(int argc, char *argv[])
           sprintf(OptCommand,"cat %s | grep '\\= 1'>app",LogFile.c_str());
   cout << OptCommand<< endl;
            system(OptCommand);
-           app.optimized_vec("app");
+           app.optimized_vec("app", inFile+".lattice"+to_string(i)+"optimized");
            cout << "##########  ############  ############"<< endl;
         }
       
@@ -247,23 +247,76 @@ void dual( string inFile, string outFile) // compute the input for the synthesis
 
 // }
 
-void ALattice::optimized_vec(string FileName)
- {
-   fstream f;
-   string line;
-      string elem[GetColNum()];
-   f.open(FileName.c_str(), ios::in);
-    while( getline(f , line))
-	{
-       
-        
-          elem[stoi(line.substr(line.find(',')+1,line.find(']')- line.find(',')-1))]= line.substr(2, line.find(',')-2).c_str();
-     
-        }
-    for(int i=0; i<GetColNum();i++)
-           cout<< elem[i] <<endl;
+void ALattice::optimized_vec(string FileName, string FileName2)
+{
+  fstream f;
+  string line;
+  vector<int> orderOpt;
+  f.open(FileName.c_str(), ios::in);
+  while( getline(f , line))
+    {
+      orderOpt.push_back(0);
+    }
+  f.close();
+      
+  f.open(FileName.c_str(), ios::in);
+  while( getline(f , line))
+    {
+      int i=0;
+      int arrive= stoi(line.substr(line.find(',')+1,line.find(']')- line.find(',')-1));
+      int start= stoi(line.substr(2, line.find(',')-2).c_str());
+      cout << arrive<<","<< start<<endl;
+      orderOpt[arrive-1]=start-1;
+      i++;
+    }
 
- }
+
+  cout << "## print optimized lattice ##" << endl;
+  for(unsigned int j=0; j<Content.size();j++) //for each row
+    {
+      for(unsigned int i=0; i<Content[j].size();i++) //for each column
+        {
+	 
+          if (i!=0) cout << " | ";
+          if(!Content[j][orderOpt[i]].getSign())
+            cout << "-";
+          else
+            cout << " ";
+          cout << Content[j][orderOpt[i]].getLit();
+        }
+      cout<<endl;
+    }
+  cout<<endl<<endl;
+  
+
+  //string FileName2=FileName + "optimized";
+  cout<< FileName2;
+  fstream f2;
+  f2.open(FileName2.c_str(), ios::out);
+
+  for(unsigned int j=0; j<Content.size();j++) //for each row
+    {
+      for(unsigned int i=0; i<Content[j].size();i++) //for each column
+        {
+	 
+          if (i!=0) f2 << " | ";
+          if(!Content[j][orderOpt[i]].getSign())
+            f2 << "-";
+          else
+            f2 << " ";
+          f2 << Content[j][orderOpt[i]].getLit();
+        }
+      f2<<endl;
+    }
+
+  f2.close();
+  cout<<"##"<<endl<<endl;
+
+  
+
+}
+
+
 
 void ALattice::print_data(string FileName)
 {
