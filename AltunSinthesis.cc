@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
+#include <string>
 #include <vector>
 #include <sstream>
 using namespace std;
@@ -22,7 +23,7 @@ private:
   string Name;                  // name of the lattice
   vector< vector<AElement> > Content; // vector osf all elements (Column x Row)
   vector< vector< vector <AElement> > > ContentMulti; // vector osf all elements (Column x Row)
-
+  vector<string> OptVecVAR; // vecotr of all the variables for optimization
   int dimension[2];             // Col Row dimensions
   int NumVar;                   // Number of literals
   int NumOut;                   // Number of outputs
@@ -33,6 +34,7 @@ private:
   vector< AElement> FindCommonLiteral_multi(vector<AElement> term, vector<AElement> termD);
   
 public:
+  //int OptFindVar();
   void setNumVar(int num);
   void setNumOut(int);
   int getNumVar();
@@ -46,6 +48,14 @@ public:
   void PrintLattice();
   void PrintLattice_multi();
   void Print2File(string FileName);
+  void Print2File_multi(string FileName);
+  int GetRowNum();
+  int GetColNum();
+  void OptFindVar();
+  void print_data(string FileName);
+  bool FindOptPos(string lit,int r, int c);
+  void Recompose_optimized(string FileName);
+  void optimized_vec(string FileName);
 };
 
 class AElement
@@ -67,15 +77,22 @@ void dual( string inFile, string outFile);
 
 int main(int argc, char *argv[])
 {
-  cout << "usage -m is for multi variables -u for unary" << endl;
+  cout << "usage -m is for multi variables -u for unary -OptCol to optimize columns --only with -u (needs GLPK)" << endl;
   (void)argc;
   fstream inputfile;
   string inFile(argv[1]);
   string MultiUnary(argv[3]);
+  bool OPT=false;
+  cout << argc;
+  if (argc > 4) {
+    string OptStr(argv[4]);
+    if (OptStr=="-OptCol") OPT=true;
+  }
   string line;
 
-  
 
+
+    
   vector<ALattice> lattices;  
 
   unsigned int inputNum=0, outputNum=0;
@@ -86,15 +103,17 @@ int main(int argc, char *argv[])
   // Synthesis of function
   sprintf(Command,"./espresso -Dexact -Dso %s > f.eq", inFile.c_str()); 
   system(Command);
-
+  cout << Command << endl;
   // compute the dual function
-  dual(inFile, inFile+"_dual");
+  // OLD  dual(inFile, inFile+"_dual");
+  dual("f.eq", inFile+"_dual");
 
   // Synthesis of the dual function
   sprintf(Command,"./espresso -Dexact -Dso -epos %s > f_dual.eq", (inFile+"_dual").c_str());
-  system(Command); 
+  system(Command);
+  cout << Command << endl<<endl;
 
-  cout << "Espresso done"<<endl;
+  cout << "Espresso done"<<endl<<endl;
   
   inputfile.open(argv[1] , ios::in); // read dimension of .i e .o 
   if (inputfile.is_open())
@@ -124,26 +143,54 @@ int main(int argc, char *argv[])
       app.read_synth_file("f_dual.eq", i , inputNum , true);
       app.print_equations();
       
-      cout <<"MULTIUNARY: " << MultiUnary << endl;
       if (MultiUnary == "-m")
         {
           cout << "MULTI" << endl;
           app.BuildLattice_multi();
           app.PrintLattice_multi();
+          ostringstream i_str;	// stream used for the conversion
+          i_str << i;
+          
+          app.Print2File_multi(inFile+".lattice"+i_str.str());
+          lattices.push_back(app);
         }
       else
         {
-          cout << "SINGLETON" << endl;
+          cout << "SINGLETON" << endl<< endl;
           app.BuildLattice();
           app.PrintLattice();
+          ostringstream i_str;	// stream used for the conversion
+          i_str << i;
+          
+          app.Print2File(inFile+".lattice"+i_str.str());
+          lattices.push_back(app);
         }
-      ostringstream i_str;	// stream used for the conversion
-      i_str << i;
       
-      app.Print2File(inFile+".lattice"+i_str.str());
-      lattices.push_back(app);
-    }
+    
 
+      if (OPT==true)
+        {
+          cout << "##########  OPTIMIZATION!  ############"<< endl;
+          //          int col=app.GetColNum(),row=app.GetRowNum();
+          app.OptFindVar();
+          string Datafile = inFile+".data"+to_string(i);
+          string LogFile = inFile+".ResultGLPK"+to_string(i);
+          string GLPKoutput = inFile+".OutGLPK"+to_string(i);
+          app.print_data(Datafile);
+          char* OptCommand;
+           OptCommand = (char*)malloc(sizeof(char)*512);
+           sprintf(OptCommand,"glpsol --model try.mod  --data %s --output %s > %s", Datafile.c_str(),GLPKoutput.c_str(),LogFile.c_str());
+           cout << OptCommand<< endl;
+          system(OptCommand);
+
+          sprintf(OptCommand,"cat %s | grep '\\= 1'>app",LogFile.c_str());
+  cout << OptCommand<< endl;
+           system(OptCommand);
+           app.optimized_vec("app");
+           cout << "##########  ############  ############"<< endl;
+        }
+      
+    }
   return 0;
 }
 
@@ -169,7 +216,7 @@ void dual( string inFile, string outFile) // compute the input for the synthesis
 	    case '#': //don't write on output file
 	      break;
 	    case '.': //write without modify
-	      outputfile << line << std::endl;
+	      outputfile << line << endl;
 	      break;
 	    default:  //write modifyinf input ( 1<->0 )
 	      {
@@ -195,10 +242,155 @@ void dual( string inFile, string outFile) // compute the input for the synthesis
 
 // ***Class ALattice variables***
 
+// void ALattice::Recompose_optimized(string FileName)
+// {
+
+// }
+
+void ALattice::optimized_vec(string FileName)
+ {
+   fstream f;
+   string line;
+      string elem[GetColNum()];
+   f.open(FileName.c_str(), ios::in);
+    while( getline(f , line))
+	{
+       
+        
+          elem[stoi(line.substr(line.find(',')+1,line.find(']')- line.find(',')-1))]= line.substr(2, line.find(',')-2).c_str();
+     
+        }
+    for(int i=0; i<GetColNum();i++)
+           cout<< elem[i] <<endl;
+
+ }
+
+void ALattice::print_data(string FileName)
+{
+  fstream f;
+   f.open(FileName.c_str(), ios::out);
+   bool debug=false;
+    if (!debug)
+      {
+        f << "param m:=" << GetColNum()<< ";" <<endl;
+        f << "param n:=" << GetRowNum()<< ";" <<endl;
+        f << "param q:=" << OptVecVAR.size()<< ";" <<endl <<endl;
+  f << "param a:=" <<  endl;
+  //param m := 5;
+  //param q := 7;
+  for(unsigned int i=0; i<OptVecVAR.size(); i++)
+    {
+      f << "#"<<OptVecVAR[i] << endl << "[*,*,"<<i+1<< "]:         ";
+      for(unsigned int j=0; j<(unsigned int)GetColNum(); j++)
+        {
+          f << j+1 << " ";
+        }
+      f << " := " << endl;
+      for(unsigned int j=0; j<(unsigned int)GetRowNum(); j++)
+        {
+          f << endl << "              "<<j+1<<"  ";
+          for(unsigned int k=0; k<(unsigned int)GetColNum(); k++)
+            f << FindOptPos(OptVecVAR[i],j,k) <<" ";
+        };
+        f << endl<< endl;
+    }
+
+  f << ";" << endl <<"end;" << endl;
+  f.close();
+      }
+    else
+      {
+  // cout << "param n:=" << GetColNum() <<endl;
+  // cout << "param m:=" << GetRowNum() <<endl;
+  // cout << "param q:=" << OptVecVAR.size() <<endl <<endl;
+  // cout << "param a:=" <<endl;
+  // //param m := 5;
+  // //param q := 7;
+  // for(unsigned int i=0; i<OptVecVAR.size(); i++)
+  //   {
+  //     cout << "#"<<OptVecVAR[i] << endl << "[*,*,"<<i+1<< "]:         ";
+  //     for(unsigned int j=0; j<(unsigned int)GetColNum(); j++)
+  //       {
+  //         cout << j+1 << " ";
+  //       }
+  //     cout << " := " << endl;
+  //     for(unsigned int j=0; j<(unsigned int)GetRowNum(); j++)
+  //       {
+  //         cout << endl << "              "<<j+1<<"  ";
+  //         for(unsigned int k=0; k<(unsigned int)GetColNum(); k++)
+  //           cout << FindOptPos(OptVecVAR[i],j,k) <<" ";
+  //       }
+  //       cout << endl<< endl;
+  //   }
+
+  cout << ";" << endl <<"end;" << endl;
+      }
+}
+
+bool ALattice::FindOptPos(string lit,int r, int c)
+{
+  string varIN;
+  // cout << "A" << varIN << endl;
+  //  cout << "B" << varIN <<endl;
+  // !Content[r][c].getSign()
+  if(!Content[r][c].getSign())
+    {
+      varIN="-" + std::to_string(Content[r][c].getLit());
+    }
+  else
+    {
+        varIN=std::to_string(Content[r][c].getLit());
+    }
+
+  if (varIN==lit)
+    return 1;
+  else
+    return 0;
+      
+}
+
+ void ALattice::OptFindVar()
+{
+  //  vector<string> OptVecVar;
+  for(unsigned int j=0; j<Content.size();j++) //for each row
+    {
+      for(unsigned int i=0; i<Content[j].size();i++) //for each column
+        {
+          string appStr;
+          if(!Content[j][i].getSign())
+            appStr="-" + std::to_string(Content[j][i].getLit());
+          else
+            appStr= std::to_string(Content[j][i].getLit());
+
+
+          
+          std::vector<string>::iterator pos;
+          pos = find (OptVecVAR.begin(), OptVecVAR.end(), appStr);
+
+          if (pos == OptVecVAR.end())
+            {
+            OptVecVAR.push_back(appStr);
+            //   cout << appStr<<"q";
+            //cout << OptVecVar[OptVecVar.size()-1]<<endl;
+            }
+          //          else
+          //  std::cout << "Element not found in myvector\n";
+          
+        }
+    
+
+    }
+  // return OptVecVar;
+}
+
+
 int ALattice::getNumVar()
 {
   return NumVar;
 }
+
+
+
 
 int ALattice::getNumOut()
 {
@@ -220,6 +412,18 @@ void ALattice::SetDimension(int c, int r)
   dimension[0]=c;
   dimension[1]=r;
 }
+
+int ALattice::GetColNum()
+{
+return dimension[0];
+}
+
+int ALattice::GetRowNum()
+{
+return dimension[1];
+}
+
+
 
 void ALattice::SetName(string s)
 {
@@ -301,16 +505,16 @@ void ALattice::read_synth_file(string InFileName, int NumOut, int NumIn, bool tr
 		  if(true_if_dual)
 		    {
 		      equation_dual.push_back(minterm);
-                      for(unsigned int t=0; t < minterm.size(); t++) 
-  		       	cout <<"D"<< minterm[t].getLit();
-		      cout << endl;
+                      //for(unsigned int t=0; t < minterm.size(); t++) 
+                        //   cout <<"D"<< minterm[t].getLit();
+                        //cout << endl;
 		    }
 		  else
 		    {
 		      equation.push_back(minterm);
-		      // for(int t=0; t < minterm.size(); t++)
-		      // 	cout << minterm[t].getLit();
-		      // cout << endl;
+                      //for(unsigned int t=0; t < minterm.size(); t++)
+                        // cout <<"L"<< minterm[t].getLit();
+                        //cout << endl;
 		    }
 		}
 	    }
@@ -336,7 +540,9 @@ void ALattice::BuildLattice()
       //  cout <<"write new row"<<endl;
       Content.push_back(appRow);
     }
-  
+  //  cout << equation_dual.size()<<endl;
+
+  SetDimension(equation.size(),equation_dual.size());
 }
 
 void ALattice::BuildLattice_multi()
@@ -352,6 +558,9 @@ void ALattice::BuildLattice_multi()
       //  cout <<"write new row"<<endl;
       ContentMulti.push_back(appRow);
     }
+  //  cout << equation_dual.size()<<endl;
+  // SetDimension(equation_dual.size(),equation.size());
+   SetDimension(equation.size(),equation_dual.size());
 }
 
 AElement ALattice::FindCommonLiteral(vector<AElement> term, vector<AElement> termD)
@@ -366,7 +575,6 @@ AElement ALattice::FindCommonLiteral(vector<AElement> term, vector<AElement> ter
 	    return term[i]; 
           }
       }
-  return term[0];
 }
 
 
@@ -452,4 +660,33 @@ void ALattice::Print2File(string FileName)
     }
   outputfile<<endl<<endl;
 }
-     
+
+void ALattice::Print2File_multi(string FileName)
+{
+  fstream outputfile;
+  outputfile.open(FileName.c_str() , ios::out); // read dimension of .i e .o
+  for(unsigned int j=0; j<ContentMulti.size();j++) //for each row
+    {
+      for(unsigned int i=0; i<ContentMulti[j].size();i++) //for each column
+        {	 
+          if (i!=0) outputfile << " | ";
+          for(unsigned int k=0; k
+                <ContentMulti[j][i].size();k++) //for each site
+            {
+              if(!ContentMulti[j][i][k].getSign())
+                outputfile << "-";
+              else
+                outputfile << " ";
+              
+              outputfile << ContentMulti[j][i][k].getLit();
+              if (k<(ContentMulti[j][i].size() - 1 ))
+                outputfile << " ; " ; 
+                
+            }
+        }
+      outputfile<<endl;
+    }
+  outputfile<<endl<<endl;
+  outputfile.close();
+}
+
