@@ -1,0 +1,296 @@
+GLPSOL: GLPK LP/MIP Solver, v4.63
+Parameter(s) specified in the command line:
+ --memlim 12000 --model try.mod --data add6.pla.data2 --output add6.pla.OutGLPK2
+Reading model section from try.mod...
+40 lines were read
+Reading data section from add6.pla.data2...
+247 lines were read
+Generating R...
+Generating assign_try...
+Generating consistency_I...
+Generating consistency_L...
+Generating mapping...
+Model has been successfully generated
+GLPK Integer Optimizer, v4.63
+789537 rows, 789760 columns, 2375424 non-zeros
+3328 integer variables, all of which are binary
+Preprocessing...
+1120 rows, 1344 columns, 5696 non-zeros
+1344 integer variables, all of which are binary
+Scaling...
+ A: min|aij| =  1.000e+00  max|aij| =  1.000e+00  ratio =  1.000e+00
+Problem data seem to be well scaled
+Constructing initial basis...
+Size of triangular part is 1119
+Solving LP relaxation...
+GLPK Simplex Optimizer, v4.63
+1120 rows, 1344 columns, 5696 non-zeros
+      0: obj =  -9.600000000e+03 inf =   2.900e+02 (57)
+     40: obj =  -9.600000000e+03 inf =   0.000e+00 (0)
+OPTIMAL LP SOLUTION FOUND
+Integer optimization begins...
++    40: mip =     not found yet <=              +inf        (1; 0)
++    40: >>>>>  -9.600000000e+03 <=  -9.600000000e+03   0.0% (1; 0)
++    40: mip =  -9.600000000e+03 <=     tree is empty   0.0% (0; 1)
+INTEGER OPTIMAL SOLUTION FOUND
+Time used:   0.7 secs
+Memory used: 1266.6 Mb (1328113808 bytes)
+Display statement at line 36
+y[1,1].val = 0
+y[2,1].val = 0
+y[3,1].val = 0
+y[4,1].val = 0
+y[5,1].val = 0
+y[6,1].val = 0
+y[7,1].val = 0
+y[8,1].val = 1
+y[9,1].val = 0
+y[10,1].val = 0
+y[11,1].val = 0
+y[12,1].val = 0
+y[13,1].val = 0
+y[14,1].val = 0
+y[15,1].val = 0
+y[16,1].val = 0
+y[1,2].val = 0
+y[2,2].val = 0
+y[3,2].val = 0
+y[4,2].val = 0
+y[5,2].val = 0
+y[6,2].val = 0
+y[7,2].val = 0
+y[8,2].val = 0
+y[9,2].val = 1
+y[10,2].val = 0
+y[11,2].val = 0
+y[12,2].val = 0
+y[13,2].val = 0
+y[14,2].val = 0
+y[15,2].val = 0
+y[16,2].val = 0
+y[1,3].val = 0
+y[2,3].val = 0
+y[3,3].val = 0
+y[4,3].val = 0
+y[5,3].val = 1
+y[6,3].val = 0
+y[7,3].val = 0
+y[8,3].val = 0
+y[9,3].val = 0
+y[10,3].val = 0
+y[11,3].val = 0
+y[12,3].val = 0
+y[13,3].val = 0
+y[14,3].val = 0
+y[15,3].val = 0
+y[16,3].val = 0
+y[1,4].val = 0
+y[2,4].val = 0
+y[3,4].val = 0
+y[4,4].val = 0
+y[5,4].val = 0
+y[6,4].val = 1
+y[7,4].val = 0
+y[8,4].val = 0
+y[9,4].val = 0
+y[10,4].val = 0
+y[11,4].val = 0
+y[12,4].val = 0
+y[13,4].val = 0
+y[14,4].val = 0
+y[15,4].val = 0
+y[16,4].val = 0
+y[1,5].val = 1
+y[2,5].val = 0
+y[3,5].val = 0
+y[4,5].val = 0
+y[5,5].val = 0
+y[6,5].val = 0
+y[7,5].val = 0
+y[8,5].val = 0
+y[9,5].val = 0
+y[10,5].val = 0
+y[11,5].val = 0
+y[12,5].val = 0
+y[13,5].val = 0
+y[14,5].val = 0
+y[15,5].val = 0
+y[16,5].val = 0
+y[1,6].val = 0
+y[2,6].val = 0
+y[3,6].val = 0
+y[4,6].val = 0
+y[5,6].val = 0
+y[6,6].val = 0
+y[7,6].val = 0
+y[8,6].val = 0
+y[9,6].val = 0
+y[10,6].val = 0
+y[11,6].val = 1
+y[12,6].val = 0
+y[13,6].val = 0
+y[14,6].val = 0
+y[15,6].val = 0
+y[16,6].val = 0
+y[1,7].val = 0
+y[2,7].val = 0
+y[3,7].val = 0
+y[4,7].val = 0
+y[5,7].val = 0
+y[6,7].val = 0
+y[7,7].val = 1
+y[8,7].val = 0
+y[9,7].val = 0
+y[10,7].val = 0
+y[11,7].val = 0
+y[12,7].val = 0
+y[13,7].val = 0
+y[14,7].val = 0
+y[15,7].val = 0
+y[16,7].val = 0
+y[1,8].val = 0
+y[2,8].val = 0
+y[3,8].val = 0
+y[4,8].val = 0
+y[5,8].val = 0
+y[6,8].val = 0
+y[7,8].val = 0
+y[8,8].val = 0
+y[9,8].val = 0
+y[10,8].val = 1
+y[11,8].val = 0
+y[12,8].val = 0
+y[13,8].val = 0
+y[14,8].val = 0
+y[15,8].val = 0
+y[16,8].val = 0
+y[1,9].val = 0
+y[2,9].val = 0
+y[3,9].val = 1
+y[4,9].val = 0
+y[5,9].val = 0
+y[6,9].val = 0
+y[7,9].val = 0
+y[8,9].val = 0
+y[9,9].val = 0
+y[10,9].val = 0
+y[11,9].val = 0
+y[12,9].val = 0
+y[13,9].val = 0
+y[14,9].val = 0
+y[15,9].val = 0
+y[16,9].val = 0
+y[1,10].val = 0
+y[2,10].val = 0
+y[3,10].val = 0
+y[4,10].val = 1
+y[5,10].val = 0
+y[6,10].val = 0
+y[7,10].val = 0
+y[8,10].val = 0
+y[9,10].val = 0
+y[10,10].val = 0
+y[11,10].val = 0
+y[12,10].val = 0
+y[13,10].val = 0
+y[14,10].val = 0
+y[15,10].val = 0
+y[16,10].val = 0
+y[1,11].val = 0
+y[2,11].val = 0
+y[3,11].val = 0
+y[4,11].val = 0
+y[5,11].val = 0
+y[6,11].val = 0
+y[7,11].val = 0
+y[8,11].val = 0
+y[9,11].val = 0
+y[10,11].val = 0
+y[11,11].val = 0
+y[12,11].val = 0
+y[13,11].val = 1
+y[14,11].val = 0
+y[15,11].val = 0
+y[16,11].val = 0
+y[1,12].val = 0
+y[2,12].val = 1
+y[3,12].val = 0
+y[4,12].val = 0
+y[5,12].val = 0
+y[6,12].val = 0
+y[7,12].val = 0
+y[8,12].val = 0
+y[9,12].val = 0
+y[10,12].val = 0
+y[11,12].val = 0
+y[12,12].val = 0
+y[13,12].val = 0
+y[14,12].val = 0
+y[15,12].val = 0
+y[16,12].val = 0
+y[1,13].val = 0
+y[2,13].val = 0
+y[3,13].val = 0
+y[4,13].val = 0
+y[5,13].val = 0
+y[6,13].val = 0
+y[7,13].val = 0
+y[8,13].val = 0
+y[9,13].val = 0
+y[10,13].val = 0
+y[11,13].val = 0
+y[12,13].val = 1
+y[13,13].val = 0
+y[14,13].val = 0
+y[15,13].val = 0
+y[16,13].val = 0
+y[1,14].val = 0
+y[2,14].val = 0
+y[3,14].val = 0
+y[4,14].val = 0
+y[5,14].val = 0
+y[6,14].val = 0
+y[7,14].val = 0
+y[8,14].val = 0
+y[9,14].val = 0
+y[10,14].val = 0
+y[11,14].val = 0
+y[12,14].val = 0
+y[13,14].val = 0
+y[14,14].val = 1
+y[15,14].val = 0
+y[16,14].val = 0
+y[1,15].val = 0
+y[2,15].val = 0
+y[3,15].val = 0
+y[4,15].val = 0
+y[5,15].val = 0
+y[6,15].val = 0
+y[7,15].val = 0
+y[8,15].val = 0
+y[9,15].val = 0
+y[10,15].val = 0
+y[11,15].val = 0
+y[12,15].val = 0
+y[13,15].val = 0
+y[14,15].val = 0
+y[15,15].val = 0
+y[16,15].val = 1
+y[1,16].val = 0
+y[2,16].val = 0
+y[3,16].val = 0
+y[4,16].val = 0
+y[5,16].val = 0
+y[6,16].val = 0
+y[7,16].val = 0
+y[8,16].val = 0
+y[9,16].val = 0
+y[10,16].val = 0
+y[11,16].val = 0
+y[12,16].val = 0
+y[13,16].val = 0
+y[14,16].val = 0
+y[15,16].val = 1
+y[16,16].val = 0
+Model has been successfully processed
+Writing MIP solution to 'add6.pla.OutGLPK2'...

@@ -1,0 +1,12 @@
+param m:=1;
+param n:=1;
+param q:=1;
+
+param a:=
+#2
+[*,*,1]:         1  := 
+
+              1  1 
+
+;
+end;

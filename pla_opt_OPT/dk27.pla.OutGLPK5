@@ -1,0 +1,66 @@
+Problem:    try
+Rows:       15
+Columns:    13 (5 integer, 5 binary)
+Non-zeros:  32
+Status:     INTEGER OPTIMAL
+Objective:  R = 0 (MAXimum)
+
+   No.   Row name        Activity     Lower bound   Upper bound
+------ ------------    ------------- ------------- -------------
+     1 R                           0                             
+     2 assign_try[1,1,1]
+                                   0            -0             = 
+     3 assign_try[1,1,2]
+                                   0            -0             = 
+     4 assign_try[2,1,1]
+                                   0            -0             = 
+     5 assign_try[2,1,2]
+                                   0            -0             = 
+     6 consistency_I[1]
+                                   1             1             = 
+     7 consistency_L[1]
+                                   1             1             = 
+     8 mapping[1,1,1,1,1]
+                                  -1                          -1 
+     9 mapping[1,1,1,1,2]
+                                  -1                          -1 
+    10 mapping[1,1,2,1,1]
+                                  -1                          -1 
+    11 mapping[1,1,2,1,2]
+                                  -1                          -1 
+    12 mapping[2,1,1,1,1]
+                                  -1                          -1 
+    13 mapping[2,1,1,1,2]
+                                  -1                          -1 
+    14 mapping[2,1,2,1,1]
+                                  -1                          -1 
+    15 mapping[2,1,2,1,2]
+                                  -1                          -1 
+
+   No. Column name       Activity     Lower bound   Upper bound
+------ ------------    ------------- ------------- -------------
+     1 y[1,1]       *              1             0             1 
+     2 z[1,1,1]     *              1             0             1 
+     3 z[1,1,2]     *              0             0             1 
+     4 z[2,1,1]     *              0             0             1 
+     5 z[2,1,2]     *              1             0             1 
+     6 x[1,1,2,1,1]                0                             
+     7 x[2,1,1,1,1]                0                             
+     8 x[1,1,2,1,2]                0                             
+     9 x[2,1,1,1,2]                0                             
+    10 x[1,1,1,1,1]                1                             
+    11 x[1,1,1,1,2]               -1                             
+    12 x[2,1,2,1,1]               -1                             
+    13 x[2,1,2,1,2]                1                             
+
+Integer feasibility conditions:
+
+KKT.PE: max.abs.err = 0.00e+00 on row 0
+        max.rel.err = 0.00e+00 on row 0
+        High quality
+
+KKT.PB: max.abs.err = 0.00e+00 on row 0
+        max.rel.err = 0.00e+00 on row 0
+        High quality
+
+End of output

@@ -1,0 +1,9 @@
+GLPSOL: GLPK LP/MIP Solver, v4.63
+Parameter(s) specified in the command line:
+ --memlim 12000 --model try.mod --data misj.pla.data10 --output misj.pla.OutGLPK10
+Reading model section from try.mod...
+40 lines were read
+Reading data section from misj.pla.data10...
+(unknown):0: unable to open misj.pla.data10 - No such file or directory
+Context:                                                             
+MathProg model processing error

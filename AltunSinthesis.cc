@@ -56,6 +56,8 @@ public:
   bool FindOptPos(string lit,int r, int c);
   void Recompose_optimized(string FileName);
   void optimized_vec(string FileName, string FileName2);
+  void OptCost(string Filename);
+
 };
 
 class AElement
@@ -178,16 +180,21 @@ int main(int argc, char *argv[])
           string GLPKoutput = inFile+".OutGLPK"+to_string(i);
           app.print_data(Datafile);
           char* OptCommand;
-           OptCommand = (char*)malloc(sizeof(char)*512);
-           sprintf(OptCommand,"glpsol --model try.mod  --data %s --output %s > %s", Datafile.c_str(),GLPKoutput.c_str(),LogFile.c_str());
-           cout << OptCommand<< endl;
+          OptCommand = (char*)malloc(sizeof(char)*512);
+          sprintf(OptCommand,"glpsol  --memlim 12000 --model try.mod  --data %s --output %s > %s", Datafile.c_str(),GLPKoutput.c_str(),LogFile.c_str());
+          cout << OptCommand<< endl;
           system(OptCommand);
 
           sprintf(OptCommand,"cat %s | grep '\\= 1'>app",LogFile.c_str());
-  cout << OptCommand<< endl;
-           system(OptCommand);
-           app.optimized_vec("app", inFile+".lattice"+to_string(i)+"optimized");
-           cout << "##########  ############  ############"<< endl;
+          cout << OptCommand<< endl;
+          system(OptCommand);
+          app.optimized_vec("app", inFile+".lattice"+to_string(i)+"optimized");
+
+          cout <<"EEE"<< GLPKoutput.c_str() ;
+          app.OptCost(LogFile.c_str());
+
+         
+          cout << "##########  ############  ############"<< endl;
         }
       
     }
@@ -388,8 +395,13 @@ bool ALattice::FindOptPos(string lit,int r, int c)
   // !Content[r][c].getSign()
   if(!Content[r][c].getSign())
     {
+      
       varIN="-" + std::to_string(Content[r][c].getLit());
     }
+
+
+
+
   else
     {
         varIN=std::to_string(Content[r][c].getLit());
@@ -400,6 +412,27 @@ bool ALattice::FindOptPos(string lit,int r, int c)
   else
     return 0;
       
+}
+
+ void ALattice::OptCost(string Filename)
+{
+  string line;
+  fstream f3, fo;
+   fo.open(Filename.c_str(), ios::in);
+   f3.open("ResOpt", ios::app);
+   f3 << Filename << " "<< GetColNum() << " " << GetRowNum();
+   while( getline(fo , line))
+	{
+          if (line[0]=='T' && line[1]=='i' && line[2]=='m')
+             f3 << line.substr(line.find(':')+1,line.find("sec")-1-line.find(':'));
+        
+          if (line[0]=='M' && line[1]=='e' && line[2]=='m')
+            f3 << line.substr(line.find('(')+1,line.find("by")-1-line.find('('));
+          
+        }
+   f3 << endl;
+   fo.close();
+   f3.close();
 }
 
  void ALattice::OptFindVar()

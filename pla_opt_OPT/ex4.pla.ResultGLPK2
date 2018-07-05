@@ -1,0 +1,76 @@
+GLPSOL: GLPK LP/MIP Solver, v4.63
+Parameter(s) specified in the command line:
+ --memlim 12000 --model try.mod --data ex4.pla.data2 --output ex4.pla.OutGLPK2
+Reading model section from try.mod...
+40 lines were read
+Reading data section from ex4.pla.data2...
+280 lines were read
+Generating R...
+Generating assign_try...
+Generating consistency_I...
+Generating consistency_L...
+Generating mapping...
+Model has been successfully generated
+GLPK Integer Optimizer, v4.63
+136591 rows, 136614 columns, 411146 non-zeros
+1362 integer variables, all of which are binary
+Preprocessing...
+450 rows, 474 columns, 1122 non-zeros
+474 integer variables, all of which are binary
+Scaling...
+ A: min|aij| =  1.000e+00  max|aij| =  1.000e+00  ratio =  1.000e+00
+Problem data seem to be well scaled
+Constructing initial basis...
+Size of triangular part is 449
+Solving LP relaxation...
+GLPK Simplex Optimizer, v4.63
+450 rows, 474 columns, 1122 non-zeros
+      0: obj =  -3.982000000e+03 inf =   9.200e+01 (41)
+      9: obj =  -3.982000000e+03 inf =   0.000e+00 (0)
+OPTIMAL LP SOLUTION FOUND
+Integer optimization begins...
++     9: mip =     not found yet <=              +inf        (1; 0)
++     9: >>>>>  -3.982000000e+03 <=  -3.982000000e+03   0.0% (1; 0)
++     9: mip =  -3.982000000e+03 <=     tree is empty   0.0% (0; 1)
+INTEGER OPTIMAL SOLUTION FOUND
+Time used:   0.1 secs
+Memory used: 220.4 Mb (231089096 bytes)
+Display statement at line 36
+y[1,1].val = 0
+y[2,1].val = 1
+y[3,1].val = 0
+y[4,1].val = 0
+y[5,1].val = 0
+y[6,1].val = 0
+y[1,2].val = 0
+y[2,2].val = 0
+y[3,2].val = 0
+y[4,2].val = 1
+y[5,2].val = 0
+y[6,2].val = 0
+y[1,3].val = 1
+y[2,3].val = 0
+y[3,3].val = 0
+y[4,3].val = 0
+y[5,3].val = 0
+y[6,3].val = 0
+y[1,4].val = 0
+y[2,4].val = 0
+y[3,4].val = 1
+y[4,4].val = 0
+y[5,4].val = 0
+y[6,4].val = 0
+y[1,5].val = 0
+y[2,5].val = 0
+y[3,5].val = 0
+y[4,5].val = 0
+y[5,5].val = 0
+y[6,5].val = 1
+y[1,6].val = 0
+y[2,6].val = 0
+y[3,6].val = 0
+y[4,6].val = 0
+y[5,6].val = 1
+y[6,6].val = 0
+Model has been successfully processed
+Writing MIP solution to 'ex4.pla.OutGLPK2'...

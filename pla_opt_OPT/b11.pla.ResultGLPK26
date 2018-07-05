@@ -1,0 +1,43 @@
+GLPSOL: GLPK LP/MIP Solver, v4.63
+Parameter(s) specified in the command line:
+ --memlim 12000 --model try.mod --data b11.pla.data26 --output b11.pla.OutGLPK26
+Reading model section from try.mod...
+40 lines were read
+Reading data section from b11.pla.data26...
+47 lines were read
+Generating R...
+Generating assign_try...
+Generating consistency_I...
+Generating consistency_L...
+Generating mapping...
+Model has been successfully generated
+GLPK Integer Optimizer, v4.63
+365 rows, 364 columns, 1084 non-zeros
+44 integer variables, all of which are binary
+Preprocessing...
+14 rows, 14 columns, 34 non-zeros
+14 integer variables, all of which are binary
+Scaling...
+ A: min|aij| =  1.000e+00  max|aij| =  1.000e+00  ratio =  1.000e+00
+Problem data seem to be well scaled
+Constructing initial basis...
+Size of triangular part is 13
+Solving LP relaxation...
+GLPK Simplex Optimizer, v4.63
+14 rows, 14 columns, 34 non-zeros
+*     0: obj =  -6.000000000e+01 inf =   0.000e+00 (0)
+OPTIMAL LP SOLUTION FOUND
+Integer optimization begins...
++     0: mip =     not found yet <=              +inf        (1; 0)
++     0: >>>>>  -6.000000000e+01 <=  -6.000000000e+01   0.0% (1; 0)
++     0: mip =  -6.000000000e+01 <=     tree is empty   0.0% (0; 1)
+INTEGER OPTIMAL SOLUTION FOUND
+Time used:   0.0 secs
+Memory used: 0.7 Mb (733768 bytes)
+Display statement at line 36
+y[1,1].val = 0
+y[2,1].val = 1
+y[1,2].val = 1
+y[2,2].val = 0
+Model has been successfully processed
+Writing MIP solution to 'b11.pla.OutGLPK26'...

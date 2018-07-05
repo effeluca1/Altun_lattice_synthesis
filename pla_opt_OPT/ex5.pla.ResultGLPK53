@@ -1,0 +1,184 @@
+GLPSOL: GLPK LP/MIP Solver, v4.63
+Parameter(s) specified in the command line:
+ --memlim 12000 --model try.mod --data ex5.pla.data53 --output ex5.pla.OutGLPK53
+Reading model section from try.mod...
+40 lines were read
+Reading data section from ex5.pla.data53...
+217 lines were read
+Generating R...
+Generating assign_try...
+Generating consistency_I...
+Generating consistency_L...
+Generating mapping...
+Model has been successfully generated
+GLPK Integer Optimizer, v4.63
+217825 rows, 217944 columns, 656268 non-zeros
+1944 integer variables, all of which are binary
+Preprocessing...
+720 rows, 840 columns, 2424 non-zeros
+840 integer variables, all of which are binary
+Scaling...
+ A: min|aij| =  1.000e+00  max|aij| =  1.000e+00  ratio =  1.000e+00
+Problem data seem to be well scaled
+Constructing initial basis...
+Size of triangular part is 719
+Solving LP relaxation...
+GLPK Simplex Optimizer, v4.63
+720 rows, 840 columns, 2424 non-zeros
+      0: obj =  -5.668000000e+03 inf =   1.420e+02 (41)
+     26: obj =  -5.668000000e+03 inf =   0.000e+00 (0)
+OPTIMAL LP SOLUTION FOUND
+Integer optimization begins...
++    26: mip =     not found yet <=              +inf        (1; 0)
++    26: >>>>>  -5.668000000e+03 <=  -5.668000000e+03   0.0% (1; 0)
++    26: mip =  -5.668000000e+03 <=     tree is empty   0.0% (0; 1)
+INTEGER OPTIMAL SOLUTION FOUND
+Time used:   0.2 secs
+Memory used: 353.3 Mb (370485072 bytes)
+Display statement at line 36
+y[1,1].val = 1
+y[2,1].val = 0
+y[3,1].val = 0
+y[4,1].val = 0
+y[5,1].val = 0
+y[6,1].val = 0
+y[7,1].val = 0
+y[8,1].val = 0
+y[9,1].val = 0
+y[10,1].val = 0
+y[11,1].val = 0
+y[12,1].val = 0
+y[1,2].val = 0
+y[2,2].val = 1
+y[3,2].val = 0
+y[4,2].val = 0
+y[5,2].val = 0
+y[6,2].val = 0
+y[7,2].val = 0
+y[8,2].val = 0
+y[9,2].val = 0
+y[10,2].val = 0
+y[11,2].val = 0
+y[12,2].val = 0
+y[1,3].val = 0
+y[2,3].val = 0
+y[3,3].val = 0
+y[4,3].val = 0
+y[5,3].val = 0
+y[6,3].val = 1
+y[7,3].val = 0
+y[8,3].val = 0
+y[9,3].val = 0
+y[10,3].val = 0
+y[11,3].val = 0
+y[12,3].val = 0
+y[1,4].val = 0
+y[2,4].val = 0
+y[3,4].val = 0
+y[4,4].val = 0
+y[5,4].val = 0
+y[6,4].val = 0
+y[7,4].val = 0
+y[8,4].val = 0
+y[9,4].val = 0
+y[10,4].val = 1
+y[11,4].val = 0
+y[12,4].val = 0
+y[1,5].val = 0
+y[2,5].val = 0
+y[3,5].val = 0
+y[4,5].val = 1
+y[5,5].val = 0
+y[6,5].val = 0
+y[7,5].val = 0
+y[8,5].val = 0
+y[9,5].val = 0
+y[10,5].val = 0
+y[11,5].val = 0
+y[12,5].val = 0
+y[1,6].val = 0
+y[2,6].val = 0
+y[3,6].val = 0
+y[4,6].val = 0
+y[5,6].val = 1
+y[6,6].val = 0
+y[7,6].val = 0
+y[8,6].val = 0
+y[9,6].val = 0
+y[10,6].val = 0
+y[11,6].val = 0
+y[12,6].val = 0
+y[1,7].val = 0
+y[2,7].val = 0
+y[3,7].val = 0
+y[4,7].val = 0
+y[5,7].val = 0
+y[6,7].val = 0
+y[7,7].val = 0
+y[8,7].val = 1
+y[9,7].val = 0
+y[10,7].val = 0
+y[11,7].val = 0
+y[12,7].val = 0
+y[1,8].val = 0
+y[2,8].val = 0
+y[3,8].val = 0
+y[4,8].val = 0
+y[5,8].val = 0
+y[6,8].val = 0
+y[7,8].val = 0
+y[8,8].val = 0
+y[9,8].val = 1
+y[10,8].val = 0
+y[11,8].val = 0
+y[12,8].val = 0
+y[1,9].val = 0
+y[2,9].val = 0
+y[3,9].val = 1
+y[4,9].val = 0
+y[5,9].val = 0
+y[6,9].val = 0
+y[7,9].val = 0
+y[8,9].val = 0
+y[9,9].val = 0
+y[10,9].val = 0
+y[11,9].val = 0
+y[12,9].val = 0
+y[1,10].val = 0
+y[2,10].val = 0
+y[3,10].val = 0
+y[4,10].val = 0
+y[5,10].val = 0
+y[6,10].val = 0
+y[7,10].val = 1
+y[8,10].val = 0
+y[9,10].val = 0
+y[10,10].val = 0
+y[11,10].val = 0
+y[12,10].val = 0
+y[1,11].val = 0
+y[2,11].val = 0
+y[3,11].val = 0
+y[4,11].val = 0
+y[5,11].val = 0
+y[6,11].val = 0
+y[7,11].val = 0
+y[8,11].val = 0
+y[9,11].val = 0
+y[10,11].val = 0
+y[11,11].val = 0
+y[12,11].val = 1
+y[1,12].val = 0
+y[2,12].val = 0
+y[3,12].val = 0
+y[4,12].val = 0
+y[5,12].val = 0
+y[6,12].val = 0
+y[7,12].val = 0
+y[8,12].val = 0
+y[9,12].val = 0
+y[10,12].val = 0
+y[11,12].val = 1
+y[12,12].val = 0
+Model has been successfully processed
+Writing MIP solution to 'ex5.pla.OutGLPK53'...

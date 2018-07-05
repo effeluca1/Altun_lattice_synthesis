@@ -1,0 +1,713 @@
+add6.pla.ResultGLPK0 2 2   0.0 224928 
+add6.pla.ResultGLPK1 6 6   0.0 18217824 
+add6.pla.ResultGLPK2 16 16   0.7 1328113808 
+addm4.pla.ResultGLPK0 9 12   0.1 180301236 
+addm4.pla.ResultGLPK1 22 23   4.0 7371645336 
+adr4.pla.ResultGLPK0 15 23   0.8 1621207472 
+al2.pla.ResultGLPK0 3 5   0.0 2995948 
+al2.pla.ResultGLPK1 2 6   0.0 1974328 
+al2.pla.ResultGLPK2 2 6   0.0 1974328 
+al2.pla.ResultGLPK3 2 6   0.0 1974328 
+al2.pla.ResultGLPK4 2 6   0.0 1974328 
+al2.pla.ResultGLPK5 2 6   0.0 1974328 
+al2.pla.ResultGLPK6 2 6   0.0 1974328 
+al2.pla.ResultGLPK7 2 6   0.0 1974328 
+al2.pla.ResultGLPK8 1 5   0.0 347544 
+al2.pla.ResultGLPK9 2 5   0.0 1236544 
+al2.pla.ResultGLPK10 4 5   0.0 5088400 
+al2.pla.ResultGLPK11 5 25   0.1 343710364 
+al2.pla.ResultGLPK12 4 5   0.0 5088400 
+al2.pla.ResultGLPK13 6 5   0.0 14339960 
+al2.pla.ResultGLPK14 2 6   0.0 1974328 
+al2.pla.ResultGLPK15 1 4   0.0 216712 
+al2.pla.ResultGLPK16 1 4   0.0 216712 
+al2.pla.ResultGLPK17 1 4   0.0 216712 
+al2.pla.ResultGLPK18 1 4   0.0 216712 
+al2.pla.ResultGLPK19 1 4   0.0 216712 
+al2.pla.ResultGLPK20 1 4   0.0 216712 
+al2.pla.ResultGLPK21 1 4   0.0 216712 
+al2.pla.ResultGLPK22 1 4   0.0 216712 
+al2.pla.ResultGLPK23 1 4   0.0 216712 
+al2.pla.ResultGLPK24 1 4   0.0 216712 
+al2.pla.ResultGLPK25 1 4   0.0 216712 
+al2.pla.ResultGLPK26 1 4   0.0 216712 
+al2.pla.ResultGLPK27 1 4   0.0 216712 
+al2.pla.ResultGLPK28 1 4   0.0 216712 
+al2.pla.ResultGLPK29 1 4   0.0 216712 
+al2.pla.ResultGLPK30 1 4   0.0 216712 
+al2.pla.ResultGLPK31 2 5   0.0 1236544 
+al2.pla.ResultGLPK32 2 5   0.0 1236544 
+al2.pla.ResultGLPK33 2 5   0.0 1236544 
+al2.pla.ResultGLPK34 2 5   0.0 1236544 
+al2.pla.ResultGLPK35 2 5   0.0 1236544 
+al2.pla.ResultGLPK36 2 5   0.0 1236544 
+al2.pla.ResultGLPK37 2 5   0.0 1236544 
+al2.pla.ResultGLPK38 2 5   0.0 1236544 
+al2.pla.ResultGLPK39 2 5   0.0 1236544 
+al2.pla.ResultGLPK40 2 5   0.0 1236544 
+al2.pla.ResultGLPK41 2 5   0.0 1236544 
+al2.pla.ResultGLPK42 2 5   0.0 1236544 
+al2.pla.ResultGLPK43 2 5   0.0 1236544 
+al2.pla.ResultGLPK44 2 5   0.0 1236544 
+al2.pla.ResultGLPK45 2 5   0.0 1236544 
+al2.pla.ResultGLPK46 2 5   0.0 1236544 
+alcom.pla.ResultGLPK0 1 4   0.0 216712 
+alcom.pla.ResultGLPK1 1 4   0.0 216712 
+alcom.pla.ResultGLPK2 2 4   0.0 733768 
+alcom.pla.ResultGLPK3 4 4   0.0 2923024 
+alcom.pla.ResultGLPK4 1 5   0.0 347544 
+alcom.pla.ResultGLPK5 4 3   0.0 1998864 
+alcom.pla.ResultGLPK6 1 4   0.0 216712 
+alcom.pla.ResultGLPK7 1 4   0.0 216712 
+alcom.pla.ResultGLPK8 1 4   0.0 216712 
+alcom.pla.ResultGLPK9 1 4   0.0 216712 
+alcom.pla.ResultGLPK10 1 4   0.0 216712 
+alcom.pla.ResultGLPK11 1 4   0.0 216712 
+alcom.pla.ResultGLPK12 1 4   0.0 216712 
+alcom.pla.ResultGLPK13 1 4   0.0 216712 
+alcom.pla.ResultGLPK14 1 4   0.0 216712 
+alcom.pla.ResultGLPK15 1 4   0.0 216712 
+alcom.pla.ResultGLPK16 1 4   0.0 216712 
+alcom.pla.ResultGLPK17 1 4   0.0 216712 
+alcom.pla.ResultGLPK18 1 4   0.0 216712 
+alcom.pla.ResultGLPK19 1 4   0.0 216712 
+alcom.pla.ResultGLPK20 1 4   0.0 216712 
+alcom.pla.ResultGLPK21 1 5   0.0 347544 
+alcom.pla.ResultGLPK22 1 5   0.0 347544 
+alcom.pla.ResultGLPK23 1 5   0.0 347544 
+alcom.pla.ResultGLPK24 1 5   0.0 347544 
+alcom.pla.ResultGLPK25 1 5   0.0 347544 
+alcom.pla.ResultGLPK26 1 5   0.0 347544 
+alcom.pla.ResultGLPK27 1 5   0.0 347544 
+alcom.pla.ResultGLPK28 1 5   0.0 347544 
+alcom.pla.ResultGLPK29 1 5   0.0 347544 
+alcom.pla.ResultGLPK30 1 5   0.0 347544 
+alcom.pla.ResultGLPK31 1 5   0.0 347544 
+alcom.pla.ResultGLPK32 1 5   0.0 347544 
+alcom.pla.ResultGLPK33 1 5   0.0 347544 
+alcom.pla.ResultGLPK34 1 4   0.0 216712 
+alcom.pla.ResultGLPK35 1 5   0.0 347544 
+alcom.pla.ResultGLPK36 1 5   0.0 347544 
+alcom.pla.ResultGLPK37 1 5   0.0 347544 
+alu1.pla.ResultGLPK0 3 2   0.0 465336 
+alu1.pla.ResultGLPK1 3 2   0.0 465336 
+alu1.pla.ResultGLPK2 3 2   0.0 465336 
+alu1.pla.ResultGLPK3 3 2   0.0 465336 
+alu1.pla.ResultGLPK4 2 3   0.0 457128 
+alu1.pla.ResultGLPK5 2 3   0.0 457128 
+alu1.pla.ResultGLPK6 2 3   0.0 457128 
+alu1.pla.ResultGLPK7 1 3   0.0 142952 
+alu2.pla.ResultGLPK0 5 4   0.0 5898560 
+alu2.pla.ResultGLPK1 8 7   0.0 64950992 
+alu2.pla.ResultGLPK2 11 10   0.1 328760548 
+alu2.pla.ResultGLPK3 22 15   2.0 3689937920 
+alu2.pla.ResultGLPK4 5 5   0.0 10044372 
+alu2.pla.ResultGLPK5 14 13   0.5 1122244816 
+alu2.pla.ResultGLPK6 4 4   0.0 3385392 
+alu2.pla.ResultGLPK7 4 1   0.0 249296 
+alu3.pla.ResultGLPK0 5 4   0.0 5898560 
+alu3.pla.ResultGLPK1 8 7   0.0 64950992 
+alu3.pla.ResultGLPK2 10 11   0.2 328566792 
+alu3.pla.ResultGLPK3 22 15   2.1 3689937920 
+alu3.pla.ResultGLPK4 5 5   0.0 10044372 
+alu3.pla.ResultGLPK5 13 14   0.6 1121793508 
+alu3.pla.ResultGLPK6 4 4   0.0 3385392 
+alu3.pla.ResultGLPK7 1 4   0.0 216712 
+apla.pla.ResultGLPK0 4 13   0.0 60632368 
+apla.pla.ResultGLPK1 4 12   0.0 51921728 
+apla.pla.ResultGLPK2 3 6   0.0 5315432 
+apla.pla.ResultGLPK3 2 7   0.0 2979624 
+apla.pla.ResultGLPK4 3 10   0.0 18930064 
+apla.pla.ResultGLPK5 1 8   0.0 1082360 
+apla.pla.ResultGLPK6 1 4   0.0 216712 
+apla.pla.ResultGLPK7 5 10   0.0 56220188 
+apla.pla.ResultGLPK8 3 11   0.0 23006108 
+apla.pla.ResultGLPK9 5 15   0.0 125133768 
+apla.pla.ResultGLPK10 4 7   0.0 13901584 
+apla.pla.ResultGLPK11 4 10   0.0 33396656 
+b10.pla.ResultGLPK0 0 1   0.0 81760 
+b11.pla.ResultGLPK0 0 1   0.0 81760 
+b11.pla.ResultGLPK1 3 6   0.0 6530992 
+b11.pla.ResultGLPK2 1 6   0.0 547096 
+b11.pla.ResultGLPK3 3 6   0.0 5323536 
+b11.pla.ResultGLPK4 3 5   0.0 3377220 
+b11.pla.ResultGLPK5 2 3   0.0 457128 
+b11.pla.ResultGLPK6 1 4   0.0 216712 
+b11.pla.ResultGLPK7 1 4   0.0 216712 
+b11.pla.ResultGLPK8 2 5   0.0 1236568 
+b11.pla.ResultGLPK9 1 3   0.0 142952 
+b11.pla.ResultGLPK10 2 6   0.0 1974328 
+b11.pla.ResultGLPK11 1 4   0.0 216712 
+b11.pla.ResultGLPK12 2 6   0.0 1974328 
+b11.pla.ResultGLPK13 2 6   0.0 1974352 
+b11.pla.ResultGLPK14 1 3   0.0 142952 
+b11.pla.ResultGLPK15 1 3   0.0 142952 
+b11.pla.ResultGLPK16 3 1   0.0 167136 
+b11.pla.ResultGLPK17 1 5   0.0 347544 
+b11.pla.ResultGLPK18 1 5   0.0 347544 
+b11.pla.ResultGLPK19 1 5   0.0 347544 
+b11.pla.ResultGLPK20 1 4   0.0 216712 
+b11.pla.ResultGLPK21 1 3   0.0 142952 
+b11.pla.ResultGLPK22 2 5   0.0 1398992 
+b11.pla.ResultGLPK23 1 5   0.0 347544 
+b11.pla.ResultGLPK24 1 5   0.0 347544 
+b11.pla.ResultGLPK25 1 5   0.0 347544 
+b11.pla.ResultGLPK26 2 4   0.0 733768 
+b11.pla.ResultGLPK27 2 5   0.0 1399016 
+b11.pla.ResultGLPK28 1 2   0.0 118472 
+b11.pla.ResultGLPK29 1 5   0.0 347544 
+b11.pla.ResultGLPK30 1 5   0.0 347544 
+b12.pla.ResultGLPK0 4 6   0.0 7285216 
+b12.pla.ResultGLPK1 7 5   0.0 19327580 
+b12.pla.ResultGLPK2 7 6   0.0 30736720 
+b12.pla.ResultGLPK3 4 2   0.0 644512 
+b12.pla.ResultGLPK4 4 2   0.0 879808 
+b12.pla.ResultGLPK5 5 1   0.0 372316 
+b12.pla.ResultGLPK6 9 6   0.0 70317504 
+b12.pla.ResultGLPK7 6 4   0.0 10344624 
+b12.pla.ResultGLPK8 7 2   0.0 3418364 
+b3.pla.ResultGLPK0 0 1   0.0 81760 
+b3.pla.ResultGLPK1 14 17   1.2 2296361720 
+b4.pla.ResultGLPK0 0 1   0.0 81760 
+b4.pla.ResultGLPK1 2 7   0.0 3344520 
+b4.pla.ResultGLPK2 2 6   0.0 2250008 
+b4.pla.ResultGLPK3 1 4   0.0 216712 
+b4.pla.ResultGLPK4 2 4   0.0 733840 
+b4.pla.ResultGLPK5 7 19   0.2 451685992 
+b4.pla.ResultGLPK6 4 17   0.1 149985952 
+b4.pla.ResultGLPK7 7 22   0.4 926254020 
+b4.pla.ResultGLPK8 5 14   0.1 158975124 
+b4.pla.ResultGLPK9 6 17   0.2 409159368 
+b4.pla.ResultGLPK10 5 17   0.1 246717796 
+b4.pla.ResultGLPK11 9 22   0.8 1665727656 
+b4.pla.ResultGLPK12 5 15   0.1 202816460 
+b4.pla.ResultGLPK13 6 17   0.2 426507696 
+b4.pla.ResultGLPK14 3 4   0.0 1739140 
+b4.pla.ResultGLPK15 1 7   0.0 766200 
+b4.pla.ResultGLPK16 1 5   0.0 347544 
+b4.pla.ResultGLPK17 2 4   0.0 733816 
+b4.pla.ResultGLPK18 4 12   0.0 39819824 
+b4.pla.ResultGLPK19 4 18   0.0 107061328 
+b4.pla.ResultGLPK20 6 18   0.1 297091776 
+b4.pla.ResultGLPK21 9 16   0.3 709595536 
+b4.pla.ResultGLPK22 5 13   0.1 123223308 
+b7.pla.ResultGLPK0 0 1   0.0 81760 
+b7.pla.ResultGLPK1 3 6   0.0 6530992 
+b7.pla.ResultGLPK2 1 6   0.0 547096 
+b7.pla.ResultGLPK3 3 6   0.0 5323536 
+b7.pla.ResultGLPK4 3 5   0.0 3377220 
+b7.pla.ResultGLPK5 2 3   0.0 457128 
+b7.pla.ResultGLPK6 1 4   0.0 216712 
+b7.pla.ResultGLPK7 1 4   0.0 216712 
+b7.pla.ResultGLPK8 2 5   0.0 1236568 
+b7.pla.ResultGLPK9 1 3   0.0 142952 
+b7.pla.ResultGLPK10 2 6   0.0 1974328 
+b7.pla.ResultGLPK11 1 4   0.0 216712 
+b7.pla.ResultGLPK12 2 6   0.0 1974328 
+b7.pla.ResultGLPK13 2 6   0.0 1974352 
+b7.pla.ResultGLPK14 1 3   0.0 142952 
+b7.pla.ResultGLPK15 1 3   0.0 142952 
+b7.pla.ResultGLPK16 3 1   0.0 167136 
+b7.pla.ResultGLPK17 1 5   0.0 347544 
+b7.pla.ResultGLPK18 1 5   0.0 347544 
+b7.pla.ResultGLPK19 1 5   0.0 347544 
+b7.pla.ResultGLPK20 1 4   0.0 216712 
+b7.pla.ResultGLPK21 1 3   0.0 142952 
+b7.pla.ResultGLPK22 2 5   0.0 1398992 
+b7.pla.ResultGLPK23 1 5   0.0 347544 
+b7.pla.ResultGLPK24 1 5   0.0 347544 
+b7.pla.ResultGLPK25 1 5   0.0 347544 
+b7.pla.ResultGLPK26 2 4   0.0 733768 
+b7.pla.ResultGLPK27 2 5   0.0 1399016 
+b7.pla.ResultGLPK28 1 2   0.0 118472 
+b7.pla.ResultGLPK29 1 5   0.0 347544 
+b7.pla.ResultGLPK30 1 5   0.0 347544 
+b9.pla.ResultGLPK0 9 10   0.1 181173076 
+b9.pla.ResultGLPK1 17 18   1.6 3028846388 
+bcc.pla.ResultGLPK0 2 15   0.0 29948368 
+bcc.pla.ResultGLPK1 2 15   0.0 29948368 
+bcc.pla.ResultGLPK2 3 16   0.0 103529052 
+bcd.div3.pla.ResultGLPK0 2 2   0.0 208544 
+bcd.div3.pla.ResultGLPK1 3 4   0.0 1739176 
+bcd.div3.pla.ResultGLPK2 3 4   0.0 1990664 
+bcd.div3.pla.ResultGLPK3 3 5   0.0 2995948 
+bench.pla.ResultGLPK0 2 2   0.0 208544 
+bench.pla.ResultGLPK1 2 3   0.0 457152 
+bench.pla.ResultGLPK2 6 7   0.0 27736080 
+bench.pla.ResultGLPK3 4 6   0.0 9264512 
+bench.pla.ResultGLPK4 3 5   0.0 3790800 
+bench.pla.ResultGLPK5 2 3   0.0 457152 
+bench.pla.ResultGLPK6 4 8   0.0 18006736 
+bench.pla.ResultGLPK7 4 6   0.0 9264416 
+br1.pla.ResultGLPK0 8 20   0.4 827696400 
+br1.pla.ResultGLPK1 3 12   0.0 40426928 
+br1.pla.ResultGLPK2 6 15   0.1 289362904 
+br1.pla.ResultGLPK3 2 12   0.0 16302344 
+br1.pla.ResultGLPK4 6 15   0.1 248681056 
+br1.pla.ResultGLPK5 8 21   0.4 1004494640 
+br1.pla.ResultGLPK6 5 14   0.1 142369620 
+br1.pla.ResultGLPK7 3 11   0.0 28585764 
+br2.pla.ResultGLPK0 5 14   0.1 142377892 
+br2.pla.ResultGLPK1 3 11   0.0 24863136 
+br2.pla.ResultGLPK2 2 12   0.0 15312816 
+br2.pla.ResultGLPK3 1 12   0.0 3271544 
+br2.pla.ResultGLPK4 8 18   0.3 631271184 
+br2.pla.ResultGLPK5 4 14   0.0 102767456 
+br2.pla.ResultGLPK6 5 16   0.1 208360408 
+br2.pla.ResultGLPK7 4 12   0.0 67484128 
+clpl.pla.ResultGLPK0 4 4   0.0 3385392 
+clpl.pla.ResultGLPK1 3 3   0.0 904096 
+clpl.pla.ResultGLPK2 2 2   0.0 208544 
+clpl.pla.ResultGLPK3 6 6   0.0 25132464 
+clpl.pla.ResultGLPK4 5 5   0.0 10044372 
+dc1.pla.ResultGLPK0 4 4   0.0 2923024 
+dc1.pla.ResultGLPK1 2 3   0.0 457128 
+dc1.pla.ResultGLPK2 4 4   0.0 3815296 
+dc1.pla.ResultGLPK3 4 4   0.0 3377216 
+dc1.pla.ResultGLPK4 4 5   0.0 5104752 
+dc1.pla.ResultGLPK5 4 4   0.0 2923072 
+dc1.pla.ResultGLPK6 3 3   0.0 904060 
+dc2.pla.ResultGLPK0 4 6   0.0 12393152 
+dc2.pla.ResultGLPK1 7 12   0.1 168132832 
+dc2.pla.ResultGLPK2 10 15   0.2 534536224 
+dc2.pla.ResultGLPK3 12 14   0.3 620917808 
+dc2.pla.ResultGLPK4 9 10   0.1 151838960 
+dc2.pla.ResultGLPK5 6 6   0.0 20389936 
+dc2.pla.ResultGLPK6 1 1   0.0 118312 
+dekoder.pla.ResultGLPK0 4 2   0.0 887936 
+dekoder.pla.ResultGLPK1 3 2   0.0 465336 
+dekoder.pla.ResultGLPK2 3 1   0.0 167136 
+dekoder.pla.ResultGLPK3 5 3   0.0 3044672 
+dekoder.pla.ResultGLPK4 2 2   0.0 208520 
+dekoder.pla.ResultGLPK5 4 3   0.0 1220368 
+dekoder.pla.ResultGLPK6 4 2   0.0 879856 
+dist.pla.ResultGLPK0 12 19   0.3 710280848 
+dist.pla.ResultGLPK1 23 24   4.7 8242515776 
+dk17.pla.ResultGLPK0 2 8   0.0 4723168 
+dk17.pla.ResultGLPK1 2 8   0.0 4723168 
+dk17.pla.ResultGLPK2 2 10   0.0 6531152 
+dk17.pla.ResultGLPK3 3 11   0.0 20908784 
+dk17.pla.ResultGLPK4 3 9   0.0 15474988 
+dk17.pla.ResultGLPK5 1 3   0.0 142952 
+dk17.pla.ResultGLPK6 1 3   0.0 142952 
+dk17.pla.ResultGLPK7 1 3   0.0 142952 
+dk17.pla.ResultGLPK8 3 8   0.0 10237496 
+dk17.pla.ResultGLPK9 4 5   0.0 5890512 
+dk17.pla.ResultGLPK10 2 7   0.0 3336392 
+dk27.pla.ResultGLPK0 1 6   0.0 547096 
+dk27.pla.ResultGLPK1 1 6   0.0 547096 
+dk27.pla.ResultGLPK2 2 6   0.0 2233872 
+dk27.pla.ResultGLPK3 1 2   0.0 118472 
+dk27.pla.ResultGLPK4 1 5   0.0 347544 
+dk27.pla.ResultGLPK5 1 2   0.0 118472 
+dk27.pla.ResultGLPK6 1 2   0.0 118472 
+dk27.pla.ResultGLPK7 2 5   0.0 1244672 
+dk27.pla.ResultGLPK8 1 1   0.0 118312 
+dk48.pla.ResultGLPK0 1 2   0.0 118472 
+dk48.pla.ResultGLPK1 1 2   0.0 118472 
+dk48.pla.ResultGLPK2 2 13   0.0 17827240 
+dk48.pla.ResultGLPK3 2 13   0.0 17851552 
+dk48.pla.ResultGLPK4 2 14   0.0 22210968 
+dk48.pla.ResultGLPK5 1 2   0.0 118472 
+dk48.pla.ResultGLPK6 1 12   0.0 3271544 
+dk48.pla.ResultGLPK7 1 2   0.0 118472 
+dk48.pla.ResultGLPK8 1 2   0.0 118472 
+dk48.pla.ResultGLPK9 1 13   0.0 4082648 
+dk48.pla.ResultGLPK10 1 2   0.0 118472 
+dk48.pla.ResultGLPK11 1 2   0.0 118472 
+dk48.pla.ResultGLPK12 1 2   0.0 118472 
+dk48.pla.ResultGLPK13 1 2   0.0 118472 
+dk48.pla.ResultGLPK14 2 12   0.0 13333736 
+dk48.pla.ResultGLPK15 1 12   0.0 3271544 
+dk48.pla.ResultGLPK16 2 13   0.0 16659376 
+ex4.pla.ResultGLPK0 6 17   0.1 231089096 
+ex4.pla.ResultGLPK1 6 17   0.1 231089096 
+ex4.pla.ResultGLPK2 6 17   0.1 231089096 
+ex4.pla.ResultGLPK3 6 17   0.1 231089096 
+ex4.pla.ResultGLPK4 6 17   0.1 231089096 
+ex5.pla.ResultGLPK0 1 3   0.0 142952 
+ex5.pla.ResultGLPK1 1 3   0.0 142952 
+ex5.pla.ResultGLPK2 1 5   0.0 347544 
+ex5.pla.ResultGLPK3 1 5   0.0 347544 
+ex5.pla.ResultGLPK4 1 5   0.0 347544 
+ex5.pla.ResultGLPK5 1 4   0.0 216712 
+ex5.pla.ResultGLPK6 1 7   0.0 766200 
+ex5.pla.ResultGLPK7 1 8   0.0 1082360 
+ex5.pla.ResultGLPK8 1 8   0.0 1082360 
+ex5.pla.ResultGLPK9 1 8   0.0 1082360 
+ex5.pla.ResultGLPK10 1 7   0.0 766200 
+ex5.pla.ResultGLPK11 1 8   0.0 1082360 
+ex5.pla.ResultGLPK12 1 8   0.0 1082360 
+ex5.pla.ResultGLPK13 1 8   0.0 1082360 
+ex5.pla.ResultGLPK14 1 8   0.0 1082360 
+ex5.pla.ResultGLPK15 1 8   0.0 1082360 
+ex5.pla.ResultGLPK16 1 8   0.0 1082360 
+ex5.pla.ResultGLPK17 1 5   0.0 347544 
+ex5.pla.ResultGLPK18 1 6   0.0 547096 
+ex5.pla.ResultGLPK19 1 5   0.0 347544 
+ex5.pla.ResultGLPK20 1 7   0.0 766200 
+ex5.pla.ResultGLPK21 1 7   0.0 766200 
+ex5.pla.ResultGLPK22 1 7   0.0 766200 
+ex5.pla.ResultGLPK23 1 5   0.0 347544 
+ex5.pla.ResultGLPK24 1 8   0.0 1082360 
+ex5.pla.ResultGLPK25 1 8   0.0 1082360 
+ex5.pla.ResultGLPK26 1 7   0.0 766200 
+ex5.pla.ResultGLPK27 1 8   0.0 1082360 
+ex5.pla.ResultGLPK28 1 8   0.0 1082360 
+ex5.pla.ResultGLPK29 1 8   0.0 1082360 
+ex5.pla.ResultGLPK30 1 8   0.0 1082360 
+ex5.pla.ResultGLPK31 8 4   0.0 21634128 
+ex5.pla.ResultGLPK32 10 4   0.0 39062136 
+ex5.pla.ResultGLPK33 7 3   0.0 8098292 
+ex5.pla.ResultGLPK34 10 4   0.0 41754880 
+ex5.pla.ResultGLPK35 7 3   0.0 7287280 
+ex5.pla.ResultGLPK36 8 2   0.0 5293072 
+ex5.pla.ResultGLPK37 9 3   0.0 14391432 
+ex5.pla.ResultGLPK38 9 4   0.0 29645972 
+ex5.pla.ResultGLPK39 8 2   0.0 5284944 
+ex5.pla.ResultGLPK40 12 6   0.1 133557440 
+ex5.pla.ResultGLPK41 5 2   0.0 1447820 
+ex5.pla.ResultGLPK42 7 3   0.0 8836344 
+ex5.pla.ResultGLPK43 14 8   0.1 319943280 
+ex5.pla.ResultGLPK44 7 2   0.0 3418448 
+ex5.pla.ResultGLPK45 7 3   0.0 8820112 
+ex5.pla.ResultGLPK46 6 3   0.0 4862952 
+ex5.pla.ResultGLPK47 10 4   0.0 39037920 
+ex5.pla.ResultGLPK48 7 3   0.0 8073944 
+ex5.pla.ResultGLPK49 6 2   0.0 2307560 
+ex5.pla.ResultGLPK50 7 2   0.0 3103124 
+ex5.pla.ResultGLPK51 10 7   0.1 126318304 
+ex5.pla.ResultGLPK52 6 6   0.0 27358000 
+ex5.pla.ResultGLPK53 12 10   0.2 370485072 
+ex5.pla.ResultGLPK54 14 8   0.1 299355280 
+ex5.pla.ResultGLPK55 8 5   0.0 36245232 
+ex5.pla.ResultGLPK56 8 5   0.0 36312656 
+ex5.pla.ResultGLPK57 10 8   0.1 153297696 
+ex5.pla.ResultGLPK58 10 4   0.0 39086472 
+ex5.pla.ResultGLPK59 11 7   0.1 142251928 
+ex5.pla.ResultGLPK60 9 3   0.0 16922256 
+ex5.pla.ResultGLPK61 6 2   0.0 2064104 
+ex5.pla.ResultGLPK62 5 2   0.0 1285420 
+ex7.pla.ResultGLPK0 9 10   0.1 181173076 
+ex7.pla.ResultGLPK1 17 18   1.6 3028846388 
+exam.pla.ResultGLPK0 6 14   0.1 168325376 
+exam.pla.ResultGLPK1 1 0   0.0 118280 
+exam.pla.ResultGLPK2 11 17   0.5 1009384780 
+exam.pla.ResultGLPK3 17 23   2.4 4393292572 
+exam.pla.ResultGLPK4 8 21   0.4 817843024 
+exam.pla.ResultGLPK5 6 11   0.0 97807776 
+exam.pla.ResultGLPK6 9 25   0.7 1466672504 
+exam.pla.ResultGLPK7 6 11   0.0 90362856 
+exam.pla.ResultGLPK8 0 1   0.0 81760 
+exp.pla.ResultGLPK0 3 5   0.0 3782660 
+exp.pla.ResultGLPK1 11 15   0.3 743604136 
+exp.pla.ResultGLPK2 3 8   0.0 12360604 
+exp.pla.ResultGLPK3 0 1   0.0 81760 
+exp.pla.ResultGLPK4 0 1   0.0 81760 
+exp.pla.ResultGLPK5 6 13   0.1 145343264 
+exp.pla.ResultGLPK6 6 7   0.0 36730184 
+exp.pla.ResultGLPK7 12 21   0.9 1724659008 
+exp.pla.ResultGLPK8 11 17   0.4 949638084 
+exp.pla.ResultGLPK9 7 12   0.1 144474924 
+exp.pla.ResultGLPK10 6 12   0.1 124345256 
+exp.pla.ResultGLPK11 6 12   0.1 124353288 
+exp.pla.ResultGLPK12 2 5   0.0 1236544 
+exp.pla.ResultGLPK13 2 5   0.0 1398968 
+exps.pla.ResultGLPK0 0 0
+exps.pla.ResultGLPK1 0 0
+exps.pla.ResultGLPK2 0 0
+exps.pla.ResultGLPK3 0 0
+exps.pla.ResultGLPK4 0 0
+exps.pla.ResultGLPK5 0 0
+exps.pla.ResultGLPK6 0 0
+exps.pla.ResultGLPK7 0 0
+exps.pla.ResultGLPK8 0 0
+exps.pla.ResultGLPK9 0 0
+exps.pla.ResultGLPK10 0 0
+exps.pla.ResultGLPK11 0 0
+exps.pla.ResultGLPK12 0 0
+exps.pla.ResultGLPK13 0 0
+exps.pla.ResultGLPK14 0 0
+exps.pla.ResultGLPK15 0 0
+exps.pla.ResultGLPK16 0 0
+exps.pla.ResultGLPK17 0 0
+exps.pla.ResultGLPK18 0 0
+exps.pla.ResultGLPK19 0 0
+exps.pla.ResultGLPK20 0 0
+exps.pla.ResultGLPK21 0 0
+exps.pla.ResultGLPK22 0 0
+exps.pla.ResultGLPK23 0 0
+exps.pla.ResultGLPK24 0 0
+exps.pla.ResultGLPK25 0 0
+exps.pla.ResultGLPK26 0 0
+exps.pla.ResultGLPK27 0 0
+exps.pla.ResultGLPK28 0 0
+exps.pla.ResultGLPK29 0 0
+exps.pla.ResultGLPK30 0 0
+exps.pla.ResultGLPK31 0 0
+exps.pla.ResultGLPK32 0 0
+exps.pla.ResultGLPK33 0 0
+exps.pla.ResultGLPK34 0 0
+exps.pla.ResultGLPK35 0 0
+exps.pla.ResultGLPK36 0 0
+exps.pla.ResultGLPK37 0 0
+f51m.pla.ResultGLPK0 0 0
+f51m.pla.ResultGLPK1 0 0
+f51m.pla.ResultGLPK2 0 0
+f51m.pla.ResultGLPK3 0 0
+f51m.pla.ResultGLPK4 0 0
+f51m.pla.ResultGLPK5 0 0
+f51m.pla.ResultGLPK6 0 0
+f51m.pla.ResultGLPK7 0 0
+fout.pla.ResultGLPK0 0 0
+fout.pla.ResultGLPK1 0 0
+fout.pla.ResultGLPK2 0 0
+fout.pla.ResultGLPK3 0 0
+fout.pla.ResultGLPK4 0 0
+fout.pla.ResultGLPK5 0 0
+fout.pla.ResultGLPK6 0 0
+fout.pla.ResultGLPK7 0 0
+fout.pla.ResultGLPK8 0 0
+fout.pla.ResultGLPK9 0 0
+gary.pla.ResultGLPK0 0 0
+gary.pla.ResultGLPK1 0 0
+gary.pla.ResultGLPK2 0 0
+gary.pla.ResultGLPK3 0 0
+gary.pla.ResultGLPK4 0 0
+gary.pla.ResultGLPK5 0 0
+gary.pla.ResultGLPK6 0 0
+gary.pla.ResultGLPK7 0 0
+gary.pla.ResultGLPK8 0 0
+gary.pla.ResultGLPK9 0 0
+gary.pla.ResultGLPK10 0 0
+ibm.pla.ResultGLPK0 0 0
+ibm.pla.ResultGLPK1 0 0
+ibm.pla.ResultGLPK2 0 0
+ibm.pla.ResultGLPK3 0 0
+ibm.pla.ResultGLPK4 0 0
+ibm.pla.ResultGLPK5 0 0
+ibm.pla.ResultGLPK6 0 0
+ibm.pla.ResultGLPK7 0 0
+ibm.pla.ResultGLPK8 0 0
+ibm.pla.ResultGLPK9 0 0
+ibm.pla.ResultGLPK10 0 0
+ibm.pla.ResultGLPK11 0 0
+ibm.pla.ResultGLPK12 0 0
+ibm.pla.ResultGLPK13 0 0
+ibm.pla.ResultGLPK14 0 0
+ibm.pla.ResultGLPK15 0 0
+ibm.pla.ResultGLPK16 0 0
+in0.pla.ResultGLPK0 0 0
+in0.pla.ResultGLPK1 0 0
+in0.pla.ResultGLPK2 0 0
+in0.pla.ResultGLPK3 0 0
+in0.pla.ResultGLPK4 0 0
+in0.pla.ResultGLPK5 0 0
+in0.pla.ResultGLPK6 0 0
+in0.pla.ResultGLPK7 0 0
+in0.pla.ResultGLPK8 0 0
+in0.pla.ResultGLPK9 0 0
+in0.pla.ResultGLPK10 0 0
+in1.pla.ResultGLPK0 0 0
+in1.pla.ResultGLPK1 0 0
+in1.pla.ResultGLPK2 0 0
+in1.pla.ResultGLPK3 0 0
+in1.pla.ResultGLPK4 0 0
+in1.pla.ResultGLPK5 0 0
+in1.pla.ResultGLPK6 0 0
+in1.pla.ResultGLPK7 0 0
+in1.pla.ResultGLPK8 0 0
+in1.pla.ResultGLPK9 0 0
+in1.pla.ResultGLPK10 0 0
+in1.pla.ResultGLPK11 0 0
+in1.pla.ResultGLPK12 0 0
+in1.pla.ResultGLPK13 0 0
+in1.pla.ResultGLPK14 0 0
+in1.pla.ResultGLPK15 0 0
+in1.pla.ResultGLPK16 0 0
+in2.pla.ResultGLPK0 0 0
+in2.pla.ResultGLPK1 0 0
+in2.pla.ResultGLPK2 0 0
+in2.pla.ResultGLPK3 0 0
+in2.pla.ResultGLPK4 0 0
+in2.pla.ResultGLPK5 0 0
+in2.pla.ResultGLPK6 0 0
+in2.pla.ResultGLPK7 0 0
+in2.pla.ResultGLPK8 0 0
+in2.pla.ResultGLPK9 0 0
+in3.pla.ResultGLPK0 0 0
+in3.pla.ResultGLPK1 0 0
+in3.pla.ResultGLPK2 0 0
+in3.pla.ResultGLPK3 0 0
+in3.pla.ResultGLPK4 0 0
+in3.pla.ResultGLPK5 0 0
+in3.pla.ResultGLPK6 0 0
+in3.pla.ResultGLPK7 0 0
+in3.pla.ResultGLPK8 0 0
+in3.pla.ResultGLPK9 0 0
+in3.pla.ResultGLPK10 0 0
+in3.pla.ResultGLPK11 0 0
+in3.pla.ResultGLPK12 0 0
+in3.pla.ResultGLPK13 0 0
+in3.pla.ResultGLPK14 0 0
+in3.pla.ResultGLPK15 0 0
+in3.pla.ResultGLPK16 0 0
+in3.pla.ResultGLPK17 0 0
+in3.pla.ResultGLPK18 0 0
+in3.pla.ResultGLPK19 0 0
+in3.pla.ResultGLPK20 0 0
+in3.pla.ResultGLPK21 0 0
+in3.pla.ResultGLPK22 0 0
+in3.pla.ResultGLPK23 0 0
+in3.pla.ResultGLPK24 0 0
+in3.pla.ResultGLPK25 0 0
+in3.pla.ResultGLPK26 0 0
+in3.pla.ResultGLPK27 0 0
+in3.pla.ResultGLPK28 0 0
+in4.pla.ResultGLPK0 misj.pla.ResultGLPK10 0 0
+misj.pla.ResultGLPK11 0 0
+misj.pla.ResultGLPK12 0 0
+misj.pla.ResultGLPK13 0 0
+mlp4.pla.ResultGLPK0 0 0
+mlp4.pla.ResultGLPK1 0 0
+mlp4.pla.ResultGLPK2 0 0
+mlp4.pla.ResultGLPK3 0 0
+mlp4.pla.ResultGLPK4 0 0
+mlp4.pla.ResultGLPK5 0 0
+mlp4.pla.ResultGLPK6 0 0
+mlp4.pla.ResultGLPK7 0 0
+mp2d.pla.ResultGLPK0 0 0
+mp2d.pla.ResultGLPK1 0 0
+mp2d.pla.ResultGLPK2 0 0
+mp2d.pla.ResultGLPK3 0 0
+mp2d.pla.ResultGLPK4 0 0
+mp2d.pla.ResultGLPK5 0 0
+mp2d.pla.ResultGLPK6 0 0
+mp2d.pla.ResultGLPK7 0 0
+mp2d.pla.ResultGLPK8 0 0
+mp2d.pla.ResultGLPK9 0 0
+mp2d.pla.ResultGLPK10 0 0
+mp2d.pla.ResultGLPK11 0 0
+mp2d.pla.ResultGLPK12 0 0
+mp2d.pla.ResultGLPK13 0 0
+newapla1.pla.ResultGLPK0 0 0
+newapla1.pla.ResultGLPK1 0 0
+newapla1.pla.ResultGLPK2 0 0
+newapla1.pla.ResultGLPK3 0 0
+newapla1.pla.ResultGLPK4 0 0
+newapla1.pla.ResultGLPK5 0 0
+newapla1.pla.ResultGLPK6 0 0
+newapla2.pla.ResultGLPK0 0 0
+newapla2.pla.ResultGLPK1 0 0
+newapla2.pla.ResultGLPK2 0 0
+newapla2.pla.ResultGLPK3 0 0
+newapla2.pla.ResultGLPK4 0 0
+newapla2.pla.ResultGLPK5 0 0
+newapla2.pla.ResultGLPK6 0 0
+newapla.pla.ResultGLPK0 0 0
+newapla.pla.ResultGLPK1 0 0
+newapla.pla.ResultGLPK2 0 0
+newapla.pla.ResultGLPK3 0 0
+newapla.pla.ResultGLPK4 0 0
+newapla.pla.ResultGLPK5 0 0
+newapla.pla.ResultGLPK6 0 0
+newapla.pla.ResultGLPK7 0 0
+newapla.pla.ResultGLPK8 0 0
+newapla.pla.ResultGLPK9 0 0
+newbyte.pla.ResultGLPK0 0 0
+newbyte.pla.ResultGLPK1 0 0
+newbyte.pla.ResultGLPK2 0 0
+newbyte.pla.ResultGLPK3 0 0
+newbyte.pla.ResultGLPK4 0 0
+newbyte.pla.ResultGLPK5 0 0
+newbyte.pla.ResultGLPK6 0 0
+newbyte.pla.ResultGLPK7 0 0
+newcond.pla.ResultGLPK0 0 0
+newcond.pla.ResultGLPK1 0 0
+newcpla1.pla.ResultGLPK0 0 0
+newcpla1.pla.ResultGLPK1 0 0
+newcpla1.pla.ResultGLPK2 0 0
+newcpla1.pla.ResultGLPK3 0 0
+newcpla1.pla.ResultGLPK4 0 0
+newcpla1.pla.ResultGLPK5 0 0
+newcpla1.pla.ResultGLPK6 0 0
+newcpla1.pla.ResultGLPK7 0 0
+newcpla1.pla.ResultGLPK8 0 0
+newcpla1.pla.ResultGLPK9 0 0
+newcpla1.pla.ResultGLPK10 0 0
+newcpla1.pla.ResultGLPK11 0 0
+newcpla1.pla.ResultGLPK12 0 0
+newcpla1.pla.ResultGLPK13 0 0
+newcpla1.pla.ResultGLPK14 0 0
+newcpla1.pla.ResultGLPK15 0 0
+newcpla2.pla.ResultGLPK0 0 0
+newcpla2.pla.ResultGLPK1 0 0
+newcpla2.pla.ResultGLPK2 0 0
+newcpla2.pla.ResultGLPK3 0 0
+newcpla2.pla.ResultGLPK4 0 0
+newcpla2.pla.ResultGLPK5 0 0
+newcpla2.pla.ResultGLPK6 0 0
+newcpla2.pla.ResultGLPK7 0 0
+newcpla2.pla.ResultGLPK8 0 0
+newcpla2.pla.ResultGLPK9 0 0
+newcwp.pla.ResultGLPK0 0 0
+newcwp.pla.ResultGLPK1 0 0
+newcwp.pla.ResultGLPK2 0 0
+newcwp.pla.ResultGLPK3 0 0
+newcwp.pla.ResultGLPK4 0 0
+newill.pla.ResultGLPK0 0 0
+newtag.pla.ResultGLPK0 0 0
+newtpla1.pla.ResultGLPK0 0 0
+newtpla1.pla.ResultGLPK1 0 0
+newtpla2.pla.ResultGLPK0 0 0
+newtpla2.pla.ResultGLPK1 0 0
+newtpla2.pla.ResultGLPK2 0 0
+newtpla2.pla.ResultGLPK3 0 0
+newtpla.pla.ResultGLPK0 0 0
+newtpla.pla.ResultGLPK1 0 0
+newtpla.pla.ResultGLPK2 0 0
+newtpla.pla.ResultGLPK3 0 0
+newtpla.pla.ResultGLPK4 0 0
+newxcpla1.pla.ResultGLPK0 0 0
+newxcpla1.pla.ResultGLPK1 0 0
+newxcpla1.pla.ResultGLPK2 0 0
+newxcpla1.pla.ResultGLPK3 0 0
+newxcpla1.pla.ResultGLPK4 0 0
+newxcpla1.pla.ResultGLPK5 0 0
+newxcpla1.pla.ResultGLPK6 0 0
+newxcpla1.pla.ResultGLPK7 0 0
+newxcpla1.pla.ResultGLPK8 0 0
+newxcpla1.pla.ResultGLPK9 0 0
+newxcpla1.pla.ResultGLPK10 0 0
+newxcpla1.pla.ResultGLPK11 0 0
+newxcpla1.pla.ResultGLPK12 0 0
+newxcpla1.pla.ResultGLPK13 0 0
+newxcpla1.pla.ResultGLPK14 0 0
+newxcpla1.pla.ResultGLPK15 0 0
+newxcpla1.pla.ResultGLPK16 0 0
+newxcpla1.pla.ResultGLPK17 0 0
+newxcpla1.pla.ResultGLPK18 0 0
+newxcpla1.pla.ResultGLPK19 0 0
+newxcpla1.pla.ResultGLPK20 0 0
+newxcpla1.pla.ResultGLPK21 0 0
+newxcpla1.pla.ResultGLPK22 0 0
+opa.pla.ResultGLPK0 0 0
+opa.pla.ResultGLPK1 0 0
+opa.pla.ResultGLPK2 0 0   0.0 73728 
+opa.pla.ResultGLPK3 0 0   0.0 73728 
+opa.pla.ResultGLPK4 0 0
+opa.pla.ResultGLPK5 0 0
+opa.pla.ResultGLPK6 0 0
+opa.pla.ResultGLPK7 0 0
+opa.pla.ResultGLPK8 0 0
+opa.pla.ResultGLPK9 0 0
+opa.pla.ResultGLPK10 0 0
+opa.pla.ResultGLPK11 0 0
+opa.pla.ResultGLPK12 0 0
+opa.pla.ResultGLPK13 0 0
+opa.pla.ResultGLPK14 0 0
+opa.pla.ResultGLPK15 0 0
+opa.pla.ResultGLPK16 0 0
+opa.pla.ResultGLPK17 0 0
+opa.pla.ResultGLPK18 0 0
+opa.pla.ResultG
