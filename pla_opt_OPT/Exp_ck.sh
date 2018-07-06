@@ -8,7 +8,7 @@ HELLO=Hello
 
 	#echo timeout 900 ./deftol $i $i $i $i ${i%%.*}.pla ${i##*pla.lattice}
 	echo timeout 900 ./deftol $i $i $i $i ${i%%.*}.pla ${jstr%%optimized}
-	     timeout 900 ./deftol $i $i $i $i ${i%%.*}.pla ${jstr%%optimized}
+#	     timeout 900 ./deftol $i $i $i $i ${i%%.*}.pla ${jstr%%optimized}
 
 #&& echo mv *.eps check_graph/
 done

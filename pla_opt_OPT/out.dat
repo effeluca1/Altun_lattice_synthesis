@@ -4459,3 +4459,9 @@ apla.pla.lattice9optimized_F_1_5	9	5	18	16	0.055283	2.01032	10
 apla.pla.lattice9optimized_F_2_5	9	5	18	16	0.053016	1.99775	10
 apla.pla.lattice9optimized_F_3_5	9	5	20	16	0.058741	2.15263	10
 apla.pla.lattice9optimized_F_4_5	9	5	18	16	0.054238	2.04267	10
+addm4.pla.lattice0	0	9	13	13	0.094337	1.38455	9
+addm4.pla.lattice0_F_0_0	0	8	16	15	0.097193	1.66681	9
+addm4.pla.lattice0_F_1_0	0	8	16	15	0.087728	1.68016	9
+addm4.pla.lattice0_F_2_0	0	8	16	15	0.093257	1.73267	9
+addm4.pla.lattice0_F_3_0	0	8	16	15	0.088083	1.63173	9
+addm4.pla.lattice0_F_4_0	0	8	16	15	0.094276	1.65853	9
