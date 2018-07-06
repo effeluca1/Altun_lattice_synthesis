@@ -744,7 +744,7 @@ void ALattice::Print2File(string FileName)
         }
       outputfile<<endl;
     }
-  outputfile<<endl<<endl;
+  //  outputfile<<endl<<endl;
 }
 
 void ALattice::Print2File_multi(string FileName)
