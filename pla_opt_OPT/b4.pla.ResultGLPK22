@@ -33,7 +33,7 @@ Integer optimization begins...
 +     5: >>>>>  -3.360000000e+03 <=  -3.360000000e+03   0.0% (1; 0)
 +     5: mip =  -3.360000000e+03 <=     tree is empty   0.0% (0; 1)
 INTEGER OPTIMAL SOLUTION FOUND
-Time used:   0.1 secs
+Time used:   0.0 secs
 Memory used: 117.5 Mb (123223308 bytes)
 Display statement at line 36
 y[1,1].val = 1

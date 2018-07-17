@@ -207,5 +207,3 @@ y[12,13].val = 0
 y[13,13].val = 0
 Model has been successfully processed
 Writing MIP solution to 'exp.pla.OutGLPK14'...
-Write error on 'exp.pla.OutGLPK14' - No space left on device
-Unable to write problem solution

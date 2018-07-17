@@ -15,35 +15,3 @@ GLPK Integer Optimizer, v4.63
 1687 rows, 1689 columns, 5096 non-zeros
 114 integer variables, all of which are binary
 Preprocessing...
-39 rows, 42 columns, 96 non-zeros
-42 integer variables, all of which are binary
-Scaling...
- A: min|aij| =  1.000e+00  max|aij| =  1.000e+00  ratio =  1.000e+00
-Problem data seem to be well scaled
-Constructing initial basis...
-Size of triangular part is 38
-Solving LP relaxation...
-GLPK Simplex Optimizer, v4.63
-39 rows, 42 columns, 96 non-zeros
-      0: obj =  -2.200000000e+02 inf =   1.000e+01 (10)
-      1: obj =  -2.200000000e+02 inf =   0.000e+00 (0)
-OPTIMAL LP SOLUTION FOUND
-Integer optimization begins...
-+     1: mip =     not found yet <=              +inf        (1; 0)
-+     1: >>>>>  -2.200000000e+02 <=  -2.200000000e+02   0.0% (1; 0)
-+     1: mip =  -2.200000000e+02 <=     tree is empty   0.0% (0; 1)
-INTEGER OPTIMAL SOLUTION FOUND
-Time used:   0.0 secs
-Memory used: 2.9 Mb (2995948 bytes)
-Display statement at line 36
-y[1,1].val = 1
-y[2,1].val = 0
-y[3,1].val = 0
-y[1,2].val = 0
-y[2,2].val = 0
-y[3,2].val = 1
-y[1,3].val = 0
-y[2,3].val = 1
-y[3,3].val = 0
-Model has been successfully processed
-Writing MIP solution to 'al2.pla.OutGLPK0'...

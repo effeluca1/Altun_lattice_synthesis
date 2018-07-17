@@ -420,7 +420,7 @@ bool ALattice::FindOptPos(string lit,int r, int c)
   fstream f3, fo;
    fo.open(Filename.c_str(), ios::in);
    f3.open("ResOpt", ios::app);
-   f3 << Filename << " "<< GetColNum() << " " << GetRowNum();
+   f3 << Filename << " "<< GetColNum() << " " << GetRowNum()<< " " << OptVecVAR.size();
    while( getline(fo , line))
 	{
           if (line[0]=='T' && line[1]=='i' && line[2]=='m')

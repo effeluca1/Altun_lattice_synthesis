@@ -1,5 +1,5 @@
 #! /bin/bash
-for  pla in *.pla;
+for  pla in $(ls *.pla | grep -v optim);
 do
     string='lattice -u -OptCol';
     total=$pla$string;

@@ -4,6 +4,8 @@ Parameter(s) specified in the command line:
 Reading model section from try.mod...
 40 lines were read
 Reading data section from misj.pla.data10...
-(unknown):0: unable to open misj.pla.data10 - No such file or directory
-Context:                                                             
+misj.pla.data10:0: warning: unexpected end of file; missing end statement inserted
+0 lines were read
+Generating R...
+try.mod:23: no value for q
 MathProg model processing error
