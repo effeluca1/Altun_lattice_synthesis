@@ -4,5 +4,5 @@ do
     string='lattice -u -OptCol';
     total=$pla$string;
     echo ./AltunSinthesis $pla $total;
-    ./AltunSinthesis $pla $total
+#    ./AltunSinthesis $pla $total
 done

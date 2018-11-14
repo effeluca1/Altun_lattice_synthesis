@@ -55,7 +55,7 @@ public:
   void print_data(string FileName);
   bool FindOptPos(string lit,int r, int c);
   void Recompose_optimized(string FileName);
-  void optimized_vec(string FileName, string FileName2);
+  void optimized_vec_col(string FileName, string FileName2);
   void OptCost(string Filename);
 
 };
@@ -84,11 +84,11 @@ int main(int argc, char *argv[])
   fstream inputfile;
   string inFile(argv[1]);
   string MultiUnary(argv[3]);
-  bool OPT=false;
+  bool OPTcol=false;
   cout << argc;
   if (argc > 4) {
     string OptStr(argv[4]);
-    if (OptStr=="-OptCol") OPT=true;
+    if (OptStr=="-OptCol") OPTcol=true;
   }
   string line;
 
@@ -170,7 +170,7 @@ int main(int argc, char *argv[])
       
     
 
-      if (OPT==true)
+      if (OPTcol==true)
         {
           cout << "##########  OPTIMIZATION!  ############"<< endl;
           //          int col=app.GetColNum(),row=app.GetRowNum();
@@ -181,14 +181,14 @@ int main(int argc, char *argv[])
           app.print_data(Datafile);
           char* OptCommand;
           OptCommand = (char*)malloc(sizeof(char)*512);
-          sprintf(OptCommand,"glpsol  --memlim 12000 --model try.mod  --data %s --output %s > %s", Datafile.c_str(),GLPKoutput.c_str(),LogFile.c_str());
+          sprintf(OptCommand,"glpsol  --memlim 12000 --model ColOpt.mod  --data %s --output %s > %s", Datafile.c_str(),GLPKoutput.c_str(),LogFile.c_str());
           cout << OptCommand<< endl;
           system(OptCommand);
 
-          sprintf(OptCommand,"cat %s | grep '\\= 1'>app",LogFile.c_str());
+          sprintf(OptCommand,"cat %s | grep y | grep val | grep '\\= 1'>app && tail -n +2 app > app.tmp && mv app.tmp app && head -n -1 app > app.tmp && mv app.tmp app",LogFile.c_str()); // removes the first and last column that werw added to fix the linear problem mapping
           cout << OptCommand<< endl;
           system(OptCommand);
-          app.optimized_vec("app", inFile+".lattice"+to_string(i)+"optimized");
+          app.optimized_vec_col("app", inFile+".lattice"+to_string(i)+"optimized");
 
           cout <<"EEE"<< GLPKoutput.c_str() ;
           app.OptCost(LogFile.c_str());
@@ -254,7 +254,7 @@ void dual( string inFile, string outFile) // compute the input for the synthesis
 
 // }
 
-void ALattice::optimized_vec(string FileName, string FileName2)
+void ALattice::optimized_vec_col(string FileName, string FileName2)
 {
   fstream f;
   string line;
@@ -265,14 +265,16 @@ void ALattice::optimized_vec(string FileName, string FileName2)
       orderOpt.push_back(0);
     }
   f.close();
-      
+  
+
+  
   f.open(FileName.c_str(), ios::in);
   while( getline(f , line))
     {
       int i=0;
-      int arrive= stoi(line.substr(line.find(',')+1,line.find(']')- line.find(',')-1));
-      int start= stoi(line.substr(2, line.find(',')-2).c_str());
-      cout << arrive<<","<< start<<endl;
+      int arrive= stoi(line.substr(line.find(',')+1,line.find(']')- line.find(',')-1)) -1;
+      int start= stoi(line.substr(2, line.find(',')-2).c_str()) -1;
+      cout << "AS "<<arrive<<","<< start<<endl;
       orderOpt[arrive-1]=start-1;
       i++;
     }
@@ -318,11 +320,118 @@ void ALattice::optimized_vec(string FileName, string FileName2)
 
   f2.close();
   cout<<"##"<<endl<<endl;
+}
+
+
+// void ALattice::optimized_vec_(string FileName, string FileName2)
+// {
+//   fstream f;
+//   string line;
+//   vector<int> orderOpt;
+//   f.open(FileName.c_str(), ios::in);
+//   while( getline(f , line))
+//     {
+//       orderOpt.push_back(0);
+//     }
+//   f.close();
+      
+//   f.open(FileName.c_str(), ios::in);
+//   while( getline(f , line))
+//     {
+//       int i=0;
+//       int arrive= stoi(line.substr(line.find(',')+1,line.find(']')- line.find(',')-1));
+//       int start= stoi(line.substr(2, line.find(',')-2).c_str());
+//       cout << arrive<<","<< start<<endl;
+//       orderOpt[arrive-1]=start-1;
+//       i++;
+//     }
+
+
+//   cout << "## print optimized lattice ##" << endl;
+//   for(unsigned int j=0; j<Content.size();j++) //for each row
+//     {
+//       for(unsigned int i=0; i<Content[j].size();i++) //for each column
+//         {
+	 
+//           if (i!=0) cout << " | ";
+//           if(!Content[j][orderOpt[i]].getSign())
+//             cout << "-";
+//           else
+//             cout << " ";
+//           cout << Content[j][orderOpt[i]].getLit();
+//         }
+//       cout<<endl;
+//     }
+//   cout<<endl<<endl;
+  
+
+//   //string FileName2=FileName + "optimized";
+//   cout<< FileName2;
+//   fstream f2;
+//   f2.open(FileName2.c_str(), ios::out);
+
+//   for(unsigned int j=0; j<Content.size();j++) //for each row
+//     {
+//       for(unsigned int i=0; i<Content[j].size();i++) //for each column
+//         {
+	 
+//           if (i!=0) f2 << " | ";
+//           if(!Content[j][orderOpt[i]].getSign())
+//             f2 << "-";
+//           else
+//             f2 << " ";
+//           f2 << Content[j][orderOpt[i]].getLit();
+//         }
+//       f2<<endl;
+//     }
+
+//   f2.close();
+//   cout<<"##"<<endl<<endl;
 
   
 
-}
+// }
 
+
+
+// void ALattice::print_data(string FileName)
+// {
+//   fstream f;
+//    f.open(FileName.c_str(), ios::out);
+//    bool debug=false;
+//     if (!debug)
+//       {
+//         f << "param m:=" << GetColNum()<< ";" <<endl;
+//         f << "param n:=" << GetRowNum()<< ";" <<endl;
+//         f << "param q:=" << OptVecVAR.size()<< ";" <<endl <<endl;
+//   f << "param a:=" <<  endl;
+//   //param m := 5;
+//   //param q := 7;
+//   for(unsigned int i=0; i<OptVecVAR.size(); i++)
+//     {
+//       f << "#"<<OptVecVAR[i] << endl << "[*,*,"<<i+1<< "]:         ";
+//       for(unsigned int j=0; j<(unsigned int)GetColNum(); j++)
+//         {
+//           f << j+1 << " ";
+//         }
+//       f << " := " << endl;
+//       for(unsigned int j=0; j<(unsigned int)GetColNum(); j++)
+//         {
+//           f << endl << "              "<<j+1<<"  ";
+//           for(unsigned int k=0; k<(unsigned int)GetRowNum(); k++)
+//             f << FindOptPos(OptVecVAR[i],j,k) <<" ";
+//         };
+//         f << endl<< endl;
+//     }
+
+//   f << ";" << endl <<"end;" << endl;
+//   f.close();
+//       }
+//     else
+//       {
+//    cout << ";" << endl <<"end;" << endl;
+//       }
+// }
 
 
 void ALattice::print_data(string FileName)
@@ -332,7 +441,7 @@ void ALattice::print_data(string FileName)
    bool debug=false;
     if (!debug)
       {
-        f << "param m:=" << GetColNum()<< ";" <<endl;
+        f << "param m:=" << GetColNum() + 2<< ";" <<endl;
         f << "param n:=" << GetRowNum()<< ";" <<endl;
         f << "param q:=" << OptVecVAR.size()<< ";" <<endl <<endl;
   f << "param a:=" <<  endl;
@@ -341,18 +450,27 @@ void ALattice::print_data(string FileName)
   for(unsigned int i=0; i<OptVecVAR.size(); i++)
     {
       f << "#"<<OptVecVAR[i] << endl << "[*,*,"<<i+1<< "]:         ";
-      for(unsigned int j=0; j<(unsigned int)GetColNum(); j++)
+      for(unsigned int j=0; j<(unsigned int)GetColNum()+2; j++)
         {
           f << j+1 << " ";
         }
       f << " := " << endl;
+
       for(unsigned int j=0; j<(unsigned int)GetRowNum(); j++)
         {
           f << endl << "              "<<j+1<<"  ";
-          for(unsigned int k=0; k<(unsigned int)GetColNum(); k++)
-            f << FindOptPos(OptVecVAR[i],j,k) <<" ";
+    
+          for(unsigned int k=0; k<(unsigned int)GetColNum()+2; k++)
+            {
+              if (k==0 || k==(unsigned int)GetColNum()+1)
+                f << "0 ";
+              else
+                {
+                  f << FindOptPos(OptVecVAR[i],j,k-1) <<" ";
+                }
+            }
         };
-        f << endl<< endl;
+      f << endl<< endl;
     }
 
   f << ";" << endl <<"end;" << endl;
@@ -360,30 +478,7 @@ void ALattice::print_data(string FileName)
       }
     else
       {
-  // cout << "param n:=" << GetColNum() <<endl;
-  // cout << "param m:=" << GetRowNum() <<endl;
-  // cout << "param q:=" << OptVecVAR.size() <<endl <<endl;
-  // cout << "param a:=" <<endl;
-  // //param m := 5;
-  // //param q := 7;
-  // for(unsigned int i=0; i<OptVecVAR.size(); i++)
-  //   {
-  //     cout << "#"<<OptVecVAR[i] << endl << "[*,*,"<<i+1<< "]:         ";
-  //     for(unsigned int j=0; j<(unsigned int)GetColNum(); j++)
-  //       {
-  //         cout << j+1 << " ";
-  //       }
-  //     cout << " := " << endl;
-  //     for(unsigned int j=0; j<(unsigned int)GetRowNum(); j++)
-  //       {
-  //         cout << endl << "              "<<j+1<<"  ";
-  //         for(unsigned int k=0; k<(unsigned int)GetColNum(); k++)
-  //           cout << FindOptPos(OptVecVAR[i],j,k) <<" ";
-  //       }
-  //       cout << endl<< endl;
-  //   }
-
-  cout << ";" << endl <<"end;" << endl;
+   cout << ";" << endl <<"end;" << endl;
       }
 }
 
