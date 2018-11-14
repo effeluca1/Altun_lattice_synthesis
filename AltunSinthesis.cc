@@ -273,13 +273,18 @@ void ALattice::optimized_vec_col(string FileName, string FileName2)
     {
       int i=0;
       int arrive= stoi(line.substr(line.find(',')+1,line.find(']')- line.find(',')-1)) -1;
-      int start= stoi(line.substr(2, line.find(',')-2).c_str()) -1;
-      cout << "AS "<<arrive<<","<< start<<endl;
-      orderOpt[arrive-1]=start-1;
+      int start = stoi(line.substr(2, line.find(',')-2).c_str()) -1;
+      cout << "AS "<<start<<","<< arrive<<endl;
+      //    orderOpt[start-1]=arrive-1;
+      orderOpt[start-1]=arrive-1;
       i++;
     }
 
+  for(unsigned int i=0; i<orderOpt.size();i++) //for each column
+        {
+          cout << "E"<< orderOpt[i]<<endl;
 
+        }
   cout << "## print optimized lattice ##" << endl;
   for(unsigned int j=0; j<Content.size();j++) //for each row
     {
