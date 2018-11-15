@@ -185,7 +185,7 @@ int main(int argc, char *argv[])
           cout << OptCommand<< endl;
           system(OptCommand);
 
-          sprintf(OptCommand,"cat %s | grep y | grep val | grep '\\= 1'>app && tail -n +2 app > app.tmp && mv app.tmp app && head -n -1 app > app.tmp && mv app.tmp app",LogFile.c_str()); // removes the first and last column that werw added to fix the linear problem mapping
+          sprintf(OptCommand,"cat %s | grep y | grep val | grep '\\= 1'>app",LogFile.c_str()); // removes the first and last column that werw added to fix the linear problem mapping
           cout << OptCommand<< endl;
           system(OptCommand);
           app.optimized_vec_col("app", inFile+".lattice"+to_string(i)+"optimized");
@@ -272,8 +272,8 @@ void ALattice::optimized_vec_col(string FileName, string FileName2)
   while( getline(f , line))
     {
       int i=0;
-      int arrive= stoi(line.substr(line.find(',')+1,line.find(']')- line.find(',')-1)) -1;
-      int start = stoi(line.substr(2, line.find(',')-2).c_str()) -1;
+      int arrive= stoi(line.substr(line.find(',')+1,line.find(']')- line.find(',')-1));
+      int start = stoi(line.substr(2, line.find(',')-2).c_str());
       cout << "AS "<<start<<","<< arrive<<endl;
       //    orderOpt[start-1]=arrive-1;
       orderOpt[start-1]=arrive-1;
@@ -281,10 +281,10 @@ void ALattice::optimized_vec_col(string FileName, string FileName2)
     }
 
   for(unsigned int i=0; i<orderOpt.size();i++) //for each column
-        {
-          cout << "E"<< orderOpt[i]<<endl;
+    {
+      cout << "E"<< orderOpt[i]<<endl;
 
-        }
+    }
   cout << "## print optimized lattice ##" << endl;
   for(unsigned int j=0; j<Content.size();j++) //for each row
     {
@@ -442,49 +442,49 @@ void ALattice::optimized_vec_col(string FileName, string FileName2)
 void ALattice::print_data(string FileName)
 {
   fstream f;
-   f.open(FileName.c_str(), ios::out);
-   bool debug=false;
-    if (!debug)
-      {
-        f << "param m:=" << GetColNum() + 2<< ";" <<endl;
-        f << "param n:=" << GetRowNum()<< ";" <<endl;
-        f << "param q:=" << OptVecVAR.size()<< ";" <<endl <<endl;
-  f << "param a:=" <<  endl;
-  //param m := 5;
-  //param q := 7;
-  for(unsigned int i=0; i<OptVecVAR.size(); i++)
+  f.open(FileName.c_str(), ios::out);
+  bool debug=false;
+  if (!debug)
     {
-      f << "#"<<OptVecVAR[i] << endl << "[*,*,"<<i+1<< "]:         ";
-      for(unsigned int j=0; j<(unsigned int)GetColNum()+2; j++)
+      f << "param m:=" << GetColNum() << ";" <<endl;
+      f << "param n:=" << GetRowNum()<< ";" <<endl;
+      f << "param q:=" << OptVecVAR.size()<< ";" <<endl <<endl;
+      f << "param a:=" <<  endl;
+      //param m := 5;
+      //param q := 7;
+      for(unsigned int i=0; i<OptVecVAR.size(); i++)
         {
-          f << j+1 << " ";
-        }
-      f << " := " << endl;
-
-      for(unsigned int j=0; j<(unsigned int)GetRowNum(); j++)
-        {
-          f << endl << "              "<<j+1<<"  ";
-    
-          for(unsigned int k=0; k<(unsigned int)GetColNum()+2; k++)
+          f << "#"<<OptVecVAR[i] << endl << "[*,*,"<<i+1<< "]:         ";
+          for(unsigned int j=0; j<(unsigned int)GetColNum(); j++)
             {
-              if (k==0 || k==(unsigned int)GetColNum()+1)
-                f << "0 ";
-              else
-                {
-                  f << FindOptPos(OptVecVAR[i],j,k-1) <<" ";
-                }
+              f << j+1 << " ";
             }
-        };
-      f << endl<< endl;
-    }
+          f << " := " << endl;
 
-  f << ";" << endl <<"end;" << endl;
-  f.close();
-      }
-    else
-      {
-   cout << ";" << endl <<"end;" << endl;
-      }
+          for(unsigned int j=0; j<(unsigned int)GetRowNum(); j++)
+            {
+              f << endl << "              "<<j+1<<"  ";
+    
+              for(unsigned int k=0; k<(unsigned int)GetColNum(); k++)
+                {
+                  // if (k==0 || k==(unsigned int)GetColNum())
+                  //   f << "0 ";
+                  // else
+                  //   {
+                  f << FindOptPos(OptVecVAR[i],j,k) <<" ";
+                  // }
+                }
+            };
+          f << endl<< endl;
+        }
+
+      f << ";" << endl <<"end;" << endl;
+      f.close();
+    }
+  else
+    {
+      cout << ";" << endl <<"end;" << endl;
+    }
 }
 
 bool ALattice::FindOptPos(string lit,int r, int c)
@@ -504,7 +504,7 @@ bool ALattice::FindOptPos(string lit,int r, int c)
 
   else
     {
-        varIN=std::to_string(Content[r][c].getLit());
+      varIN=std::to_string(Content[r][c].getLit());
     }
 
   if (varIN==lit)
@@ -514,28 +514,28 @@ bool ALattice::FindOptPos(string lit,int r, int c)
       
 }
 
- void ALattice::OptCost(string Filename)
+void ALattice::OptCost(string Filename)
 {
   string line;
   fstream f3, fo;
-   fo.open(Filename.c_str(), ios::in);
-   f3.open("ResOpt", ios::app);
-   f3 << Filename << " "<< GetColNum() << " " << GetRowNum()<< " " << OptVecVAR.size();
-   while( getline(fo , line))
-	{
-          if (line[0]=='T' && line[1]=='i' && line[2]=='m')
-             f3 << line.substr(line.find(':')+1,line.find("sec")-1-line.find(':'));
+  fo.open(Filename.c_str(), ios::in);
+  f3.open("ResOpt", ios::app);
+  f3 << Filename << " "<< GetColNum() << " " << GetRowNum()<< " " << OptVecVAR.size();
+  while( getline(fo , line))
+    {
+      if (line[0]=='T' && line[1]=='i' && line[2]=='m')
+        f3 << line.substr(line.find(':')+1,line.find("sec")-1-line.find(':'));
         
-          if (line[0]=='M' && line[1]=='e' && line[2]=='m')
-            f3 << line.substr(line.find('(')+1,line.find("by")-1-line.find('('));
+      if (line[0]=='M' && line[1]=='e' && line[2]=='m')
+        f3 << line.substr(line.find('(')+1,line.find("by")-1-line.find('('));
           
-        }
-   f3 << endl;
-   fo.close();
-   f3.close();
+    }
+  f3 << endl;
+  fo.close();
+  f3.close();
 }
 
- void ALattice::OptFindVar()
+void ALattice::OptFindVar()
 {
   //  vector<string> OptVecVar;
   for(unsigned int j=0; j<Content.size();j++) //for each row
@@ -555,9 +555,9 @@ bool ALattice::FindOptPos(string lit,int r, int c)
 
           if (pos == OptVecVAR.end())
             {
-            OptVecVAR.push_back(appStr);
-            //   cout << appStr<<"q";
-            //cout << OptVecVar[OptVecVar.size()-1]<<endl;
+              OptVecVAR.push_back(appStr);
+              //   cout << appStr<<"q";
+              //cout << OptVecVar[OptVecVar.size()-1]<<endl;
             }
           //          else
           //  std::cout << "Element not found in myvector\n";
@@ -601,12 +601,12 @@ void ALattice::SetDimension(int c, int r)
 
 int ALattice::GetColNum()
 {
-return dimension[0];
+  return dimension[0];
 }
 
 int ALattice::GetRowNum()
 {
-return dimension[1];
+  return dimension[1];
 }
 
 
@@ -692,15 +692,15 @@ void ALattice::read_synth_file(string InFileName, int NumOut, int NumIn, bool tr
 		    {
 		      equation_dual.push_back(minterm);
                       //for(unsigned int t=0; t < minterm.size(); t++) 
-                        //   cout <<"D"<< minterm[t].getLit();
-                        //cout << endl;
+                      //   cout <<"D"<< minterm[t].getLit();
+                      //cout << endl;
 		    }
 		  else
 		    {
 		      equation.push_back(minterm);
                       //for(unsigned int t=0; t < minterm.size(); t++)
-                        // cout <<"L"<< minterm[t].getLit();
-                        //cout << endl;
+                      // cout <<"L"<< minterm[t].getLit();
+                      //cout << endl;
 		    }
 		}
 	    }
@@ -746,7 +746,7 @@ void ALattice::BuildLattice_multi()
     }
   //  cout << equation_dual.size()<<endl;
   // SetDimension(equation_dual.size(),equation.size());
-   SetDimension(equation.size(),equation_dual.size());
+  SetDimension(equation.size(),equation_dual.size());
 }
 
 AElement ALattice::FindCommonLiteral(vector<AElement> term, vector<AElement> termD)
