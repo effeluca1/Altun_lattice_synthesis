@@ -197,7 +197,27 @@ int main(int argc, char *argv[])
           cout <<"EEE"<< GLPKoutput.c_str() ;
           app.OptCost(LogFile.c_str());
 
-         
+          // ---plot results------------------------
+          string ResOptCol="ResOptCol";
+          char* NAMEappCol;
+         NAMEappCol = (char*)malloc(sizeof(char)*512);
+          fstream f3, fo;
+          fo.open(LogFile.c_str(), ios::in);
+          f3.open(ResOptCol, ios::app);
+          f3 << inFile <<i<< " "   << app.GetRowNum()<< " " << app.GetColNum() << " ";
+
+          while( getline(fo , line))
+            {
+
+              if (line[0]=='T' && line[1]=='i' && line[2]=='m')
+                {
+                  
+                f3 << line.substr(line.find(':')+1,line.find("sec")-1-line.find(':'))<<endl;
+                }
+            }     
+          // ---------------------------------------
+
+          
           cout << "##########  ############  ############"<< endl;
         }
 
@@ -627,7 +647,7 @@ bool ALattice::FindOptPos(string lit,int r, int c)
 void ALattice::OptCost(string Filename)
 {
   string line,ResOpt;
-  ResOpt="ResOpt"+Filename;
+  ResOpt="ResOpt";
   fstream f3, fo;
   fo.open(Filename.c_str(), ios::in);
   f3.open(ResOpt, ios::app);
