@@ -203,7 +203,7 @@ int main(int argc, char *argv[])
          NAMEappCol = (char*)malloc(sizeof(char)*512);
           fstream f3, fo;
           fo.open(LogFile.c_str(), ios::in);
-          f3.open(ResOptCol, ios::app);
+          f3.open(ResOptCol.c_str(), ios::app|ios::out);
           f3 << inFile <<i<< " "   << app.GetRowNum()<< " " << app.GetColNum() << " ";
 
           while( getline(fo , line))
@@ -650,7 +650,7 @@ void ALattice::OptCost(string Filename)
   ResOpt="ResOpt";
   fstream f3, fo;
   fo.open(Filename.c_str(), ios::in);
-  f3.open(ResOpt, ios::app);
+  f3.open(ResOpt, ios::app|ios::out);
   f3 << Filename << " "<< GetColNum() << " " << GetRowNum()<< " " << OptVecVAR.size();
   while( getline(fo , line))
     {
