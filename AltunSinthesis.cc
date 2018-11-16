@@ -245,6 +245,26 @@ int main(int argc, char *argv[])
           cout <<"EEE"<< GLPKoutput.c_str() ;
           app.OptCost(LogFile.c_str());
 
+          // ---plot results------------------------
+          string ResOptRow="ResOptRow";
+          char* NAMEappRow;
+         NAMEappRow = (char*)malloc(sizeof(char)*512);
+          fstream f3, fo;
+          fo.open(LogFile.c_str(), ios::in);
+          f3.open(ResOptRow.c_str(), ios::app|ios::out);
+          f3 << inFile <<i<< " "   << app.GetRowNum()<< " " << app.GetRowNum() << " ";
+
+          while( getline(fo , line))
+            {
+
+              if (line[0]=='T' && line[1]=='i' && line[2]=='m')
+                {
+                  
+                f3 << line.substr(line.find(':')+1,line.find("sec")-1-line.find(':'))<<endl;
+                }
+            }     
+          // ---------------------------------------
+
          
           cout << "##########  ############  ############"<< endl;
         }
