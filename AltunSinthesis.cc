@@ -189,7 +189,7 @@ int main(int argc, char *argv[])
           cout << OptCommand<< endl;
           system(OptCommand);
 
-          sprintf(OptCommand,"cat %s | grep y | grep val | grep '\\= 1'>app%s",LogFile.c_str(),inFile); // removes the first and last column that werw added to fix the linear problem mapping
+          sprintf(OptCommand,"cat %s | grep y | grep val | grep '\\= 1'>app%s",LogFile.c_str(),inFile.c_str()); // removes the first and last column that werw added to fix the linear problem mapping
           cout << OptCommand<< endl;
           system(OptCommand);
           app.optimized_vec_col("app"+inFile, inFile+".lattice"+to_string(i)+"optimizedRow");
@@ -217,7 +217,7 @@ int main(int argc, char *argv[])
           cout << OptCommand<< endl;
           system(OptCommand);
 
-          sprintf(OptCommand,"cat %s | grep y | grep val | grep '\\= 1'>app%s",LogFile.c_str(),inFile); // removes the first and last column that werw added to fix the linear problem mapping
+          sprintf(OptCommand,"cat %s | grep y | grep val | grep '\\= 1'>app%s",LogFile.c_str(),inFile.c_str()); // removes the first and last column that werw added to fix the linear problem mapping
           cout << OptCommand<< endl;
           system(OptCommand);
           app.optimized_vec_row("app"+inFile, inFile+".lattice"+to_string(i)+"optimizedCol");
@@ -627,7 +627,7 @@ bool ALattice::FindOptPos(string lit,int r, int c)
 void ALattice::OptCost(string Filename)
 {
   string line,ResOpt;
-  ResOpt="ResOpt"+inFile;
+  ResOpt="ResOpt"+Filename;
   fstream f3, fo;
   fo.open(Filename.c_str(), ios::in);
   f3.open(ResOpt, ios::app);
