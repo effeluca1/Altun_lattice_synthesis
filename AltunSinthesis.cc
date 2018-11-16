@@ -106,15 +106,16 @@ int main(int argc, char *argv[])
   Command = (char*)malloc(sizeof(char)*512);
 
   // Synthesis of function
-  sprintf(Command,"./espresso -Dexact -Dso %s > f.eq", inFile.c_str()); 
+  sprintf(Command,"./espresso -Dexact -Dso %s > %sf.eq", inFile.c_str(),inFile.c_str()); 
   system(Command);
   cout << Command << endl;
   // compute the dual function
   // OLD  dual(inFile, inFile+"_dual");
-  dual("f.eq", inFile+"_dual");
+  string Feq = inFile+"f.eq";
+  dual(Feq, inFile+"_dual");
 
   // Synthesis of the dual function
-  sprintf(Command,"./espresso -Dexact -Dso -epos %s > f_dual.eq", (inFile+"_dual").c_str());
+  sprintf(Command,"./espresso -Dexact -Dso -epos %s > %sf_dual.eq", (inFile+"_dual").c_str(),inFile.c_str());
   system(Command);
   cout << Command << endl<<endl;
 
@@ -144,8 +145,8 @@ int main(int argc, char *argv[])
     {
       ALattice app;
       app.setNumOut(i); 
-      app.read_synth_file("f.eq", i , inputNum , false);
-      app.read_synth_file("f_dual.eq", i , inputNum , true);
+      app.read_synth_file(inFile+"f.eq", i , inputNum , false);
+      app.read_synth_file(inFile+"f_dual.eq", i , inputNum , true);
       app.print_equations();
       
       if (MultiUnary == "-m")
@@ -188,10 +189,10 @@ int main(int argc, char *argv[])
           cout << OptCommand<< endl;
           system(OptCommand);
 
-          sprintf(OptCommand,"cat %s | grep y | grep val | grep '\\= 1'>app",LogFile.c_str()); // removes the first and last column that werw added to fix the linear problem mapping
+          sprintf(OptCommand,"cat %s | grep y | grep val | grep '\\= 1'>app%s",LogFile.c_str(),inFile); // removes the first and last column that werw added to fix the linear problem mapping
           cout << OptCommand<< endl;
           system(OptCommand);
-          app.optimized_vec_col("app", inFile+".lattice"+to_string(i)+"optimizedRow");
+          app.optimized_vec_col("app"+inFile, inFile+".lattice"+to_string(i)+"optimizedRow");
 
           cout <<"EEE"<< GLPKoutput.c_str() ;
           app.OptCost(LogFile.c_str());
@@ -216,10 +217,10 @@ int main(int argc, char *argv[])
           cout << OptCommand<< endl;
           system(OptCommand);
 
-          sprintf(OptCommand,"cat %s | grep y | grep val | grep '\\= 1'>app",LogFile.c_str()); // removes the first and last column that werw added to fix the linear problem mapping
+          sprintf(OptCommand,"cat %s | grep y | grep val | grep '\\= 1'>app%s",LogFile.c_str(),inFile); // removes the first and last column that werw added to fix the linear problem mapping
           cout << OptCommand<< endl;
           system(OptCommand);
-          app.optimized_vec_row("app", inFile+".lattice"+to_string(i)+"optimizedCol");
+          app.optimized_vec_row("app"+inFile, inFile+".lattice"+to_string(i)+"optimizedCol");
 
           cout <<"EEE"<< GLPKoutput.c_str() ;
           app.OptCost(LogFile.c_str());
@@ -625,10 +626,11 @@ bool ALattice::FindOptPos(string lit,int r, int c)
 
 void ALattice::OptCost(string Filename)
 {
-  string line;
+  string line,ResOpt;
+  ResOpt="ResOpt"+inFile;
   fstream f3, fo;
   fo.open(Filename.c_str(), ios::in);
-  f3.open("ResOpt", ios::app);
+  f3.open(ResOpt, ios::app);
   f3 << Filename << " "<< GetColNum() << " " << GetRowNum()<< " " << OptVecVAR.size();
   while( getline(fo , line))
     {
