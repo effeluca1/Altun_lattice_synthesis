@@ -212,9 +212,10 @@ int main(int argc, char *argv[])
               if (line[0]=='T' && line[1]=='i' && line[2]=='m')
                 {
                   
-                f3 << line.substr(line.find(':')+1,line.find("sec")-1-line.find(':'))<<endl;
+                f3 << line.substr(line.find(':')+1,line.find("sec")-1-line.find(':'));
                 }
-            }     
+            }
+          f3<<endl;
           // ---------------------------------------
 
           
