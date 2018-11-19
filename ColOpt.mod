@@ -13,7 +13,7 @@ param a{i in I , j in J , k in K};
 #VARS
 var y{j in J , l in J} binary; 
 var z{i in I , j in J , k in K} binary;
-var min_zj_zv{i in I, j in J, v in J, k in K} ;
+var min_zj_zv{i in I, j in J, v in J, k in K} binary ;
 
 #OBJ
 #come definisco coppie u,v wrt i.... 
@@ -40,3 +40,4 @@ solve;
 display y;
 #display x;
 #display R;
+end;

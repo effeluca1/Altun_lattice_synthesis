@@ -56,6 +56,7 @@ public:
   bool FindOptPos(string lit,int r, int c);
   void Recompose_optimized(string FileName);
   void optimized_vec_col(string FileName, string FileName2);
+  void optimized_vec_col_row(string FileName, string FileName2,string FileName3);
   void optimized_vec_row(string FileName, string FileName2);
   void OptCost(string Filename);
 
@@ -80,7 +81,8 @@ void dual( string inFile, string outFile);
 
 int main(int argc, char *argv[])
 {
-  cout << "usage -m is for multi variables -u for unary -OptCol to optimize columns --only with -u (needs GLPK)" << endl;
+
+  printf( "usage:\n-m\t multi variables(per cell) \n-u\t  unary cells  \n-OptCol\t  optimize column \n-OptRow\t  optimize rows \n-OptCol and -OptRow works only with -u (needs GLPK)\n\n\n");
   (void)argc;
   fstream inputfile;
   string inFile(argv[1]);
@@ -90,8 +92,9 @@ int main(int argc, char *argv[])
   cout << argc;
   if (argc > 4) {
     string OptStr(argv[4]);
+    string OptStr2(argv[5]);
     if (OptStr=="-OptCol") OPTcol=true;
-    if (OptStr=="-OptRow") OPTrow=true; // bisogna fare un ponte per farle tutte e due o un disable della sintesi per fare solo ordinamento
+    if (OptStr2=="-OptRow") OPTrow=true; // bisogna fare un ponte per farle tutte e due o un disable della sintesi per fare solo ordinamento
   }
   string line;
 
@@ -189,12 +192,12 @@ int main(int argc, char *argv[])
           cout << OptCommand<< endl;
           system(OptCommand);
 
-          sprintf(OptCommand,"cat %s | grep y | grep val | grep '\\= 1'>app%s",LogFile.c_str(),inFile.c_str()); // removes the first and last column that werw added to fix the linear problem mapping
+          sprintf(OptCommand,"cat %s | grep y | grep val | grep '\\= 1'>app%sCol",LogFile.c_str(),inFile.c_str()); // removes the first and last column that werw added to fix the linear problem mapping
           cout << OptCommand<< endl;
           system(OptCommand);
-          app.optimized_vec_col("app"+inFile, inFile+".lattice"+to_string(i)+"optimizedRow");
+          app.optimized_vec_col("app"+inFile+"Col", inFile+".lattice"+to_string(i)+"optimizedCol");
 
-          cout <<"EEE"<< GLPKoutput.c_str() ;
+          ///  cout <<"EEE"<< GLPKoutput.c_str() ;
           app.OptCost(LogFile.c_str());
 
           // ---plot results------------------------
@@ -238,12 +241,12 @@ int main(int argc, char *argv[])
           cout << OptCommand<< endl;
           system(OptCommand);
 
-          sprintf(OptCommand,"cat %s | grep y | grep val | grep '\\= 1'>app%s",LogFile.c_str(),inFile.c_str()); // removes the first and last column that werw added to fix the linear problem mapping
+          sprintf(OptCommand,"cat %s | grep y | grep val | grep '\\= 1'>app%sRow",LogFile.c_str(),inFile.c_str()); // removes the first and last column that werw added to fix the linear problem mapping
           cout << OptCommand<< endl;
           system(OptCommand);
-          app.optimized_vec_row("app"+inFile, inFile+".lattice"+to_string(i)+"optimizedCol");
+          app.optimized_vec_row("app"+inFile+"Row", inFile+".lattice"+to_string(i)+"optimizedRow");
 
-          cout <<"EEE"<< GLPKoutput.c_str() ;
+          // cout <<"EEE"<< GLPKoutput.c_str() ;
           app.OptCost(LogFile.c_str());
 
           // ---plot results------------------------
@@ -269,6 +272,12 @@ int main(int argc, char *argv[])
          
           cout << "##########  ############  ############"<< endl;
         }
+
+       if (OPTrow==true && OPTcol==true)
+         {
+           cout << "########## ROW & COLUMN  OPTIMIZATION!  ############"<< endl;
+           app.optimized_vec_col_row("app"+inFile+"Col", inFile+".lattice"+to_string(i)+"optimizedRowCol","app"+inFile+"Row");
+         }
       
     }
   return 0;
@@ -327,6 +336,108 @@ void dual( string inFile, string outFile) // compute the input for the synthesis
 
 // }
 
+
+void ALattice::optimized_vec_col_row(string FileName, string FileName2, string FileName3)
+{
+  fstream f,fR;
+  string line;
+  vector<int> orderOptC, orderOptR;
+  f.open(FileName.c_str(), ios::in);
+  fR.open(FileName3.c_str(), ios::in);
+  while( getline(f , line))
+    {
+      orderOptC.push_back(0);
+    }
+  f.close();
+
+    while( getline(fR , line))
+    {
+      orderOptR.push_back(0);
+    }
+  fR.close();
+
+  
+  f.open(FileName.c_str(), ios::in);
+    fR.open(FileName3.c_str(), ios::in);
+  while( getline(f , line))
+    {
+      int i=0;
+      int arrive= stoi(line.substr(line.find(',')+1,line.find(']')- line.find(',')-1));
+      int start = stoi(line.substr(2, line.find(',')-2).c_str());
+      cout << "ASC "<<start<<","<< arrive<<endl;
+      //    orderOptC[start-1]=arrive-1;
+      orderOptC[start-1]=arrive-1;
+      i++;
+    }
+    f.close();
+  cout <<FileName3<< "ASR ";
+    while( getline(fR , line))
+    {
+    int i=0;
+      int arrive= stoi(line.substr(line.find(',')+1,line.find(']')- line.find(',')-1));
+      int start = stoi(line.substr(2, line.find(',')-2).c_str());
+      cout << "ASR "<<start<<","<< arrive<<endl;
+      //    orderOpt[start-1]=arrive-1;
+      orderOptR[start-1]=arrive-1;
+      i++;
+    }
+  fR.close();
+  for(unsigned int i=0; i<orderOptC.size();i++) //for each column
+    {
+      cout << "EC"<< orderOptC[i]<<endl;
+
+    }
+    for(unsigned int i=0; i<orderOptR.size();i++) //for each column
+    {
+      cout << "ER"<< orderOptR[i]<<endl;
+
+    }
+  cout << "## print optimized lattice ##" << endl;
+  for(unsigned int j=0; j<Content.size();j++) //for each row
+    {
+      for(unsigned int i=0; i<Content[j].size();i++) //for each column
+        {
+	 
+          if (i!=0) cout << " | ";
+          if(!Content[orderOptR[j]][orderOptC[i]].getSign())
+            cout << "-";
+          else
+            cout << " ";
+          cout << Content[orderOptR[j]][orderOptC[i]].getLit();
+        }
+      cout<<endl;
+    }
+  cout<<endl<<endl;
+  
+
+  //string FileName2=FileName + "optimized";
+  cout<< FileName2;
+  fstream f2;
+  f2.open(FileName2.c_str(), ios::out);
+
+  for(unsigned int j=0; j<Content.size();j++) //for each row
+    {
+            for(unsigned int i=0; i<Content[j].size();i++) //for each column
+        {
+	 
+          if (i!=0) f2 << " | ";
+          if(!Content[orderOptR[j]][orderOptC[i]].getSign())
+            f2 << "-";
+          else
+            f2 << " ";
+          f2 << Content[orderOptR[j]][orderOptC[i]].getLit();
+        }
+      f2<<endl;
+    }
+  
+
+
+
+  f2.close();
+  cout<<"##"<<endl<<endl;
+}
+
+
 void ALattice::optimized_vec_row(string FileName, string FileName2)
 {
   fstream f;
@@ -347,7 +458,7 @@ void ALattice::optimized_vec_row(string FileName, string FileName2)
       int i=0;
       int arrive= stoi(line.substr(line.find(',')+1,line.find(']')- line.find(',')-1));
       int start = stoi(line.substr(2, line.find(',')-2).c_str());
-      cout << "AS "<<start<<","<< arrive<<endl;
+      cout << "ASR "<<start<<","<< arrive<<endl;
       //    orderOpt[start-1]=arrive-1;
       orderOpt[start-1]=arrive-1;
       i++;
@@ -404,6 +515,8 @@ void ALattice::optimized_vec_row(string FileName, string FileName2)
 }
 
 
+
+
 void ALattice::optimized_vec_col(string FileName, string FileName2)
 {
   fstream f;
@@ -424,7 +537,7 @@ void ALattice::optimized_vec_col(string FileName, string FileName2)
       int i=0;
       int arrive= stoi(line.substr(line.find(',')+1,line.find(']')- line.find(',')-1));
       int start = stoi(line.substr(2, line.find(',')-2).c_str());
-      cout << "AS "<<start<<","<< arrive<<endl;
+      cout << "ASC "<<start<<","<< arrive<<endl;
       //    orderOpt[start-1]=arrive-1;
       orderOpt[start-1]=arrive-1;
       i++;

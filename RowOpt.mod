@@ -13,7 +13,7 @@ param a{i in I , j in J , k in K};
 #VARS
 var y{i in I , l in I} binary; 
 var z{i in I , j in J , k in K} binary;
-var min_zj_zv{i in I, j in J, v in I, k in K} ;
+var min_zj_zv{i in I, j in J, v in I, k in K} binary ;
 
 #OBJ
 
@@ -67,5 +67,5 @@ display y;
 #
 ##printf{ i in I, j in J,v in I: abs(v-j)=1}:'a4jv %1s %1s %1s %1s %3s %3s\n',4,i,j,v,  a[i, j, 4],   a[i, v, 4];
 #
-#end;
+end;
 #
