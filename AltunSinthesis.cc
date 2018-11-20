@@ -23,8 +23,7 @@ private:
   string Name;                  // name of the lattice
   vector< vector<AElement> > Content; // vector osf all elements (Column x Row)
   vector< vector< vector <AElement> > > ContentMulti; // vector osf all elements (Column x Row)
-  vector<string> OptVecVAR; // vecotr of all the variables for optimization
-  int dimension[2];             // Col Row dimensions
+   int dimension[2];             // Col Row dimensions
   int NumVar;                   // Number of literals
   int NumOut;                   // Number of outputs
  
@@ -35,6 +34,7 @@ private:
   
 public:
   //int OptFindVar();
+ vector<string> OptVecVAR; // vecotr of all the variables for optimization
   void setNumVar(int num);
   void setNumOut(int);
   int getNumVar();
@@ -188,7 +188,7 @@ int main(int argc, char *argv[])
           app.print_data(Datafile);
           char* OptCommand;
           OptCommand = (char*)malloc(sizeof(char)*512);
-          sprintf(OptCommand,"glpsol  --memlim 12000 --model ColOpt.mod  --data %s --output %s > %s", Datafile.c_str(),GLPKoutput.c_str(),LogFile.c_str());
+          sprintf(OptCommand,"glpsol --tmlim 3600 --memlim 8000 --model ColOpt.mod  --data %s --output %s > %s", Datafile.c_str(),GLPKoutput.c_str(),LogFile.c_str());
           cout << OptCommand<< endl;
           system(OptCommand);
 
@@ -207,25 +207,30 @@ int main(int argc, char *argv[])
           fstream f3, fo;
           fo.open(LogFile.c_str(), ios::in);
           f3.open(ResOptCol.c_str(), ios::app|ios::out);
-          f3 << inFile <<i<< " "   << app.GetRowNum()<< " " << app.GetColNum() << " ";
+          f3 << inFile <<i<< " "   << app.GetRowNum()<< " " << app.GetColNum() << " "<< app.OptVecVAR.size() <<" ";
 
+          string COLstring, GAPcol;
           while( getline(fo , line))
             {
-
+   
               if (line[0]=='T' && line[1]=='i' && line[2]=='m')
-                {
-                  
-                f3 << line.substr(line.find(':')+1,line.find("sec")-1-line.find(':'));
-                }
+                       COLstring=line.substr(line.find(':')+1,line.find("sec")-1-line.find(':')) ;
+
+              if (line[0]=='+' && line.find('%') != std::string::npos)
+                    GAPcol=line.substr(line.find('%')-5,5)  ;     // + 28822: mip =   1.300000000e+02 <=   2.380000000e+02  83.1% (205W
+         
+              
             }
-          f3<<endl;
+          f3 << COLstring << " " << GAPcol<< endl;
+          cout <<" GAP"<< COLstring << " " << GAPcol<< endl;
+          f3.close();
           // ---------------------------------------
 
           
           cout << "##########  ############  ############"<< endl;
         }
 
-
+      cout<<"OPTTTT" << OPTrow<< endl;
        if (OPTrow==true)
         {
           cout << "########## ROW  OPTIMIZATION!  ############"<< endl;
@@ -237,7 +242,7 @@ int main(int argc, char *argv[])
           app.print_data(Datafile);
           char* OptCommand;
           OptCommand = (char*)malloc(sizeof(char)*512);
-          sprintf(OptCommand,"glpsol  --memlim 12000 --model RowOpt.mod  --data %s --output %s > %s", Datafile.c_str(),GLPKoutput.c_str(),LogFile.c_str());
+          sprintf(OptCommand,"glpsol  --tmlim 120 --memlim 8000 --model RowOpt.mod  --data %s --output %s > %s", Datafile.c_str(),GLPKoutput.c_str(),LogFile.c_str());
           cout << OptCommand<< endl;
           system(OptCommand);
 
@@ -256,23 +261,29 @@ int main(int argc, char *argv[])
           fstream f3, fo;
           fo.open(LogFile.c_str(), ios::in);
           f3.open(ResOptRow.c_str(), ios::app|ios::out);
-          f3 << inFile <<i<< " "   << app.GetRowNum()<< " " << app.GetRowNum() << " ";
+          f3 << inFile <<i<< " "   << app.GetRowNum()<< " " << app.GetRowNum() << " "<< app.OptVecVAR.size() <<" ";
 
+          string ROWstring, GAProw;
           while( getline(fo , line))
             {
-
               if (line[0]=='T' && line[1]=='i' && line[2]=='m')
-                {
-                  
-                f3 << line.substr(line.find(':')+1,line.find("sec")-1-line.find(':'))<<endl;
-                }
-            }     
+                       ROWstring=line.substr(line.find(':')+1,line.find("sec")-1-line.find(':')) ;
+
+              if (line[0]=='+' && line.find('%') != std::string::npos)
+                    GAProw=line.substr(line.find_last_of('%')-5,5)  ;     // + 28822: mip =   1.300000000e+02 <=   2.380000000e+02  83.1% (205W
+         
+              
+            }
+          f3 << ROWstring << " " << GAProw<< endl;
+          f3.close();
+         
+
           // ---------------------------------------
 
          
           cout << "##########  ############  ############"<< endl;
         }
-
+       cout << "##" << endl;
        if (OPTrow==true && OPTcol==true)
          {
            cout << "########## ROW & COLUMN  OPTIMIZATION!  ############"<< endl;
