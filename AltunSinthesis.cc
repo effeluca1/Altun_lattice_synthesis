@@ -242,7 +242,7 @@ int main(int argc, char *argv[])
           app.print_data(Datafile);
           char* OptCommand;
           OptCommand = (char*)malloc(sizeof(char)*512);
-          sprintf(OptCommand,"glpsol  --tmlim 120 --memlim 8000 --model RowOpt.mod  --data %s --output %s > %s", Datafile.c_str(),GLPKoutput.c_str(),LogFile.c_str());
+          sprintf(OptCommand,"glpsol  --tmlim 3600 --memlim 8000 --model RowOpt.mod  --data %s --output %s > %s", Datafile.c_str(),GLPKoutput.c_str(),LogFile.c_str());
           cout << OptCommand<< endl;
           system(OptCommand);
 
