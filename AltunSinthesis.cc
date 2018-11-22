@@ -171,7 +171,7 @@ int main(int argc, char *argv[])
           lattices.push_back(app);
 
           app.OptLiterals();
-          app.PrintLattice();
+          app.PrintLatticeOpt();
         }
       else
         {
