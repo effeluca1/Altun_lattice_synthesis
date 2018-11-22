@@ -23,7 +23,8 @@ private:
   string Name;                  // name of the lattice
   vector< vector<AElement> > Content; // vector osf all elements (Column x Row)
   vector< vector< vector <AElement> > > ContentMulti; // vector osf all elements (Column x Row)
-   int dimension[2];             // Col Row dimensions
+  vector< vector<AElement> > ContentOpt; // vector osf all elements (Column x Row)
+  int dimension[2];             // Col Row dimensions
   int NumVar;                   // Number of literals
   int NumOut;                   // Number of outputs
  
@@ -59,7 +60,9 @@ public:
   void optimized_vec_col_row(string FileName, string FileName2,string FileName3);
   void optimized_vec_row(string FileName, string FileName2);
   void OptCost(string Filename);
-
+  void OptLiterals();
+  AElement OptimizeMultiValue(unsigned int J, unsigned int I);
+  void PrintLatticeOpt();
 };
 
 class AElement
@@ -73,6 +76,10 @@ public:
   bool getSign() {return sign;}
   void setLit(int num) {lit=num;}
   void setSign(bool val) {sign=val;}
+  bool operator ==(const AElement& d)  {
+    if (lit == d.lit && sign == d.sign) return true;
+    else return false;
+  }
 };
 
 // function prototype declaration
@@ -162,6 +169,9 @@ int main(int argc, char *argv[])
           
           app.Print2File_multi(inFile+".lattice"+i_str.str());
           lattices.push_back(app);
+
+          app.OptLiterals();
+          app.PrintLattice();
         }
       else
         {
@@ -296,6 +306,122 @@ int main(int argc, char *argv[])
 
 
 // ***FUNCTIONS***
+
+void ALattice::OptLiterals()
+{
+  int MultiMap[ContentMulti.size()][ContentMulti[0].size()];
+
+  for(unsigned int j=0; j<ContentMulti.size();j++) //for each row
+    {
+      for(unsigned int i=0; i<ContentMulti[j].size();i++) //for each column
+        {
+          if (ContentMulti[j][i].size()==1)
+            MultiMap[j][i]=1;
+          else
+            MultiMap[j][i]=0;
+        }
+    }
+
+    for(unsigned int j=0; j<ContentMulti.size();j++) //for each row
+    {
+      for(unsigned int i=0; i<ContentMulti[j].size();i++) //for each column
+        {
+          if (ContentMulti[j][i].size()==1)
+            ContentOpt[j][i]=ContentMulti[j][i][0];
+          else
+            ContentOpt[j][i]=OptimizeMultiValue(j,i);
+        }
+    }
+
+
+  
+}
+
+AElement ALattice::OptimizeMultiValue(unsigned int J, unsigned int I)
+{
+  //vector<int> NumOccurrU(ContentMulti[J][I].size(), 0);
+  //vector<int> NumOccurrM(ContentMulti[J][I].size(), 0);
+
+  int  NumOccurrU[ContentMulti[J][I].size()];
+  int  NumOccurrM[ContentMulti[J][I].size()];
+  int  NumOccurrUsorted[ContentMulti[J][I].size()];
+  int  NumOccurrMsorted[ContentMulti[J][I].size()];
+
+  for (unsigned int e=0; e < ContentMulti[J][I].size(); e++ )
+    {
+      NumOccurrU[e]=0;
+      NumOccurrM[e]=0;
+    }
+  // int NumCells;
+
+  for (unsigned int k=0 ; k<ContentMulti[J][I].size(); k++) // check Fixed literals
+    {
+      if (ContentMulti[J][I+1].size()==1  && I<ContentMulti[J].size()-1 ) // if is unary and not in  dx column
+        {
+          if (ContentMulti[J][I+1][0] == ContentMulti[J][I][k])
+            NumOccurrU[k]++;
+        }
+      else if  (ContentMulti[J][I+1].size()>1  && I<ContentMulti[J].size()-1 )
+        {
+          if  (find (ContentMulti[J][I+1].begin(), ContentMulti[J][I+1].end(), ContentMulti[J][I][k])  != ContentMulti[J][I+1].end() )
+            NumOccurrM[k]++;
+        }
+               
+      if (ContentMulti[J+1][I].size()==1 && J<ContentMulti.size()-1 ) // if is unary and not in  bottom row
+        {
+          if (ContentMulti[J+1][I][0] == ContentMulti[J][I][k])
+            NumOccurrU[k]++;
+        }
+      else if  (ContentMulti[J+1][I].size()>1  && J<ContentMulti.size()-1 )
+        {
+          if  (find (ContentMulti[J+1][I].begin(), ContentMulti[J+1][I].end(), ContentMulti[J][I][k])  != ContentMulti[J+1][I].end() )
+            NumOccurrM[k]++;
+        }
+      
+      if (ContentMulti[J-1][I].size()==1 && I>0) // if is unary and not in left column
+        {
+          if (ContentMulti[J-1][I][0] == ContentMulti[J][I][k])
+            NumOccurrU[k]++;
+        }
+      else if  (ContentMulti[J-1][I].size()>1  && I>0 )
+        {
+          if  (find (ContentMulti[J-1][I].begin(), ContentMulti[J-1][I].end(), ContentMulti[J][I][k])  != ContentMulti[J-1][I].end() )
+            NumOccurrM[k]++;
+        }
+      
+      if (ContentMulti[J][I-1].size()==1  && J>0 ) // if is unary and not in top row
+        {
+          if (ContentMulti[J][I-1][0] == ContentMulti[J][I][k])
+            NumOccurrU[k]++;
+        }
+      else if  (ContentMulti[J][I-1].size()>1  && J>0 )
+        {
+          if  (find (ContentMulti[J][I-1].begin(), ContentMulti[J][I-1].end(), ContentMulti[J][I][k])  != ContentMulti[J][I-1].end() )
+            NumOccurrM[k]++;
+        }
+    }
+
+ for (unsigned int e=0; e < ContentMulti[J][I].size(); e++ )
+    {
+      NumOccurrUsorted[e] = NumOccurrU[e];
+      NumOccurrMsorted[e] = NumOccurrM[e];
+    }
+ 
+     sort(NumOccurrUsorted, NumOccurrUsorted + ContentMulti[J][I].size());
+     sort(NumOccurrMsorted, NumOccurrMsorted + ContentMulti[J][I].size());
+
+
+     if (NumOccurrUsorted[ContentMulti[J][I].size()]-1 > NumOccurrUsorted[ContentMulti[J][I].size()-2])
+       {
+        for (unsigned int e=0; e < ContentMulti[J][I].size(); e++ )
+          {
+            if (NumOccurrUsorted[ContentMulti[J][I].size()]-1 == NumOccurrU[e] )
+              return ContentMulti[J][I][e];
+          }
+       }
+}
+     
+
 void dual( string inFile, string outFile) // compute the input for the synthesis of the dual function
 {
   string line;
@@ -485,7 +611,6 @@ void ALattice::optimized_vec_row(string FileName, string FileName2)
     {
       for(unsigned int i=0; i<Content[j].size();i++) //for each column
         {
-	 
           if (i!=0) cout << " | ";
           if(!Content[orderOpt[j]][i].getSign())
             cout << "-";
@@ -564,7 +689,6 @@ void ALattice::optimized_vec_col(string FileName, string FileName2)
     {
       for(unsigned int i=0; i<Content[j].size();i++) //for each column
         {
-	 
           if (i!=0) cout << " | ";
           if(!Content[j][orderOpt[i]].getSign())
             cout << "-";
@@ -602,116 +726,6 @@ void ALattice::optimized_vec_col(string FileName, string FileName2)
 }
 
 
-
-// void ALattice::optimized_vec_(string FileName, string FileName2)
-// {
-//   fstream f;
-//   string line;
-//   vector<int> orderOpt;
-//   f.open(FileName.c_str(), ios::in);
-//   while( getline(f , line))
-//     {
-//       orderOpt.push_back(0);
-//     }
-//   f.close();
-      
-//   f.open(FileName.c_str(), ios::in);
-//   while( getline(f , line))
-//     {
-//       int i=0;
-//       int arrive= stoi(line.substr(line.find(',')+1,line.find(']')- line.find(',')-1));
-//       int start= stoi(line.substr(2, line.find(',')-2).c_str());
-//       cout << arrive<<","<< start<<endl;
-//       orderOpt[arrive-1]=start-1;
-//       i++;
-//     }
-
-
-//   cout << "## print optimized lattice ##" << endl;
-//   for(unsigned int j=0; j<Content.size();j++) //for each row
-//     {
-//       for(unsigned int i=0; i<Content[j].size();i++) //for each column
-//         {
-	 
-//           if (i!=0) cout << " | ";
-//           if(!Content[j][orderOpt[i]].getSign())
-//             cout << "-";
-//           else
-//             cout << " ";
-//           cout << Content[j][orderOpt[i]].getLit();
-//         }
-//       cout<<endl;
-//     }
-//   cout<<endl<<endl;
-  
-
-//   //string FileName2=FileName + "optimized";
-//   cout<< FileName2;
-//   fstream f2;
-//   f2.open(FileName2.c_str(), ios::out);
-
-//   for(unsigned int j=0; j<Content.size();j++) //for each row
-//     {
-//       for(unsigned int i=0; i<Content[j].size();i++) //for each column
-//         {
-	 
-//           if (i!=0) f2 << " | ";
-//           if(!Content[j][orderOpt[i]].getSign())
-//             f2 << "-";
-//           else
-//             f2 << " ";
-//           f2 << Content[j][orderOpt[i]].getLit();
-//         }
-//       f2<<endl;
-//     }
-
-//   f2.close();
-//   cout<<"##"<<endl<<endl;
-
-  
-
-// }
-
-
-
-// void ALattice::print_data(string FileName)
-// {
-//   fstream f;
-//    f.open(FileName.c_str(), ios::out);
-//    bool debug=false;
-//     if (!debug)
-//       {
-//         f << "param m:=" << GetColNum()<< ";" <<endl;
-//         f << "param n:=" << GetRowNum()<< ";" <<endl;
-//         f << "param q:=" << OptVecVAR.size()<< ";" <<endl <<endl;
-//   f << "param a:=" <<  endl;
-//   //param m := 5;
-//   //param q := 7;
-//   for(unsigned int i=0; i<OptVecVAR.size(); i++)
-//     {
-//       f << "#"<<OptVecVAR[i] << endl << "[*,*,"<<i+1<< "]:         ";
-//       for(unsigned int j=0; j<(unsigned int)GetColNum(); j++)
-//         {
-//           f << j+1 << " ";
-//         }
-//       f << " := " << endl;
-//       for(unsigned int j=0; j<(unsigned int)GetColNum(); j++)
-//         {
-//           f << endl << "              "<<j+1<<"  ";
-//           for(unsigned int k=0; k<(unsigned int)GetRowNum(); k++)
-//             f << FindOptPos(OptVecVAR[i],j,k) <<" ";
-//         };
-//         f << endl<< endl;
-//     }
-
-//   f << ";" << endl <<"end;" << endl;
-//   f.close();
-//       }
-//     else
-//       {
-//    cout << ";" << endl <<"end;" << endl;
-//       }
-// }
 
 
 void ALattice::print_data(string FileName)
@@ -1076,6 +1090,25 @@ void ALattice::PrintLattice()
   cout<<endl<<endl;
 }
 
+void ALattice::PrintLatticeOpt()
+{
+  for(unsigned int j=0; j<ContentOpt.size();j++) //for each row
+    {
+      for(unsigned int i=0; i<ContentOpt[j].size();i++) //for each column
+        {
+	 
+          if (i!=0) cout << " | ";
+          if(!ContentOpt[j][i].getSign())
+            cout << "-";
+          else
+            cout << " ";
+          cout << ContentOpt[j][i].getLit();
+        }
+      cout<<endl;
+    }
+  cout<<endl<<endl;
+}
+
 void ALattice::PrintLattice_multi()
 {
   for(unsigned int j=0; j<ContentMulti.size();j++) //for each row
@@ -1148,7 +1181,7 @@ void ALattice::Print2File_multi(string FileName)
         }
       outputfile<<endl;
     }
-  outputfile<<endl<<endl;
+  //  outputfile<<endl<<endl;
   outputfile.close();
 }
 
