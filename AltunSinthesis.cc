@@ -63,6 +63,7 @@ public:
   void OptLiterals();
   AElement OptimizeMultiValue(unsigned int J, unsigned int I);
   void PrintLatticeOpt();
+  void Print2File_multi_opt(string FileName);
 };
 
 class AElement
@@ -179,6 +180,7 @@ int main(int argc, char *argv[])
           app.OptLiterals();
           cout << "OPT!" << endl;
           app.PrintLatticeOpt();
+          app.Print2File_multi_opt(inFile+".latticeLITOPT"+i_str.str());
           cout << "OPT!" << endl;
         }
       else
@@ -1226,28 +1228,43 @@ void ALattice::Print2File_multi(string FileName)
 {
   fstream outputfile;
   outputfile.open(FileName.c_str() , ios::out); // read dimension of .i e .o
-  for(unsigned int j=0; j<ContentMulti.size();j++) //for each row
+  //  outputfile<<endl<<endl;
+  for(unsigned int j=0; j<ContentOpt.size();j++) //for each row
     {
-      for(unsigned int i=0; i<ContentMulti[j].size();i++) //for each column
-        {	 
+      for(unsigned int i=0; i<ContentOpt[j].size();i++) //for each column
+        {
+	 
           if (i!=0) outputfile << " | ";
-          for(unsigned int k=0; k
-                <ContentMulti[j][i].size();k++) //for each site
-            {
-              if(!ContentMulti[j][i][k].getSign())
-                outputfile << "-";
-              else
-                outputfile << " ";
-              
-              outputfile << ContentMulti[j][i][k].getLit();
-              if (k<(ContentMulti[j][i].size() - 1 ))
-                outputfile << " ; " ; 
-                
-            }
+          if(!ContentOpt[j][i][0].getSign())
+            outputfile << "-";
+          else
+            outputfile << " ";
+          outputfile << ContentOpt[j][i][0].getLit();
         }
       outputfile<<endl;
     }
-  //  outputfile<<endl<<endl;
   outputfile.close();
 }
 
+ 
+void ALattice::Print2File_multi_opt(string FileName)
+{
+  fstream outputfile;
+  outputfile.open(FileName.c_str() , ios::out); // read dimension of .i e .o
+   //  outputfile<<endl<<endl;
+    for(unsigned int j=0; j<ContentOpt.size();j++) //for each row
+    {
+      for(unsigned int i=0; i<ContentOpt[j].size();i++) //for each column
+        {
+	 
+          if (i!=0) outputfile << " | ";
+          if(!ContentOpt[j][i][0].getSign())
+            outputfile << "-";
+          else
+            outputfile << " ";
+          outputfile << ContentOpt[j][i][0].getLit();
+        }
+      outputfile<<endl;
+    }
+  outputfile.close();
+}
