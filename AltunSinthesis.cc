@@ -23,7 +23,7 @@ private:
   string Name;                  // name of the lattice
   vector< vector<AElement> > Content; // vector osf all elements (Column x Row)
   vector< vector< vector <AElement> > > ContentMulti; // vector osf all elements (Column x Row)
-  vector< vector<AElement> > ContentOpt; // vector osf all elements (Column x Row)
+  vector< vector< vector <AElement> > > ContentOpt; // vector osf all elements (Column x Row)
   int dimension[2];             // Col Row dimensions
   int NumVar;                   // Number of literals
   int NumOut;                   // Number of outputs
@@ -35,7 +35,7 @@ private:
   
 public:
   //int OptFindVar();
- vector<string> OptVecVAR; // vecotr of all the variables for optimization
+  vector<string> OptVecVAR; // vecotr of all the variables for optimization
   void setNumVar(int num);
   void setNumOut(int);
   int getNumVar();
@@ -162,6 +162,7 @@ int main(int argc, char *argv[])
       if (MultiUnary == "-m")
         {
           cout << "MULTI" << endl;
+ 
           app.BuildLattice_multi();
           app.PrintLattice_multi();
           ostringstream i_str;	// stream used for the conversion
@@ -170,13 +171,20 @@ int main(int argc, char *argv[])
           app.Print2File_multi(inFile+".lattice"+i_str.str());
           lattices.push_back(app);
 
+
+
+
+          cout << "OPT!" << endl;
+          app.BuildLattice();
           app.OptLiterals();
+          cout << "OPT!" << endl;
           app.PrintLatticeOpt();
+          cout << "OPT!" << endl;
         }
       else
         {
           cout << "SINGLETON" << endl<< endl;
-          app.BuildLattice();
+          
           app.PrintLattice();
           ostringstream i_str;	// stream used for the conversion
           i_str << i;
@@ -213,7 +221,7 @@ int main(int argc, char *argv[])
           // ---plot results------------------------
           string ResOptCol="ResOptCol";
           char* NAMEappCol;
-         NAMEappCol = (char*)malloc(sizeof(char)*512);
+          NAMEappCol = (char*)malloc(sizeof(char)*512);
           fstream f3, fo;
           fo.open(LogFile.c_str(), ios::in);
           f3.open(ResOptCol.c_str(), ios::app|ios::out);
@@ -224,10 +232,10 @@ int main(int argc, char *argv[])
             {
    
               if (line[0]=='T' && line[1]=='i' && line[2]=='m')
-                       COLstring=line.substr(line.find(':')+1,line.find("sec")-1-line.find(':')) ;
+                COLstring=line.substr(line.find(':')+1,line.find("sec")-1-line.find(':')) ;
 
               if (line[0]=='+' && line.find('%') != std::string::npos)
-                    GAPcol=line.substr(line.find('%')-5,5)  ;     // + 28822: mip =   1.300000000e+02 <=   2.380000000e+02  83.1% (205W
+                GAPcol=line.substr(line.find('%')-5,5)  ;     // + 28822: mip =   1.300000000e+02 <=   2.380000000e+02  83.1% (205W
          
               
             }
@@ -241,7 +249,7 @@ int main(int argc, char *argv[])
         }
 
       cout<<"OPTTTT" << OPTrow<< endl;
-       if (OPTrow==true)
+      if (OPTrow==true)
         {
           cout << "########## ROW  OPTIMIZATION!  ############"<< endl;
           //          int col=app.GetColNum(),row=app.GetRowNum();
@@ -267,7 +275,7 @@ int main(int argc, char *argv[])
           // ---plot results------------------------
           string ResOptRow="ResOptRow";
           char* NAMEappRow;
-         NAMEappRow = (char*)malloc(sizeof(char)*512);
+          NAMEappRow = (char*)malloc(sizeof(char)*512);
           fstream f3, fo;
           fo.open(LogFile.c_str(), ios::in);
           f3.open(ResOptRow.c_str(), ios::app|ios::out);
@@ -277,10 +285,10 @@ int main(int argc, char *argv[])
           while( getline(fo , line))
             {
               if (line[0]=='T' && line[1]=='i' && line[2]=='m')
-                       ROWstring=line.substr(line.find(':')+1,line.find("sec")-1-line.find(':')) ;
+                ROWstring=line.substr(line.find(':')+1,line.find("sec")-1-line.find(':')) ;
 
               if (line[0]=='+' && line.find('%') != std::string::npos)
-                    GAProw=line.substr(line.find_last_of('%')-5,5)  ;     // + 28822: mip =   1.300000000e+02 <=   2.380000000e+02  83.1% (205W
+                GAProw=line.substr(line.find_last_of('%')-5,5)  ;     // + 28822: mip =   1.300000000e+02 <=   2.380000000e+02  83.1% (205W
          
               
             }
@@ -293,12 +301,12 @@ int main(int argc, char *argv[])
          
           cout << "##########  ############  ############"<< endl;
         }
-       cout << "##" << endl;
-       if (OPTrow==true && OPTcol==true)
-         {
-           cout << "########## ROW & COLUMN  OPTIMIZATION!  ############"<< endl;
-           app.optimized_vec_col_row("app"+inFile+"Col", inFile+".lattice"+to_string(i)+"optimizedRowCol","app"+inFile+"Row");
-         }
+      cout << "##" << endl;
+      if (OPTrow==true && OPTcol==true)
+        {
+          cout << "########## ROW & COLUMN  OPTIMIZATION!  ############"<< endl;
+          app.optimized_vec_col_row("app"+inFile+"Col", inFile+".lattice"+to_string(i)+"optimizedRowCol","app"+inFile+"Row");
+        }
       
     }
   return 0;
@@ -308,9 +316,10 @@ int main(int argc, char *argv[])
 // ***FUNCTIONS***
 
 void ALattice::OptLiterals()
-{
+{         
   int MultiMap[ContentMulti.size()][ContentMulti[0].size()];
-
+  ContentOpt=ContentMulti;
+  
   for(unsigned int j=0; j<ContentMulti.size();j++) //for each row
     {
       for(unsigned int i=0; i<ContentMulti[j].size();i++) //for each column
@@ -322,14 +331,19 @@ void ALattice::OptLiterals()
         }
     }
 
-    for(unsigned int j=0; j<ContentMulti.size();j++) //for each row
+  for(unsigned int j=0; j<ContentMulti.size();j++) //for each row
     {
       for(unsigned int i=0; i<ContentMulti[j].size();i++) //for each column
         {
-          if (ContentMulti[j][i].size()==1)
-            ContentOpt[j][i]=ContentMulti[j][i][0];
-          else
-            ContentOpt[j][i]=OptimizeMultiValue(j,i);
+
+          if (ContentMulti[j][i].size()>1)
+            {
+
+              ContentOpt[j][i][0]=OptimizeMultiValue(j,i);
+              ContentOpt[j][i].resize(1);
+              cout << j << " "<< i << " "<<"Out " <<ContentOpt[j][i][0].getSign()<< ContentOpt[j][i][0].getLit()<<endl;
+            }
+          else cout << j << " "<< i <<  "single " << endl;
         }
     }
 
@@ -339,88 +353,140 @@ void ALattice::OptLiterals()
 
 AElement ALattice::OptimizeMultiValue(unsigned int J, unsigned int I)
 {
-  //vector<int> NumOccurrU(ContentMulti[J][I].size(), 0);
-  //vector<int> NumOccurrM(ContentMulti[J][I].size(), 0);
+  vector<int> NumOccurrU(ContentOpt[J][I].size(), 0);
+  vector<int> NumOccurrM(ContentOpt[J][I].size(), 0);
+  vector<int> NumOccurrMplusU(ContentOpt[J][I].size(), 0);
+  vector<int> NumOccurrUsorted(ContentOpt[J][I].size(), 0);
+  vector<int> NumOccurrMsorted(ContentOpt[J][I].size(), 0);
+  vector<int> NumOccurrMplusUsorted(ContentOpt[J][I].size(), 0);
 
-  int  NumOccurrU[ContentMulti[J][I].size()];
-  int  NumOccurrM[ContentMulti[J][I].size()];
-  int  NumOccurrUsorted[ContentMulti[J][I].size()];
-  int  NumOccurrMsorted[ContentMulti[J][I].size()];
+  
+  //int  NumOccurrU[ContentOpt[J][I].size()];
+  //int  NumOccurrM[ContentOpt[J][I].size()];
+  //int  NumOccurrUsorted[ContentOpt[J][I].size()];
+  //int  NumOccurrMsorted[ContentOpt[J][I].size()];
 
-  for (unsigned int e=0; e < ContentMulti[J][I].size(); e++ )
-    {
-      NumOccurrU[e]=0;
-      NumOccurrM[e]=0;
-    }
+  // for (unsigned int e=0; e < ContentOpt[J][I].size(); e++ )
+  //   {
+  //     NumOccurrU[e]=0;
+  //     NumOccurrM[e]=0;
+  //   }
   // int NumCells;
 
-  for (unsigned int k=0 ; k<ContentMulti[J][I].size(); k++) // check Fixed literals
+  for (unsigned int k=0 ; k<ContentOpt[J][I].size(); k++) // check Fixed literals
     {
-      if (ContentMulti[J][I+1].size()==1  && I<ContentMulti[J].size()-1 ) // if is unary and not in  dx column
+      if( I<ContentOpt[J].size()-1) // NOT IN DX COLUMN
         {
-          if (ContentMulti[J][I+1][0] == ContentMulti[J][I][k])
-            NumOccurrU[k]++;
+          if (ContentOpt[J][I+1].size()==1  ) // if is unary
+            {
+              if (ContentOpt[J][I+1][0] == ContentOpt[J][I][k])
+                NumOccurrU[k]++;
+            }
+          else  if(ContentOpt[J][I+1].size()>1)
+            { 
+              if  (find (ContentOpt[J][I+1].begin(), ContentOpt[J][I+1].end(), ContentOpt[J][I][k])  != ContentOpt[J][I+1].end() )
+                NumOccurrM[k]++;
+            }
         }
-      else if  (ContentMulti[J][I+1].size()>1  && I<ContentMulti[J].size()-1 )
+ 
+      if(J<ContentOpt.size()-1) // not in  bottom row
         {
-          if  (find (ContentMulti[J][I+1].begin(), ContentMulti[J][I+1].end(), ContentMulti[J][I][k])  != ContentMulti[J][I+1].end() )
-            NumOccurrM[k]++;
+          if (ContentOpt[J+1][I].size()==1  ) // if is unary  
+            {
+              if (ContentOpt[J+1][I][0] == ContentOpt[J][I][k])
+                NumOccurrU[k]++;
+            }
+          else if  (ContentOpt[J+1][I].size()>1  ) // if is multi
+            {
+              if  (find (ContentOpt[J+1][I].begin(), ContentOpt[J+1][I].end(), ContentOpt[J][I][k])  != ContentOpt[J+1][I].end() )
+                NumOccurrM[k]++;
+            }
         }
-               
-      if (ContentMulti[J+1][I].size()==1 && J<ContentMulti.size()-1 ) // if is unary and not in  bottom row
+
+      if( J>0) // not in left column
         {
-          if (ContentMulti[J+1][I][0] == ContentMulti[J][I][k])
-            NumOccurrU[k]++;
+          if (ContentOpt[J-1][I].size()==1) // if is unary 
+            {
+              if (ContentOpt[J-1][I][0] == ContentOpt[J][I][k])
+                NumOccurrU[k]++;
+            }
+          else if  (ContentOpt[J-1][I].size()>1  ) // if is multi
+            {
+              if  (find (ContentOpt[J-1][I].begin(), ContentOpt[J-1][I].end(), ContentOpt[J][I][k])  != ContentOpt[J-1][I].end() )
+                NumOccurrM[k]++;
+            }
         }
-      else if  (ContentMulti[J+1][I].size()>1  && J<ContentMulti.size()-1 )
+
+      if( I>0 ) // not in top row
         {
-          if  (find (ContentMulti[J+1][I].begin(), ContentMulti[J+1][I].end(), ContentMulti[J][I][k])  != ContentMulti[J+1][I].end() )
-            NumOccurrM[k]++;
-        }
-      
-      if (ContentMulti[J-1][I].size()==1 && I>0) // if is unary and not in left column
-        {
-          if (ContentMulti[J-1][I][0] == ContentMulti[J][I][k])
-            NumOccurrU[k]++;
-        }
-      else if  (ContentMulti[J-1][I].size()>1  && I>0 )
-        {
-          if  (find (ContentMulti[J-1][I].begin(), ContentMulti[J-1][I].end(), ContentMulti[J][I][k])  != ContentMulti[J-1][I].end() )
-            NumOccurrM[k]++;
-        }
-      
-      if (ContentMulti[J][I-1].size()==1  && J>0 ) // if is unary and not in top row
-        {
-          if (ContentMulti[J][I-1][0] == ContentMulti[J][I][k])
-            NumOccurrU[k]++;
-        }
-      else if  (ContentMulti[J][I-1].size()>1  && J>0 )
-        {
-          if  (find (ContentMulti[J][I-1].begin(), ContentMulti[J][I-1].end(), ContentMulti[J][I][k])  != ContentMulti[J][I-1].end() )
-            NumOccurrM[k]++;
+          if (ContentOpt[J][I-1].size()==1) // if is unary
+            {
+              if (ContentOpt[J][I-1][0] == ContentOpt[J][I][k])
+                NumOccurrU[k]++;
+            }
+          else if  (ContentOpt[J][I-1].size()>1 ) // if is multi
+            {
+              if  (find (ContentOpt[J][I-1].begin(), ContentOpt[J][I-1].end(), ContentOpt[J][I][k])  != ContentOpt[J][I-1].end() )
+                NumOccurrM[k]++;
+            }
+          //   cout << "###OPT IN!" << endl;
         }
     }
 
- for (unsigned int e=0; e < ContentMulti[J][I].size(); e++ )
+
+  
+  for (unsigned int e=0; e < ContentOpt[J][I].size(); e++ )
     {
       NumOccurrUsorted[e] = NumOccurrU[e];
       NumOccurrMsorted[e] = NumOccurrM[e];
+      NumOccurrMplusU[e]= NumOccurrU[e] + NumOccurrM[e];
+      NumOccurrMplusUsorted[e]= NumOccurrU[e] + NumOccurrM[e];
     }
+      
  
-     sort(NumOccurrUsorted, NumOccurrUsorted + ContentMulti[J][I].size());
-     sort(NumOccurrMsorted, NumOccurrMsorted + ContentMulti[J][I].size());
+  sort(NumOccurrUsorted.begin(), NumOccurrUsorted.end()); // sort the vector
+  sort(NumOccurrMsorted.begin(), NumOccurrMsorted.end());    // sort the vector
+  sort(NumOccurrMplusUsorted.begin(), NumOccurrMplusUsorted.end());    // sort the vector
 
 
-     if (NumOccurrUsorted[ContentMulti[J][I].size()]-1 > NumOccurrUsorted[ContentMulti[J][I].size()-2])
-       {
-        for (unsigned int e=0; e < ContentMulti[J][I].size(); e++ )
-          {
-            if (NumOccurrUsorted[ContentMulti[J][I].size()]-1 == NumOccurrU[e] )
-              return ContentMulti[J][I][e];
-          }
-       }
-}
-     
+  if (NumOccurrUsorted[ContentOpt[J][I].size()-1] > NumOccurrUsorted[ContentOpt[J][I].size()-2])
+    {
+      for (unsigned int e=0; e < ContentOpt[J][I].size(); e++ )
+        {//cout << "HEREU" <<NumOccurrUsorted[ContentOpt[J][I].size() -1]<< " "<< NumOccurrU[e] <<  endl;
+          if (NumOccurrUsorted[ContentOpt[J][I].size() -1]== NumOccurrU[e])
+            {
+              cout <<"inU "<< ContentOpt[J][I][e].getSign() << ContentOpt[J][I][e].getLit()<<endl;
+              return ContentOpt[J][I][e];
+              break;
+            }
+        }
+    }
+  
+  else if (NumOccurrMplusUsorted[ContentOpt[J][I].size()-1] > NumOccurrMplusUsorted[ContentOpt[J][I].size()-2])
+    { 
+      for (unsigned int e=0; e < ContentOpt[J][I].size(); e++ )
+        { //cout << "HERE" <<NumOccurrMplusUsorted[ContentOpt[J][I].size() -1]<< " "<< NumOccurrMplusU[e] <<  endl;
+          if (NumOccurrMplusUsorted[ContentOpt[J][I].size()-1]== NumOccurrMplusU[e])
+            { 
+              cout <<"inM "<< ContentOpt[J][I][e].getSign() << ContentOpt[J][I][e].getLit()<<endl;
+              return ContentOpt[J][I][e];
+              break;
+            }
+        }
+    }
+  else
+    {
+    for (unsigned int e=0; e < ContentOpt[J][I].size(); e++ )
+        { cout << "HERE" <<NumOccurrMplusUsorted[ContentOpt[J][I].size() -1]<< " "<< NumOccurrMplusU[e] <<  endl;
+          if (NumOccurrMplusUsorted[ContentOpt[J][I].size()-1]== NumOccurrMplusU[e])
+            { 
+              cout <<"inP "<< ContentOpt[J][I][e].getSign() << ContentOpt[J][I][e].getLit()<<endl;
+              return ContentOpt[J][I][e];
+              break;
+            }
+        }
+    }
+} 
 
 void dual( string inFile, string outFile) // compute the input for the synthesis of the dual function
 {
@@ -487,7 +553,7 @@ void ALattice::optimized_vec_col_row(string FileName, string FileName2, string F
     }
   f.close();
 
-    while( getline(fR , line))
+  while( getline(fR , line))
     {
       orderOptR.push_back(0);
     }
@@ -495,7 +561,7 @@ void ALattice::optimized_vec_col_row(string FileName, string FileName2, string F
 
   
   f.open(FileName.c_str(), ios::in);
-    fR.open(FileName3.c_str(), ios::in);
+  fR.open(FileName3.c_str(), ios::in);
   while( getline(f , line))
     {
       int i=0;
@@ -506,11 +572,11 @@ void ALattice::optimized_vec_col_row(string FileName, string FileName2, string F
       orderOptC[start-1]=arrive-1;
       i++;
     }
-    f.close();
+  f.close();
   cout <<FileName3<< "ASR ";
-    while( getline(fR , line))
+  while( getline(fR , line))
     {
-    int i=0;
+      int i=0;
       int arrive= stoi(line.substr(line.find(',')+1,line.find(']')- line.find(',')-1));
       int start = stoi(line.substr(2, line.find(',')-2).c_str());
       cout << "ASR "<<start<<","<< arrive<<endl;
@@ -524,7 +590,7 @@ void ALattice::optimized_vec_col_row(string FileName, string FileName2, string F
       cout << "EC"<< orderOptC[i]<<endl;
 
     }
-    for(unsigned int i=0; i<orderOptR.size();i++) //for each column
+  for(unsigned int i=0; i<orderOptR.size();i++) //for each column
     {
       cout << "ER"<< orderOptR[i]<<endl;
 
@@ -554,7 +620,7 @@ void ALattice::optimized_vec_col_row(string FileName, string FileName2, string F
 
   for(unsigned int j=0; j<Content.size();j++) //for each row
     {
-            for(unsigned int i=0; i<Content[j].size();i++) //for each column
+      for(unsigned int i=0; i<Content[j].size();i++) //for each column
         {
 	 
           if (i!=0) f2 << " | ";
@@ -1098,11 +1164,11 @@ void ALattice::PrintLatticeOpt()
         {
 	 
           if (i!=0) cout << " | ";
-          if(!ContentOpt[j][i].getSign())
+          if(!ContentOpt[j][i][0].getSign())
             cout << "-";
           else
             cout << " ";
-          cout << ContentOpt[j][i].getLit();
+          cout << ContentOpt[j][i][0].getLit();
         }
       cout<<endl;
     }
