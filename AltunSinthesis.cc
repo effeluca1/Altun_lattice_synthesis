@@ -281,7 +281,7 @@ int main(int argc, char *argv[])
           fstream f3, fo;
           fo.open(LogFile.c_str(), ios::in);
           f3.open(ResOptRow.c_str(), ios::app|ios::out);
-          f3 << inFile <<i<< " "   << app.GetRowNum()<< " " << app.GetRowNum() << " "<< app.OptVecVAR.size() <<" ";
+          f3 << inFile <<i<< " "   << app.GetRowNum()<< " " << app.GetColNum() << " "<< app.OptVecVAR.size() <<" ";
 
           string ROWstring, GAProw;
           while( getline(fo , line))
