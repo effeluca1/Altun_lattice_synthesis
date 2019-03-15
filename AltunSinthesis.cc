@@ -171,7 +171,7 @@ int main(int argc, char *argv[])
           
           app.Print2File_multi(inFile+".lattice"+i_str.str());
           lattices.push_back(app);
-
+          app.Print2File_multi(inFile+".latticeM"+i_str.str());
 
 
 
