@@ -24,6 +24,8 @@ private:
   vector< vector<AElement> > Content; // vector osf all elements (Column x Row)
   vector< vector< vector <AElement> > > ContentMulti; // vector osf all elements (Column x Row)
   vector< vector< vector <AElement> > > ContentOpt; // vector osf all elements (Column x Row)
+  vector< vector< vector <AElement> > > ContentDisOpt; // vector osf all elements (Column x Row)
+
   int dimension[2];             // Col Row dimensions
   int NumVar;                   // Number of literals
   int NumOut;                   // Number of outputs
@@ -61,9 +63,13 @@ public:
   void optimized_vec_row(string FileName, string FileName2);
   void OptCost(string Filename);
   void OptLiterals();
+  void DisOptLiterals();
   AElement OptimizeMultiValue(unsigned int J, unsigned int I);
+  AElement DisOptimizeMultiValue(unsigned int J, unsigned int I);
   void PrintLatticeOpt();
+    void PrintLatticeDisOpt();
   void Print2File_multi_opt(string FileName);
+  void Print2File_multi_dis_opt(string FileName);
 };
 
 class AElement
@@ -169,7 +175,7 @@ int main(int argc, char *argv[])
           ostringstream i_str;	// stream used for the conversion
           i_str << i;
           
-          app.Print2File_multi(inFile+".lattice"+i_str.str());
+          //  app.Print2File_multi(inFile+".lattice"+i_str.str());
           lattices.push_back(app);
           app.Print2File_multi(inFile+".latticeM"+i_str.str());
 
@@ -182,6 +188,14 @@ int main(int argc, char *argv[])
           app.PrintLatticeOpt();
           app.Print2File_multi_opt(inFile+".latticeLITOPT"+i_str.str());
           cout << "OPT!" << endl;
+
+          cout << "DisOPT!" << endl;
+          app.BuildLattice();
+          app.DisOptLiterals();
+          cout << "SisDisOPT!" << endl;
+          app.PrintLatticeDisOpt();
+          app.Print2File_multi_dis_opt(inFile+".latticeLIT_dis_OPT"+i_str.str());
+          cout << "DisOPT!" << endl;
         }
       else
         {
@@ -317,10 +331,10 @@ int main(int argc, char *argv[])
 
 // ***FUNCTIONS***
 
-void ALattice::OptLiterals()
+void ALattice::DisOptLiterals()
 {         
   int MultiMap[ContentMulti.size()][ContentMulti[0].size()];
-  ContentOpt=ContentMulti;
+  ContentDisOpt=ContentMulti;
   
   for(unsigned int j=0; j<ContentMulti.size();j++) //for each row
     {
@@ -341,6 +355,179 @@ void ALattice::OptLiterals()
           if (ContentMulti[j][i].size()>1)
             {
 
+              ContentDisOpt[j][i][0]=DisOptimizeMultiValue(j,i);
+              ContentDisOpt[j][i].resize(1);
+              cout << j << " "<< i << " "<<"Out " <<ContentDisOpt[j][i][0].getSign()<< ContentDisOpt[j][i][0].getLit()<<endl;
+            }
+          else cout << j << " "<< i <<  "single " << endl;
+        }
+    }
+}
+
+AElement ALattice::DisOptimizeMultiValue(unsigned int J, unsigned int I)
+{
+  vector<int> NumOccurrU(ContentDisOpt[J][I].size(), 0);
+  vector<int> NumOccurrM(ContentDisOpt[J][I].size(), 0);
+  vector<int> NumOccurrMplusU(ContentDisOpt[J][I].size(), 0);
+  vector<int> NumOccurrUsorted(ContentDisOpt[J][I].size(), 0);
+  vector<int> NumOccurrMsorted(ContentDisOpt[J][I].size(), 0);
+  vector<int> NumOccurrMplusUsorted(ContentDisOpt[J][I].size(), 0);
+
+  for (unsigned int k=0 ; k<ContentDisOpt[J][I].size(); k++) // check Fixed literals
+    {
+      if( I<ContentDisOpt[J].size()-1) // NOT IN DX COLUMN
+        {
+          if (ContentDisOpt[J][I+1].size()==1  ) // if is unary
+            {
+              if (ContentDisOpt[J][I+1][0] == ContentDisOpt[J][I][k])
+                NumOccurrU[k]++;
+            }
+          else  if(ContentDisOpt[J][I+1].size()>1)
+            { 
+              if  (find (ContentDisOpt[J][I+1].begin(), ContentDisOpt[J][I+1].end(), ContentDisOpt[J][I][k])  != ContentDisOpt[J][I+1].end() )
+                NumOccurrM[k]++;
+            }
+        }
+ 
+      if(J<ContentDisOpt.size()-1) // not in  bottom row
+        {
+          if (ContentDisOpt[J+1][I].size()==1  ) // if is unary  
+            {
+              if (ContentDisOpt[J+1][I][0] == ContentDisOpt[J][I][k])
+                NumOccurrU[k]++;
+            }
+          else if  (ContentDisOpt[J+1][I].size()>1  ) // if is multi
+            {
+              if  (find (ContentDisOpt[J+1][I].begin(), ContentDisOpt[J+1][I].end(), ContentDisOpt[J][I][k])  != ContentDisOpt[J+1][I].end() )
+                NumOccurrM[k]++;
+            }
+        }
+
+      if( J>0) // not in left column
+        {
+          if (ContentDisOpt[J-1][I].size()==1) // if is unary 
+            {
+              if (ContentDisOpt[J-1][I][0] == ContentDisOpt[J][I][k])
+                NumOccurrU[k]++;
+            }
+          else if  (ContentDisOpt[J-1][I].size()>1  ) // if is multi
+            {
+              if  (find (ContentDisOpt[J-1][I].begin(), ContentDisOpt[J-1][I].end(), ContentDisOpt[J][I][k])  != ContentDisOpt[J-1][I].end() )
+                NumOccurrM[k]++;
+            }
+        }
+
+      if( I>0 ) // not in top row
+        {
+          if (ContentDisOpt[J][I-1].size()==1) // if is unary
+            {
+              if (ContentDisOpt[J][I-1][0] == ContentDisOpt[J][I][k])
+                NumOccurrU[k]++;
+            }
+          else if  (ContentDisOpt[J][I-1].size()>1 ) // if is multi
+            {
+              if  (find (ContentDisOpt[J][I-1].begin(), ContentDisOpt[J][I-1].end(), ContentDisOpt[J][I][k])  != ContentDisOpt[J][I-1].end() )
+                NumOccurrM[k]++;
+            }
+          //   cout << "###OPT IN!" << endl;
+        }
+    }
+
+
+  
+  for (unsigned int e=0; e < ContentDisOpt[J][I].size(); e++ )
+    {
+      NumOccurrUsorted[e] = NumOccurrU[e];
+      NumOccurrMsorted[e] = NumOccurrM[e];
+      NumOccurrMplusU[e]= NumOccurrU[e] + NumOccurrM[e];
+      NumOccurrMplusUsorted[e]= NumOccurrU[e] + NumOccurrM[e];
+    }
+      
+ 
+  sort(NumOccurrUsorted.begin(), NumOccurrUsorted.end()); // sort the vector
+  sort(NumOccurrMsorted.begin(), NumOccurrMsorted.end());    // sort the vector
+  sort(NumOccurrMplusUsorted.begin(), NumOccurrMplusUsorted.end());    // sort the vector
+
+
+  // 1-- scelgo letterale che non ha occorrenze
+  
+  // 2--- scelgo il letterale con meno occorrenze
+
+  // 3 -- in pratica scelgo sempre il primo letterale del vettore
+  
+
+
+
+  
+
+  // if (NumOccurrUsorted[ContentDisOpt[J][I].size()-1] > NumOccurrUsorted[ContentDisOpt[J][I].size()-2])
+  //   {
+       for (unsigned int e=0; e < ContentDisOpt[J][I].size(); e++ )
+         {//cout << "HEREU" <<NumOccurrUsorted[ContentDisOpt[J][I].size() -1]<< " "<< NumOccurrU[e] <<  endl;
+           if (NumOccurrUsorted[0]== NumOccurrU[e])
+             {
+               cout <<"inU "<< ContentDisOpt[J][I][e].getSign() << ContentDisOpt[J][I][e].getLit()<<endl;
+               return ContentDisOpt[J][I][e];
+               break;
+             }
+         }
+  //   }
+  
+  // else if (NumOccurrMplusUsorted[ContentDisOpt[J][I].size()-1] > NumOccurrMplusUsorted[ContentDisOpt[J][I].size()-2])
+  //   { 
+  //     for (unsigned int e=0; e < ContentDisOpt[J][I].size(); e++ )
+  //       { //cout << "HERE" <<NumOccurrMplusUsorted[ContentDisOpt[J][I].size() -1]<< " "<< NumOccurrMplusU[e] <<  endl;
+  //         if (NumOccurrMplusUsorted[ContentDisOpt[J][I].size()-1]== NumOccurrMplusU[e])
+  //           { 
+  //             cout <<"inM "<< ContentDisOpt[J][I][e].getSign() << ContentDisOpt[J][I][e].getLit()<<endl;
+  //             return ContentDisOpt[J][I][e];
+  //             break;
+  //           }
+  //       }
+  //   }
+  // else
+  //   {
+  //   for (unsigned int e=0; e < ContentDisOpt[J][I].size(); e++ )
+  //       { cout << "HERE" <<NumOccurrMplusUsorted[ContentDisOpt[J][I].size() -1]<< " "<< NumOccurrMplusU[e] <<  endl;
+  //         if (NumOccurrMplusUsorted[ContentDisOpt[J][I].size()-1]== NumOccurrMplusU[e])
+  //           { 
+  //             cout <<"inP "<< ContentDisOpt[J][I][e].getSign() << ContentDisOpt[J][I][e].getLit()<<endl;
+  //             return ContentDisOpt[J][I][e];
+  //             break;
+  //           }
+  //       }
+  //   }
+} 
+
+
+
+
+
+
+
+
+void ALattice::OptLiterals()
+{         
+  int MultiMap[ContentMulti.size()][ContentMulti[0].size()];
+  ContentOpt=ContentMulti;
+  
+  for(unsigned int j=0; j<ContentMulti.size();j++) //for each row
+    {
+      for(unsigned int i=0; i<ContentMulti[j].size();i++) //for each column
+        {
+          if (ContentMulti[j][i].size()==1)
+            MultiMap[j][i]=1;
+          else
+            MultiMap[j][i]=0;
+        }
+    }
+
+  for(unsigned int j=0; j<ContentMulti.size();j++) //for each row
+    {
+      for(unsigned int i=0; i<ContentMulti[j].size();i++) //for each column
+        {
+          if (ContentMulti[j][i].size()>1)
+            {
               ContentOpt[j][i][0]=OptimizeMultiValue(j,i);
               ContentOpt[j][i].resize(1);
               cout << j << " "<< i << " "<<"Out " <<ContentOpt[j][i][0].getSign()<< ContentOpt[j][i][0].getLit()<<endl;
@@ -348,9 +535,6 @@ void ALattice::OptLiterals()
           else cout << j << " "<< i <<  "single " << endl;
         }
     }
-
-
-  
 }
 
 AElement ALattice::OptimizeMultiValue(unsigned int J, unsigned int I)
@@ -489,6 +673,14 @@ AElement ALattice::OptimizeMultiValue(unsigned int J, unsigned int I)
         }
     }
 } 
+
+
+
+
+
+
+
+
 
 void dual( string inFile, string outFile) // compute the input for the synthesis of the dual function
 {
@@ -1158,6 +1350,27 @@ void ALattice::PrintLattice()
   cout<<endl<<endl;
 }
 
+
+void ALattice::PrintLatticeDisOpt()
+{
+  for(unsigned int j=0; j<ContentDisOpt.size();j++) //for each row
+    {
+      for(unsigned int i=0; i<ContentDisOpt[j].size();i++) //for each column
+        {
+	 
+          if (i!=0) cout << " | ";
+          if(!ContentDisOpt[j][i][0].getSign())
+            cout << "-";
+          else
+            cout << " ";
+          cout << ContentDisOpt[j][i][0].getLit();
+        }
+      cout<<endl;
+    }
+  cout<<endl<<endl;
+}
+
+
 void ALattice::PrintLatticeOpt()
 {
   for(unsigned int j=0; j<ContentOpt.size();j++) //for each row
@@ -1228,22 +1441,47 @@ void ALattice::Print2File_multi(string FileName)
 {
   fstream outputfile;
   outputfile.open(FileName.c_str() , ios::out); // read dimension of .i e .o
-  //  outputfile<<endl<<endl;
-  for(unsigned int j=0; j<ContentOpt.size();j++) //for each row
-    {
-      for(unsigned int i=0; i<ContentOpt[j].size();i++) //for each column
-        {
-	 
+  //  outputfile<<endl<<endl; for(unsigned int j=0; j<ContentMulti.size();j++) //for each row
+   for(unsigned int j=0; j<ContentMulti.size();j++) //for each row
+     {    
+      for(unsigned int i=0; i<ContentMulti[j].size();i++) //for each column
+        {	 
           if (i!=0) outputfile << " | ";
-          if(!ContentOpt[j][i][0].getSign())
-            outputfile << "-";
-          else
-            outputfile << " ";
-          outputfile << ContentOpt[j][i][0].getLit();
+          for(unsigned int k=0; k <ContentMulti[j][i].size();k++) //for each site
+            {
+              if(!ContentMulti[j][i][k].getSign())
+                outputfile << "-";
+              else
+                outputfile << " ";
+              
+              outputfile << ContentMulti[j][i][k].getLit();
+              if (k<(ContentMulti[j][i].size() - 1 ))
+                outputfile << " ; " ; 
+                
+            }
         }
-      outputfile<<endl;
-    }
-  outputfile.close();
+      if( j<ContentOpt.size()-1)
+        outputfile<<endl;
+     }
+   outputfile.close();
+    
+   //   cout<<endl<<endl;
+ 
+//   for(unsigned int j=0; j<ContentOpt.size();j++) //for each row
+//     {
+//       for(unsigned int i=0; i<ContentOpt[j].size();i++) //for each column
+//         {
+	 
+//           if (i!=0) outputfile << " | ";
+//           if(!ContentOpt[j][i][0].getSign())
+//             outputfile << "-";
+//           else
+//             outputfile << " ";
+//           outputfile << ContentOpt[j][i][0].getLit();
+//         }
+//       outputfile<<endl;
+//     }
+//   outputfile.close();
 }
 
  
@@ -1268,3 +1506,25 @@ void ALattice::Print2File_multi_opt(string FileName)
     }
   outputfile.close();
 }
+
+void ALattice::Print2File_multi_dis_opt(string FileName)
+{
+  fstream outputfile;
+  outputfile.open(FileName.c_str() , ios::out); // read dimension of .i e .o
+   //  outputfile<<endl<<endl;
+    for(unsigned int j=0; j<ContentDisOpt.size();j++) //for each row
+    {
+      for(unsigned int i=0; i<ContentDisOpt[j].size();i++) //for each column
+        {
+	 
+          if (i!=0) outputfile << " | ";
+          if(!ContentDisOpt[j][i][0].getSign())
+            outputfile << "-";
+          else
+            outputfile << " ";
+          outputfile << ContentDisOpt[j][i][0].getLit();
+        }
+      outputfile<<endl;
+    }
+  outputfile.close();
+} 
