@@ -67,7 +67,7 @@ public:
   AElement OptimizeMultiValue(unsigned int J, unsigned int I);
   AElement DisOptimizeMultiValue(unsigned int J, unsigned int I);
   void PrintLatticeOpt();
-    void PrintLatticeDisOpt();
+  void PrintLatticeDisOpt();
   void Print2File_multi_opt(string FileName);
   void Print2File_multi_dis_opt(string FileName);
 };
@@ -101,19 +101,24 @@ int main(int argc, char *argv[])
   fstream inputfile;
   string inFile(argv[1]);
   string MultiUnary(argv[3]);
+  bool DISOPTcol=false;
+  bool DISOPTrow=false;
   bool OPTcol=false;
   bool OPTrow=false; 
   cout << argc;
-  if (argc > 4) {
+  
+  if (argc >= 4) {
     string OptStr(argv[4]);
     string OptStr2(argv[5]);
+     if (OptStr=="-DisOptCol") DISOPTcol=true;
     if (OptStr=="-OptCol") OPTcol=true;
     if (OptStr2=="-OptRow") OPTrow=true; // bisogna fare un ponte per farle tutte e due o un disable della sintesi per fare solo ordinamento
+       if (OptStr2=="-DisOptRow") DISOPTrow=true;
   }
   string line;
 
 
-
+  cout << "YYYYY" << endl;
     
   vector<ALattice> lattices;  
 
@@ -200,7 +205,7 @@ int main(int argc, char *argv[])
       else
         {
           cout << "SINGLETON" << endl<< endl;
-          
+          app.BuildLattice();
           app.PrintLattice();
           ostringstream i_str;	// stream used for the conversion
           i_str << i;
@@ -210,6 +215,61 @@ int main(int argc, char *argv[])
         }
       
     
+
+
+      
+      if (DISOPTcol==true)
+        {
+          cout << "########## COLUMN  DISOPTIMIZATION!  ############"<< endl;
+          //          int col=app.GetColNum(),row=app.GetRowNum();
+          app.OptFindVar();
+          string Datafile = inFile+".data"+to_string(i);
+          string LogFile = inFile+".ResultColGLPK"+to_string(i);
+          string GLPKoutput = inFile+".OutColGLPK"+to_string(i);
+          app.print_data(Datafile);
+          char* OptCommand;
+          OptCommand = (char*)malloc(sizeof(char)*512);
+          sprintf(OptCommand,"glpsol --tmlim 3600 --memlim 8000 --model ColDisOpt.mod  --data %s --output %s > %s", Datafile.c_str(),GLPKoutput.c_str(),LogFile.c_str());
+          cout << OptCommand<< endl;
+          system(OptCommand);
+
+          sprintf(OptCommand,"cat %s | grep y | grep val | grep '\\= 1'>app%sCol",LogFile.c_str(),inFile.c_str()); // removes the first and last column that werw added to fix the linear problem mapping
+          cout << OptCommand<< endl;
+          system(OptCommand);
+          app.optimized_vec_col("app"+inFile+"Col", inFile+".lattice"+to_string(i)+"optimizedCol");
+
+          ///  cout <<"EEE"<< GLPKoutput.c_str() ;
+          app.OptCost(LogFile.c_str());
+
+          // ---plot results------------------------
+          string ResOptCol="ResOptCol";
+          char* NAMEappCol;
+          NAMEappCol = (char*)malloc(sizeof(char)*512);
+          fstream f3, fo;
+          fo.open(LogFile.c_str(), ios::in);
+          f3.open(ResOptCol.c_str(), ios::app|ios::out);
+          f3 << inFile <<i<< " "   << app.GetRowNum()<< " " << app.GetColNum() << " "<< app.OptVecVAR.size() <<" ";
+
+          string COLstring, GAPcol;
+          while( getline(fo , line))
+            {
+   
+              if (line[0]=='T' && line[1]=='i' && line[2]=='m')
+                COLstring=line.substr(line.find(':')+1,line.find("sec")-1-line.find(':')) ;
+
+              if (line[0]=='+' && line.find('%') != std::string::npos)
+                GAPcol=line.substr(line.find('%')-5,5)  ;     // + 28822: mip =   1.300000000e+02 <=   2.380000000e+02  83.1% (205W
+         
+              
+            }
+          f3 << COLstring << " " << GAPcol<< endl;
+          cout <<" GAP"<< COLstring << " " << GAPcol<< endl;
+          f3.close();
+          // ---------------------------------------
+
+          
+          cout << "##########  ############  ############"<< endl;
+        }
 
       if (OPTcol==true)
         {
@@ -264,7 +324,7 @@ int main(int argc, char *argv[])
           cout << "##########  ############  ############"<< endl;
         }
 
-      cout<<"OPTTTT" << OPTrow<< endl;
+      cout<<"OPTTTTY" << OPTrow<< endl;
       if (OPTrow==true)
         {
           cout << "########## ROW  OPTIMIZATION!  ############"<< endl;
@@ -278,6 +338,7 @@ int main(int argc, char *argv[])
           OptCommand = (char*)malloc(sizeof(char)*512);
           sprintf(OptCommand,"glpsol  --tmlim 3600 --memlim 8000 --model RowOpt.mod  --data %s --output %s > %s", Datafile.c_str(),GLPKoutput.c_str(),LogFile.c_str());
           cout << OptCommand<< endl;
+          
           system(OptCommand);
 
           sprintf(OptCommand,"cat %s | grep y | grep val | grep '\\= 1'>app%sRow",LogFile.c_str(),inFile.c_str()); // removes the first and last column that werw added to fix the linear problem mapping
@@ -318,9 +379,66 @@ int main(int argc, char *argv[])
           cout << "##########  ############  ############"<< endl;
         }
       cout << "##" << endl;
-      if (OPTrow==true && OPTcol==true)
+
+       if (DISOPTrow==true)
         {
-          cout << "########## ROW & COLUMN  OPTIMIZATION!  ############"<< endl;
+          cout << "########## ROW  DISOPTIMIZATION!  ############"<< endl;
+          //          int col=app.GetColNum(),row=app.GetRowNum();
+          app.OptFindVar();
+          string Datafile = inFile+".data"+to_string(i);
+          string LogFile = inFile+".ResultRowGLPK"+to_string(i);
+          string GLPKoutput = inFile+".OutRowGLPK"+to_string(i);
+          app.print_data(Datafile);
+          char* OptCommand;
+          OptCommand = (char*)malloc(sizeof(char)*512);
+          sprintf(OptCommand,"glpsol  --tmlim 3600 --memlim 8000 --model RowDisOpt.mod  --data %s --output %s > %s", Datafile.c_str(),GLPKoutput.c_str(),LogFile.c_str());
+          cout << OptCommand<< endl;
+          
+          system(OptCommand);
+
+          sprintf(OptCommand,"cat %s | grep y | grep val | grep '\\= 1'>app%sRow",LogFile.c_str(),inFile.c_str()); // removes the first and last column that werw added to fix the linear problem mapping
+          cout << OptCommand<< endl;
+          system(OptCommand);
+          app.optimized_vec_row("app"+inFile+"Row", inFile+".lattice"+to_string(i)+"optimizedRow");
+
+          // cout <<"EEE"<< GLPKoutput.c_str() ;
+          app.OptCost(LogFile.c_str());
+
+          // ---plot results------------------------
+          string ResOptRow="ResOptRow";
+          char* NAMEappRow;
+          NAMEappRow = (char*)malloc(sizeof(char)*512);
+          fstream f3, fo;
+          fo.open(LogFile.c_str(), ios::in);
+          f3.open(ResOptRow.c_str(), ios::app|ios::out);
+          f3 << inFile <<i<< " "   << app.GetRowNum()<< " " << app.GetColNum() << " "<< app.OptVecVAR.size() <<" ";
+
+          string ROWstring, GAProw;
+          while( getline(fo , line))
+            {
+              if (line[0]=='T' && line[1]=='i' && line[2]=='m')
+                ROWstring=line.substr(line.find(':')+1,line.find("sec")-1-line.find(':')) ;
+
+              if (line[0]=='+' && line.find('%') != std::string::npos)
+                GAProw=line.substr(line.find_last_of('%')-5,5)  ;     // + 28822: mip =   1.300000000e+02 <=   2.380000000e+02  83.1% (205W
+         
+              
+            }
+          f3 << ROWstring << " " << GAProw<< endl;
+          f3.close();
+         
+
+          // ---------------------------------------
+
+         
+          cout << "##########  ############  ############"<< endl;
+        }
+      cout << "##" << endl;
+
+      
+      if ((OPTrow==true && OPTcol==true)|| (DISOPTrow==true && DISOPTcol==true))
+        {
+          cout << "########## ROW & COLUMN  OPTIMIZATION(/DIS)!  ############"<< endl;
           app.optimized_vec_col_row("app"+inFile+"Col", inFile+".lattice"+to_string(i)+"optimizedRowCol","app"+inFile+"Row");
         }
       
@@ -462,15 +580,15 @@ AElement ALattice::DisOptimizeMultiValue(unsigned int J, unsigned int I)
 
   // if (NumOccurrUsorted[ContentDisOpt[J][I].size()-1] > NumOccurrUsorted[ContentDisOpt[J][I].size()-2])
   //   {
-       for (unsigned int e=0; e < ContentDisOpt[J][I].size(); e++ )
-         {//cout << "HEREU" <<NumOccurrUsorted[ContentDisOpt[J][I].size() -1]<< " "<< NumOccurrU[e] <<  endl;
-           if (NumOccurrUsorted[0]== NumOccurrU[e])
-             {
-               cout <<"inU "<< ContentDisOpt[J][I][e].getSign() << ContentDisOpt[J][I][e].getLit()<<endl;
-               return ContentDisOpt[J][I][e];
-               break;
-             }
-         }
+  for (unsigned int e=0; e < ContentDisOpt[J][I].size(); e++ )
+    {//cout << "HEREU" <<NumOccurrUsorted[ContentDisOpt[J][I].size() -1]<< " "<< NumOccurrU[e] <<  endl;
+      if (NumOccurrUsorted[0]== NumOccurrU[e])
+        {
+          cout <<"inU "<< ContentDisOpt[J][I][e].getSign() << ContentDisOpt[J][I][e].getLit()<<endl;
+          return ContentDisOpt[J][I][e];
+          break;
+        }
+    }
   //   }
   
   // else if (NumOccurrMplusUsorted[ContentDisOpt[J][I].size()-1] > NumOccurrMplusUsorted[ContentDisOpt[J][I].size()-2])
@@ -662,7 +780,7 @@ AElement ALattice::OptimizeMultiValue(unsigned int J, unsigned int I)
     }
   else
     {
-    for (unsigned int e=0; e < ContentOpt[J][I].size(); e++ )
+      for (unsigned int e=0; e < ContentOpt[J][I].size(); e++ )
         { cout << "HERE" <<NumOccurrMplusUsorted[ContentOpt[J][I].size() -1]<< " "<< NumOccurrMplusU[e] <<  endl;
           if (NumOccurrMplusUsorted[ContentOpt[J][I].size()-1]== NumOccurrMplusU[e])
             { 
@@ -1442,8 +1560,8 @@ void ALattice::Print2File_multi(string FileName)
   fstream outputfile;
   outputfile.open(FileName.c_str() , ios::out); // read dimension of .i e .o
   //  outputfile<<endl<<endl; for(unsigned int j=0; j<ContentMulti.size();j++) //for each row
-   for(unsigned int j=0; j<ContentMulti.size();j++) //for each row
-     {    
+  for(unsigned int j=0; j<ContentMulti.size();j++) //for each row
+    {    
       for(unsigned int i=0; i<ContentMulti[j].size();i++) //for each column
         {	 
           if (i!=0) outputfile << " | ";
@@ -1462,26 +1580,26 @@ void ALattice::Print2File_multi(string FileName)
         }
       if( j<ContentOpt.size()-1)
         outputfile<<endl;
-     }
-   outputfile.close();
+    }
+  outputfile.close();
     
-   //   cout<<endl<<endl;
+  //   cout<<endl<<endl;
  
-//   for(unsigned int j=0; j<ContentOpt.size();j++) //for each row
-//     {
-//       for(unsigned int i=0; i<ContentOpt[j].size();i++) //for each column
-//         {
+  //   for(unsigned int j=0; j<ContentOpt.size();j++) //for each row
+  //     {
+  //       for(unsigned int i=0; i<ContentOpt[j].size();i++) //for each column
+  //         {
 	 
-//           if (i!=0) outputfile << " | ";
-//           if(!ContentOpt[j][i][0].getSign())
-//             outputfile << "-";
-//           else
-//             outputfile << " ";
-//           outputfile << ContentOpt[j][i][0].getLit();
-//         }
-//       outputfile<<endl;
-//     }
-//   outputfile.close();
+  //           if (i!=0) outputfile << " | ";
+  //           if(!ContentOpt[j][i][0].getSign())
+  //             outputfile << "-";
+  //           else
+  //             outputfile << " ";
+  //           outputfile << ContentOpt[j][i][0].getLit();
+  //         }
+  //       outputfile<<endl;
+  //     }
+  //   outputfile.close();
 }
 
  
@@ -1489,8 +1607,8 @@ void ALattice::Print2File_multi_opt(string FileName)
 {
   fstream outputfile;
   outputfile.open(FileName.c_str() , ios::out); // read dimension of .i e .o
-   //  outputfile<<endl<<endl;
-    for(unsigned int j=0; j<ContentOpt.size();j++) //for each row
+  //  outputfile<<endl<<endl;
+  for(unsigned int j=0; j<ContentOpt.size();j++) //for each row
     {
       for(unsigned int i=0; i<ContentOpt[j].size();i++) //for each column
         {
@@ -1511,8 +1629,8 @@ void ALattice::Print2File_multi_dis_opt(string FileName)
 {
   fstream outputfile;
   outputfile.open(FileName.c_str() , ios::out); // read dimension of .i e .o
-   //  outputfile<<endl<<endl;
-    for(unsigned int j=0; j<ContentDisOpt.size();j++) //for each row
+  //  outputfile<<endl<<endl;
+  for(unsigned int j=0; j<ContentDisOpt.size();j++) //for each row
     {
       for(unsigned int i=0; i<ContentDisOpt[j].size();i++) //for each column
         {
