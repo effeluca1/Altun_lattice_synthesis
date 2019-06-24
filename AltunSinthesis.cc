@@ -21,9 +21,11 @@ class ALattice
 {
 private:
   string Name;                  // name of the lattice
+  string MultiUnary;            // indicate if is multiunary
   vector< vector<AElement> > Content; // vector osf all elements (Column x Row)
   vector< vector< vector <AElement> > > ContentMulti; // vector osf all elements (Column x Row)
   vector< vector< vector <AElement> > > ContentOpt; // vector osf all elements (Column x Row)
+   vector< vector< vector <AElement> > > ContentMultiOrd; // vector osf all elements (Column x Row)
   vector< vector< vector <AElement> > > ContentDisOpt; // vector osf all elements (Column x Row)
 
   int dimension[2];             // Col Row dimensions
@@ -75,6 +77,11 @@ public:
   void PrintLatticeDisOpt();
   void Print2File_multi_opt(string FileName);
   void Print2File_multi_dis_opt(string FileName);
+  void setMulti(string s);
+  void OptLiterals_M();
+  void PrintLatticeOpt_M();
+  void Print2File_multi_opt_M(string FileName);
+
 };
 
 class AElement
@@ -171,6 +178,7 @@ int main(int argc, char *argv[])
   for(unsigned int i=0; i<outputNum; i++)
     {
       ALattice app;
+      app.setMulti(MultiUnary);
       app.setNumOut(i); 
       app.read_synth_file(inFile+"f.eq", i , inputNum , false);
       app.read_synth_file(inFile+"f_dual.eq", i , inputNum , true);
@@ -301,7 +309,9 @@ int main(int argc, char *argv[])
               app.optimized_vec_col_M("app"+inFile+"Col", inFile+".latticeM"+to_string(i)+"optimizedCol");
 
               ///  cout <<"EEE"<< GLPKoutput.c_str() ;
+              //              cout << "!!!!!! COST !!!!!!!!" << endl;
               app.OptCost(LogFile_M.c_str());
+              //              cout << "!!!!!!!!!!!!!!!!!!!!!!"<< endl;
 
               // ---plot results------------------------
               string ResOptCol="ResOptCol";
@@ -324,6 +334,18 @@ int main(int argc, char *argv[])
               cout <<" GAP"<< COLstring << " " << GAPcol<< endl;
               f3.close();
               // ---------------------------------------
+
+
+
+              //  aeo;dfojś
+              app.OptLiterals_M();
+              cout << "OPTM!" << endl;
+              app.PrintLatticeOpt_M();
+
+              ostringstream i_str;	// stream used for the conversion
+              i_str << i;
+              app.Print2File_multi_opt_M(inFile+".latticeLITOPT_M_"+i_str.str());
+              cout << "OPTM!" << endl;
 
             }
           else {
@@ -668,8 +690,42 @@ AElement ALattice::DisOptimizeMultiValue(unsigned int J, unsigned int I)
 void ALattice::OptLiterals()
 {         
   int MultiMap[ContentMulti.size()][ContentMulti[0].size()];
-  ContentOpt=ContentMulti;
+
+    ContentOpt=ContentMulti;
   
+  for(unsigned int j=0; j<ContentMulti.size();j++) //for each row
+    {
+      for(unsigned int i=0; i<ContentMulti[j].size();i++) //for each column
+        {
+          if (ContentMulti[j][i].size()==1)
+            MultiMap[j][i]=1;
+          else
+            MultiMap[j][i]=0;
+        }
+    }
+
+  for(unsigned int j=0; j<ContentMulti.size();j++) //for each row
+    {
+      for(unsigned int i=0; i<ContentMulti[j].size();i++) //for each column
+        {
+          if (ContentMulti[j][i].size()>1)
+            {
+              ContentOpt[j][i][0]=OptimizeMultiValue(j,i);
+              ContentOpt[j][i].resize(1);
+              cout << j << " "<< i << " "<<"Out " <<ContentOpt[j][i][0].getSign()<< ContentOpt[j][i][0].getLit()<<endl;
+            }
+          else cout << j << " "<< i <<  "single " << endl;
+        }
+    }
+
+  
+}
+
+void ALattice::OptLiterals_M()
+{         
+  int MultiMap[ContentMulti.size()][ContentMulti[0].size()];
+
+  ContentOpt=ContentMultiOrd;
   for(unsigned int j=0; j<ContentMulti.size();j++) //for each row
     {
       for(unsigned int i=0; i<ContentMulti[j].size();i++) //for each column
@@ -1146,6 +1202,7 @@ void ALattice::optimized_vec_col(string FileName, string FileName2)
 
 void ALattice::optimized_vec_col_M(string FileName, string FileName2)
 {
+  ContentMultiOrd = ContentMulti;
   fstream f;
   string line;
   vector<int> orderOpt;
@@ -1206,6 +1263,7 @@ void ALattice::optimized_vec_col_M(string FileName, string FileName2)
                 cout << " ";
               
               cout << ContentMulti[j][orderOpt[i]][k].getLit();
+              ContentMultiOrd[j][i][k] =  ContentMulti[j][orderOpt[i]][k];
               if (k<(ContentMulti[j][orderOpt[i]].size() - 1 ))
                 cout << " ; " ; 
                 
@@ -1763,6 +1821,25 @@ void ALattice::PrintLatticeOpt()
   cout<<endl<<endl;
 }
 
+void ALattice::PrintLatticeOpt_M()
+{
+  for(unsigned int j=0; j<ContentMultiOrd.size();j++) //for each row
+    {
+      for(unsigned int i=0; i<ContentMultiOrd[j].size();i++) //for each column
+        {
+	 
+          if (i!=0) cout << " | ";
+          if(!ContentMultiOrd[j][i][0].getSign())
+            cout << "-";
+          else
+            cout << " ";
+          cout << ContentMultiOrd[j][i][0].getLit();
+        }
+      cout<<endl;
+    }
+  cout<<endl<<endl;
+}
+
 void ALattice::PrintLattice_multi()
 {
   for(unsigned int j=0; j<ContentMulti.size();j++) //for each row
@@ -1879,6 +1956,28 @@ void ALattice::Print2File_multi_opt(string FileName)
   outputfile.close();
 }
 
+void ALattice::Print2File_multi_opt_M(string FileName)
+{
+  fstream outputfile; 
+  outputfile.open(FileName.c_str() , ios::out); // read dimension of .i e .o
+  //  outputfile<<endl<<endl;
+  for(unsigned int j=0; j<ContentMultiOrd.size();j++) //for each row
+    {
+      for(unsigned int i=0; i<ContentMultiOrd[j].size();i++) //for each column
+        {
+	 
+          if (i!=0) outputfile << " | ";
+          if(!ContentMultiOrd[j][i][0].getSign())
+            outputfile << "-";
+          else
+            outputfile << " ";
+          outputfile << ContentMultiOrd[j][i][0].getLit();
+        }
+      outputfile<<endl;
+    }
+  outputfile.close();
+}
+
 void ALattice::Print2File_multi_dis_opt(string FileName)
 {
   fstream outputfile;
@@ -1900,3 +1999,8 @@ void ALattice::Print2File_multi_dis_opt(string FileName)
     }
   outputfile.close();
 } 
+
+void ALattice::setMulti(string s)
+{
+  MultiUnary=s;
+}
