@@ -38,6 +38,7 @@ private:
 public:
   //int OptFindVar();
   vector<string> OptVecVAR; // vecotr of all the variables for optimization
+  vector<string> OptVecVARm; // vecotr of all the variables for multi-variable optimization
   void setNumVar(int num);
   void setNumOut(int);
   int getNumVar();
@@ -55,9 +56,13 @@ public:
   int GetRowNum();
   int GetColNum();
   void OptFindVar();
+  void OptFindVarM();
   void print_data(string FileName);
+  void print_data_multi(string FileName);
   bool FindOptPos(string lit,int r, int c);
+  bool FindOptPosM(string lit,int r, int c);
   void Recompose_optimized(string FileName);
+  void optimized_vec_col_M(string FileName, string FileName2);
   void optimized_vec_col(string FileName, string FileName2);
   void optimized_vec_col_row(string FileName, string FileName2,string FileName3);
   void optimized_vec_row(string FileName, string FileName2);
@@ -96,7 +101,7 @@ void dual( string inFile, string outFile);
 int main(int argc, char *argv[])
 {
 
-  printf( "usage:\n-m\t multi variables(per cell) \n-u\t  unary cells  \n-OptCol\t  optimize column \n-OptRow\t  optimize rows \n-OptCol and -OptRow works only with -u (needs GLPK)\n\n\n");
+  printf( "usage:\n-m\t multi variables(per cell) \n-u\t  unary cells  \n-OptCol\t  optimize column \n-OptRow\t  optimize rows  \n-DisOptCol\t  dis-optimize column \n-DisOptRow\t  dis-optimize row \n-OptCol and -OptRow work  with -uand -m (needs GLPK)\n\n// ./AltunSinthesis file.pla lattice -m \n");
   (void)argc;
   fstream inputfile;
   string inFile(argv[1]);
@@ -107,18 +112,18 @@ int main(int argc, char *argv[])
   bool OPTrow=false; 
   cout << argc;
   
-  if (argc >= 4) {
-    string OptStr(argv[4]);
-    string OptStr2(argv[5]);
-     if (OptStr=="-DisOptCol") DISOPTcol=true;
-    if (OptStr=="-OptCol") OPTcol=true;
-    if (OptStr2=="-OptRow") OPTrow=true; // bisogna fare un ponte per farle tutte e due o un disable della sintesi per fare solo ordinamento
-       if (OptStr2=="-DisOptRow") DISOPTrow=true;
-  }
+  if (argc >= 4)
+    {
+      string OptStr(argv[4]);
+      string OptStr2(argv[5]);
+      if (OptStr=="-DisOptCol")  DISOPTcol=true;
+      if (OptStr=="-OptCol")     OPTcol=true;
+      if (OptStr2=="-OptRow")    OPTrow=true; // bisogna fare un ponte per farle tutte e due o un disable della sintesi per fare solo ordinamento
+      if (OptStr2=="-DisOptRow") DISOPTrow=true;
+    }
   string line;
-
-
-  cout << "YYYYY" << endl;
+  
+  // cout << "YYYYY" << endl;      
     
   vector<ALattice> lattices;  
 
@@ -184,8 +189,6 @@ int main(int argc, char *argv[])
           lattices.push_back(app);
           app.Print2File_multi(inFile+".latticeM"+i_str.str());
 
-
-
           cout << "OPT!" << endl;
           app.BuildLattice();
           app.OptLiterals();
@@ -194,13 +197,14 @@ int main(int argc, char *argv[])
           app.Print2File_multi_opt(inFile+".latticeLITOPT"+i_str.str());
           cout << "OPT!" << endl;
 
-          cout << "DisOPT!" << endl;
-          app.BuildLattice();
-          app.DisOptLiterals();
-          cout << "SisDisOPT!" << endl;
-          app.PrintLatticeDisOpt();
-          app.Print2File_multi_dis_opt(inFile+".latticeLIT_dis_OPT"+i_str.str());
-          cout << "DisOPT!" << endl;
+          // DISOPT!!! -- uncomment if needed
+          // cout << "DisOPT!" << endl;
+          // app.BuildLattice();
+          // app.DisOptLiterals();
+          // cout << "SisDisOPT!" << endl;
+          // app.PrintLatticeDisOpt();
+          // app.Print2File_multi_dis_opt(inFile+".latticeLIT_dis_OPT"+i_str.str());
+          // cout << "DisOPT!" << endl;
         }
       else
         {
@@ -215,8 +219,13 @@ int main(int argc, char *argv[])
         }
       
     
-
-
+      // if (app.getNumVar()>9)
+      //   {
+      //     cout << app.getNumVar() <<" VARs are too much! :-P"<<endl;
+      //     return 2;
+      //   }
+      
+      cout << "$$$$$$$$$" <<  app.OptVecVAR.size() << "VAR $$$$$$$$$";
       
       if (DISOPTcol==true)
         {
@@ -229,7 +238,7 @@ int main(int argc, char *argv[])
           app.print_data(Datafile);
           char* OptCommand;
           OptCommand = (char*)malloc(sizeof(char)*512);
-          sprintf(OptCommand,"glpsol --tmlim 3600 --memlim 8000 --model ColDisOpt.mod  --data %s --output %s > %s", Datafile.c_str(),GLPKoutput.c_str(),LogFile.c_str());
+          sprintf(OptCommand,"glpsol --tmlim 360 --memlim 8000 --model ColDisOpt.mod  --data %s --output %s > %s", Datafile.c_str(),GLPKoutput.c_str(),LogFile.c_str());
           cout << OptCommand<< endl;
           system(OptCommand);
 
@@ -253,21 +262,15 @@ int main(int argc, char *argv[])
           string COLstring, GAPcol;
           while( getline(fo , line))
             {
-   
               if (line[0]=='T' && line[1]=='i' && line[2]=='m')
                 COLstring=line.substr(line.find(':')+1,line.find("sec")-1-line.find(':')) ;
-
               if (line[0]=='+' && line.find('%') != std::string::npos)
                 GAPcol=line.substr(line.find('%')-5,5)  ;     // + 28822: mip =   1.300000000e+02 <=   2.380000000e+02  83.1% (205W
-         
-              
             }
           f3 << COLstring << " " << GAPcol<< endl;
           cout <<" GAP"<< COLstring << " " << GAPcol<< endl;
           f3.close();
           // ---------------------------------------
-
-          
           cout << "##########  ############  ############"<< endl;
         }
 
@@ -275,174 +278,212 @@ int main(int argc, char *argv[])
         {
           cout << "########## COLUMN  OPTIMIZATION!  ############"<< endl;
           //          int col=app.GetColNum(),row=app.GetRowNum();
-          app.OptFindVar();
-          string Datafile = inFile+".data"+to_string(i);
-          string LogFile = inFile+".ResultColGLPK"+to_string(i);
-          string GLPKoutput = inFile+".OutColGLPK"+to_string(i);
-          app.print_data(Datafile);
-          char* OptCommand;
-          OptCommand = (char*)malloc(sizeof(char)*512);
-          sprintf(OptCommand,"glpsol --tmlim 3600 --memlim 8000 --model ColOpt.mod  --data %s --output %s > %s", Datafile.c_str(),GLPKoutput.c_str(),LogFile.c_str());
-          cout << OptCommand<< endl;
-          system(OptCommand);
-
-          sprintf(OptCommand,"cat %s | grep y | grep val | grep '\\= 1'>app%sCol",LogFile.c_str(),inFile.c_str()); // removes the first and last column that werw added to fix the linear problem mapping
-          cout << OptCommand<< endl;
-          system(OptCommand);
-          app.optimized_vec_col("app"+inFile+"Col", inFile+".lattice"+to_string(i)+"optimizedCol");
-
-          ///  cout <<"EEE"<< GLPKoutput.c_str() ;
-          app.OptCost(LogFile.c_str());
-
-          // ---plot results------------------------
-          string ResOptCol="ResOptCol";
-          char* NAMEappCol;
-          NAMEappCol = (char*)malloc(sizeof(char)*512);
-          fstream f3, fo;
-          fo.open(LogFile.c_str(), ios::in);
-          f3.open(ResOptCol.c_str(), ios::app|ios::out);
-          f3 << inFile <<i<< " "   << app.GetRowNum()<< " " << app.GetColNum() << " "<< app.OptVecVAR.size() <<" ";
-
-          string COLstring, GAPcol;
-          while( getline(fo , line))
+          if (MultiUnary == "-m")
             {
-   
-              if (line[0]=='T' && line[1]=='i' && line[2]=='m')
-                COLstring=line.substr(line.find(':')+1,line.find("sec")-1-line.find(':')) ;
-
-              if (line[0]=='+' && line.find('%') != std::string::npos)
-                GAPcol=line.substr(line.find('%')-5,5)  ;     // + 28822: mip =   1.300000000e+02 <=   2.380000000e+02  83.1% (205W
-         
+              cout << "***********MULTI************" << endl;
+              app.OptFindVarM();
               
+              string Datafile_M = inFile+".data_M"+to_string(i);
+              string LogFile_M = inFile+".ResultColGLPK_M"+to_string(i);
+              string GLPKoutput_M = inFile+".OutColGLPK_M"+to_string(i);
+
+              app.print_data_multi(Datafile_M);
+              
+              char* OptCommand_M;
+              OptCommand_M = (char*)malloc(sizeof(char)*512);
+              sprintf(OptCommand_M,"glpsol --tmlim 3600 --memlim 8000 --model ColOpt.mod  --data %s --output %s > %s", Datafile_M.c_str(),GLPKoutput_M.c_str(),LogFile_M.c_str());
+              cout << OptCommand_M<< endl;
+              system(OptCommand_M);
+
+              sprintf(OptCommand_M,"cat %s | grep y | grep val | grep '\\= 1'>app%sCol",LogFile_M.c_str(),inFile.c_str()); // removes the first and last column that were added to fix the linear problem mapping
+              cout << OptCommand_M<< endl;
+              system(OptCommand_M);
+              app.optimized_vec_col_M("app"+inFile+"Col", inFile+".latticeM"+to_string(i)+"optimizedCol");
+
+              ///  cout <<"EEE"<< GLPKoutput.c_str() ;
+              app.OptCost(LogFile_M.c_str());
+
+              // ---plot results------------------------
+              string ResOptCol="ResOptCol";
+              char* NAMEappCol;
+              NAMEappCol = (char*)malloc(sizeof(char)*512);
+              fstream f3, fo;
+              fo.open(LogFile_M.c_str(), ios::in);
+              f3.open(ResOptCol.c_str(), ios::app|ios::out);
+              f3 << inFile <<i<< " "   << app.GetRowNum()<< " " << app.GetColNum() << " "<< app.OptVecVAR.size() <<" ";
+
+              string COLstring, GAPcol;
+              while( getline(fo , line))
+                {   
+                  if (line[0]=='T' && line[1]=='i' && line[2]=='m')
+                    COLstring=line.substr(line.find(':')+1,line.find("sec")-1-line.find(':')) ;
+                  if (line[0]=='+' && line.find('%') != std::string::npos)
+                    GAPcol=line.substr(line.find('%')-5,5)  ;     // + 28822: mip =   1.300000000e+02 <=   2.380000000e+02  83.1% (205W                       
+                }
+              f3 << COLstring << " " << GAPcol<< endl;
+              cout <<" GAP"<< COLstring << " " << GAPcol<< endl;
+              f3.close();
+              // ---------------------------------------
+
             }
-          f3 << COLstring << " " << GAPcol<< endl;
-          cout <<" GAP"<< COLstring << " " << GAPcol<< endl;
-          f3.close();
-          // ---------------------------------------
+          else {
+            cout << "*******SINGLE*******"<< endl;
+            app.OptFindVar();
+            string Datafile = inFile+".data"+to_string(i);
+            string LogFile = inFile+".ResultColGLPK"+to_string(i);
+            string GLPKoutput = inFile+".OutColGLPK"+to_string(i);
+            app.print_data(Datafile);
+            char* OptCommand;
+            OptCommand = (char*)malloc(sizeof(char)*512);
+            sprintf(OptCommand,"glpsol --tmlim 3600 --memlim 8000 --model ColOpt.mod  --data %s --output %s > %s", Datafile.c_str(),GLPKoutput.c_str(),LogFile.c_str());
+            cout << OptCommand<< endl;
+            system(OptCommand);
+
+            sprintf(OptCommand,"cat %s | grep y | grep val | grep '\\= 1'>app%sCol",LogFile.c_str(),inFile.c_str()); // removes the first and last column that were added to fix the linear problem mapping
+            cout << OptCommand<< endl;
+            system(OptCommand);
+            app.optimized_vec_col("app"+inFile+"Col", inFile+".lattice"+to_string(i)+"optimizedCol");
+
+            ///  cout <<"EEE"<< GLPKoutput.c_str() ;
+            app.OptCost(LogFile.c_str());
+
+            // ---plot results------------------------
+            string ResOptCol="ResOptCol";
+            char* NAMEappCol;
+            NAMEappCol = (char*)malloc(sizeof(char)*512);
+            fstream f3, fo;
+            fo.open(LogFile.c_str(), ios::in);
+            f3.open(ResOptCol.c_str(), ios::app|ios::out);
+            f3 << inFile <<i<< " "   << app.GetRowNum()<< " " << app.GetColNum() << " "<< app.OptVecVAR.size() <<" ";
+
+            string COLstring, GAPcol;
+            while( getline(fo , line))
+              {   
+                if (line[0]=='T' && line[1]=='i' && line[2]=='m')
+                  COLstring=line.substr(line.find(':')+1,line.find("sec")-1-line.find(':')) ;
+                if (line[0]=='+' && line.find('%') != std::string::npos)
+                  GAPcol=line.substr(line.find('%')-5,5)  ;     // + 28822: mip =   1.300000000e+02 <=   2.380000000e+02  83.1% (205W                       
+              }
+            f3 << COLstring << " " << GAPcol<< endl;
+            cout <<" GAP"<< COLstring << " " << GAPcol<< endl;
+            f3.close();
+            // ---------------------------------------
 
           
-          cout << "##########  ############  ############"<< endl;
-        }
+            cout << "##########  ############  ############"<< endl;
+          }
 
-      cout<<"OPTTTTY" << OPTrow<< endl;
-      if (OPTrow==true)
-        {
-          cout << "########## ROW  OPTIMIZATION!  ############"<< endl;
-          //          int col=app.GetColNum(),row=app.GetRowNum();
-          app.OptFindVar();
-          string Datafile = inFile+".data"+to_string(i);
-          string LogFile = inFile+".ResultRowGLPK"+to_string(i);
-          string GLPKoutput = inFile+".OutRowGLPK"+to_string(i);
-          app.print_data(Datafile);
-          char* OptCommand;
-          OptCommand = (char*)malloc(sizeof(char)*512);
-          sprintf(OptCommand,"glpsol  --tmlim 3600 --memlim 8000 --model RowOpt.mod  --data %s --output %s > %s", Datafile.c_str(),GLPKoutput.c_str(),LogFile.c_str());
-          cout << OptCommand<< endl;
-          
-          system(OptCommand);
-
-          sprintf(OptCommand,"cat %s | grep y | grep val | grep '\\= 1'>app%sRow",LogFile.c_str(),inFile.c_str()); // removes the first and last column that werw added to fix the linear problem mapping
-          cout << OptCommand<< endl;
-          system(OptCommand);
-          app.optimized_vec_row("app"+inFile+"Row", inFile+".lattice"+to_string(i)+"optimizedRow");
-
-          // cout <<"EEE"<< GLPKoutput.c_str() ;
-          app.OptCost(LogFile.c_str());
-
-          // ---plot results------------------------
-          string ResOptRow="ResOptRow";
-          char* NAMEappRow;
-          NAMEappRow = (char*)malloc(sizeof(char)*512);
-          fstream f3, fo;
-          fo.open(LogFile.c_str(), ios::in);
-          f3.open(ResOptRow.c_str(), ios::app|ios::out);
-          f3 << inFile <<i<< " "   << app.GetRowNum()<< " " << app.GetColNum() << " "<< app.OptVecVAR.size() <<" ";
-
-          string ROWstring, GAProw;
-          while( getline(fo , line))
+          cout<<"OPTTTTY" << OPTrow<< endl;
+          if (OPTrow==true)
             {
-              if (line[0]=='T' && line[1]=='i' && line[2]=='m')
-                ROWstring=line.substr(line.find(':')+1,line.find("sec")-1-line.find(':')) ;
-
-              if (line[0]=='+' && line.find('%') != std::string::npos)
-                GAProw=line.substr(line.find_last_of('%')-5,5)  ;     // + 28822: mip =   1.300000000e+02 <=   2.380000000e+02  83.1% (205W
-         
-              
-            }
-          f3 << ROWstring << " " << GAProw<< endl;
-          f3.close();
-         
-
-          // ---------------------------------------
-
-         
-          cout << "##########  ############  ############"<< endl;
-        }
-      cout << "##" << endl;
-
-       if (DISOPTrow==true)
-        {
-          cout << "########## ROW  DISOPTIMIZATION!  ############"<< endl;
-          //          int col=app.GetColNum(),row=app.GetRowNum();
-          app.OptFindVar();
-          string Datafile = inFile+".data"+to_string(i);
-          string LogFile = inFile+".ResultRowGLPK"+to_string(i);
-          string GLPKoutput = inFile+".OutRowGLPK"+to_string(i);
-          app.print_data(Datafile);
-          char* OptCommand;
-          OptCommand = (char*)malloc(sizeof(char)*512);
-          sprintf(OptCommand,"glpsol  --tmlim 3600 --memlim 8000 --model RowDisOpt.mod  --data %s --output %s > %s", Datafile.c_str(),GLPKoutput.c_str(),LogFile.c_str());
-          cout << OptCommand<< endl;
+              cout << "########## ROW  OPTIMIZATION!  ############"<< endl;
+              //          int col=app.GetColNum(),row=app.GetRowNum();
+              app.OptFindVar();
+              string Datafile = inFile+".data"+to_string(i);
+              string LogFile = inFile+".ResultRowGLPK"+to_string(i);
+              string GLPKoutput = inFile+".OutRowGLPK"+to_string(i);
+              app.print_data(Datafile);
+              char* OptCommand;
+              OptCommand = (char*)malloc(sizeof(char)*512);
+              sprintf(OptCommand,"glpsol  --tmlim 3600 --memlim 8000 --model RowOpt.mod  --data %s --output %s > %s", Datafile.c_str(),GLPKoutput.c_str(),LogFile.c_str());
+              cout << OptCommand<< endl;
           
-          system(OptCommand);
+              system(OptCommand);
 
-          sprintf(OptCommand,"cat %s | grep y | grep val | grep '\\= 1'>app%sRow",LogFile.c_str(),inFile.c_str()); // removes the first and last column that werw added to fix the linear problem mapping
-          cout << OptCommand<< endl;
-          system(OptCommand);
-          app.optimized_vec_row("app"+inFile+"Row", inFile+".lattice"+to_string(i)+"optimizedRow");
+              sprintf(OptCommand,"cat %s | grep y | grep val | grep '\\= 1'>app%sRow",LogFile.c_str(),inFile.c_str()); // removes the first and last column that werw added to fix the linear problem mapping
+              cout << OptCommand<< endl;
+              system(OptCommand);
+              app.optimized_vec_row("app"+inFile+"Row", inFile+".lattice"+to_string(i)+"optimizedRow");
 
-          // cout <<"EEE"<< GLPKoutput.c_str() ;
-          app.OptCost(LogFile.c_str());
+              // cout <<"EEE"<< GLPKoutput.c_str() ;
+              app.OptCost(LogFile.c_str());
 
-          // ---plot results------------------------
-          string ResOptRow="ResOptRow";
-          char* NAMEappRow;
-          NAMEappRow = (char*)malloc(sizeof(char)*512);
-          fstream f3, fo;
-          fo.open(LogFile.c_str(), ios::in);
-          f3.open(ResOptRow.c_str(), ios::app|ios::out);
-          f3 << inFile <<i<< " "   << app.GetRowNum()<< " " << app.GetColNum() << " "<< app.OptVecVAR.size() <<" ";
+              // ---plot results------------------------
+              string ResOptRow="ResOptRow";
+              char* NAMEappRow;
+              NAMEappRow = (char*)malloc(sizeof(char)*512);
+              fstream f3, fo;
+              fo.open(LogFile.c_str(), ios::in);
+              f3.open(ResOptRow.c_str(), ios::app|ios::out);
+              f3 << inFile <<i<< " "   << app.GetRowNum()<< " " << app.GetColNum() << " "<< app.OptVecVAR.size() <<" ";
 
-          string ROWstring, GAProw;
-          while( getline(fo , line))
-            {
-              if (line[0]=='T' && line[1]=='i' && line[2]=='m')
-                ROWstring=line.substr(line.find(':')+1,line.find("sec")-1-line.find(':')) ;
+              string ROWstring, GAProw;
+              while( getline(fo , line))
+                {
+                  if (line[0]=='T' && line[1]=='i' && line[2]=='m')
+                    ROWstring=line.substr(line.find(':')+1,line.find("sec")-1-line.find(':')) ;
+                  if (line[0]=='+' && line.find('%') != std::string::npos)
+                    GAProw=line.substr(line.find_last_of('%')-5,5)  ;     // + 28822: mip =   1.300000000e+02 <=   2.380000000e+02  83.1% (205W                       
+                }
+              f3 << ROWstring << " " << GAProw<< endl;
+              f3.close();         
+              // ---------------------------------------
 
-              if (line[0]=='+' && line.find('%') != std::string::npos)
-                GAProw=line.substr(line.find_last_of('%')-5,5)  ;     // + 28822: mip =   1.300000000e+02 <=   2.380000000e+02  83.1% (205W
          
-              
+              cout << "##########  ############  ############"<< endl;
             }
-          f3 << ROWstring << " " << GAProw<< endl;
-          f3.close();
-         
+          cout << "##" << endl;
 
-          // ---------------------------------------
+          if (DISOPTrow==true)
+            {
+              cout << "########## ROW  DISOPTIMIZATION!  ############"<< endl;
+              //          int col=app.GetColNum(),row=app.GetRowNum();
+              app.OptFindVar();
+              string Datafile = inFile+".data"+to_string(i);
+              string LogFile = inFile+".ResultRowGLPK"+to_string(i);
+              string GLPKoutput = inFile+".OutRowGLPK"+to_string(i);
+              app.print_data(Datafile);
+              char* OptCommand;
+              OptCommand = (char*)malloc(sizeof(char)*512);
+              sprintf(OptCommand,"glpsol  --tmlim 360 --memlim 8000 --model RowDisOpt.mod  --data %s --output %s > %s", Datafile.c_str(),GLPKoutput.c_str(),LogFile.c_str());
+              cout << OptCommand<< endl;
+          
+              system(OptCommand);
+
+              sprintf(OptCommand,"cat %s | grep y | grep val | grep '\\= 1'>app%sRow",LogFile.c_str(),inFile.c_str()); // removes the first and last column that werw added to fix the linear problem mapping
+              cout << OptCommand<< endl;
+              system(OptCommand);
+              app.optimized_vec_row("app"+inFile+"Row", inFile+".lattice"+to_string(i)+"optimizedRow");
+
+              // cout <<"EEE"<< GLPKoutput.c_str() ;
+              app.OptCost(LogFile.c_str());
+
+              // ---plot results------------------------
+              string ResOptRow="ResOptRow";
+              char* NAMEappRow;
+              NAMEappRow = (char*)malloc(sizeof(char)*512);
+              fstream f3, fo;
+              fo.open(LogFile.c_str(), ios::in);
+              f3.open(ResOptRow.c_str(), ios::app|ios::out);
+              f3 << inFile <<i<< " "   << app.GetRowNum()<< " " << app.GetColNum() << " "<< app.OptVecVAR.size() <<" ";
+
+              string ROWstring, GAProw;
+              while( getline(fo , line))
+                {
+                  if (line[0]=='T' && line[1]=='i' && line[2]=='m')
+                    ROWstring=line.substr(line.find(':')+1,line.find("sec")-1-line.find(':')) ;
+                  if (line[0]=='+' && line.find('%') != std::string::npos)
+                    GAProw=line.substr(line.find_last_of('%')-5,5)  ;     // + 28822: mip =   1.300000000e+02 <=   2.380000000e+02  83.1% (205W
+                }
+              f3 << ROWstring << " " << GAProw<< endl;
+              f3.close();      
+              // ---------------------------------------
 
          
-          cout << "##########  ############  ############"<< endl;
-        }
-      cout << "##" << endl;
+              cout << "##########  ############  ############"<< endl;
+            }
+          cout << "##" << endl;
 
       
-      if ((OPTrow==true && OPTcol==true)|| (DISOPTrow==true && DISOPTcol==true))
-        {
-          cout << "########## ROW & COLUMN  OPTIMIZATION(/DIS)!  ############"<< endl;
-          app.optimized_vec_col_row("app"+inFile+"Col", inFile+".lattice"+to_string(i)+"optimizedRowCol","app"+inFile+"Row");
-        }
+          if ((OPTrow==true && OPTcol==true)|| (DISOPTrow==true && DISOPTcol==true))
+            {
+              cout << "########## ROW & COLUMN  OPTIMIZATION(/DIS)!  ############"<< endl;
+              app.optimized_vec_col_row("app"+inFile+"Col", inFile+".lattice"+to_string(i)+"optimizedRowCol","app"+inFile+"Row");
+            }
       
+        }
     }
+  
   return 0;
 }
 
@@ -1103,6 +1144,108 @@ void ALattice::optimized_vec_col(string FileName, string FileName2)
   cout<<"##"<<endl<<endl;
 }
 
+void ALattice::optimized_vec_col_M(string FileName, string FileName2)
+{
+  fstream f;
+  string line;
+  vector<int> orderOpt;
+  f.open(FileName.c_str(), ios::in);
+  while( getline(f , line))
+    {
+      orderOpt.push_back(0);
+    }
+  f.close();
+  
+
+  
+  f.open(FileName.c_str(), ios::in);
+  while( getline(f , line))
+    {
+      int i=0;
+      int arrive= stoi(line.substr(line.find(',')+1,line.find(']')- line.find(',')-1));
+      int start = stoi(line.substr(2, line.find(',')-2).c_str());
+      cout << "ASC "<<start<<","<< arrive<<endl;
+      //    orderOpt[start-1]=arrive-1;
+      orderOpt[start-1]=arrive-1;
+      i++;
+    }
+
+  for(unsigned int i=0; i<orderOpt.size();i++) //for each column
+    {
+      cout << "E"<< orderOpt[i]<<endl;
+
+    }
+  cout << "## print optimized lattice ##" << endl;
+
+
+// for(unsigned int j=0; j<Content.size();j++) //for each row
+//     {
+//       for(unsigned int i=0; i<Content[j].size();i++) //for each column
+//         {
+//           if (i!=0) cout << " | ";
+//           if(!Content[j][orderOpt[i]].getSign())
+//             cout << "-";
+//           else
+//             cout << " ";
+//           cout << Content[j][orderOpt[i]].getLit();
+//         }
+//       cout<<endl;
+//     }
+
+  
+ for(unsigned int j=0; j<ContentMulti.size();j++) //for each row
+    {
+      for(unsigned int i=0; i<ContentMulti[j].size();i++) //for each column
+        {	 
+          if (i!=0) cout << " | ";
+          for(unsigned int k=0; k<ContentMulti[j][orderOpt[i]].size();k++) //for each site
+            {
+              if(!ContentMulti[j][orderOpt[i]][k].getSign())
+                cout << "-";
+              else
+                cout << " ";
+              
+              cout << ContentMulti[j][orderOpt[i]][k].getLit();
+              if (k<(ContentMulti[j][orderOpt[i]].size() - 1 ))
+                cout << " ; " ; 
+                
+            }
+        }
+      cout<<endl;
+    }
+  cout<<endl<<endl;
+  
+
+  //string FileName2=FileName + "optimized";
+  cout<< FileName2;
+  fstream f2;
+  f2.open(FileName2.c_str(), ios::out);
+
+ for(unsigned int j=0; j<ContentMulti.size();j++) //for each row
+    {
+      for(unsigned int i=0; i<ContentMulti[j].size();i++) //for each column
+        {	 
+          if (i!=0) f2 << " | ";
+          for(unsigned int k=0; k<ContentMulti[j][orderOpt[i]].size();k++) //for each site
+            {
+              if(!ContentMulti[j][orderOpt[i]][k].getSign())
+                f2 << "-";
+              else
+                f2 << " ";
+              
+              f2 << ContentMulti[j][orderOpt[i]][k].getLit();
+              if (k<(ContentMulti[j][orderOpt[i]].size() - 1 ))
+                f2 << " ; " ; 
+                
+            }
+        }
+      f2<<endl;
+    }
+
+  f2.close();
+  cout<<"##"<<endl<<endl;
+}
+
 
 
 
@@ -1154,6 +1297,54 @@ void ALattice::print_data(string FileName)
     }
 }
 
+void ALattice::print_data_multi(string FileName)
+{
+  fstream f;
+  f.open(FileName.c_str(), ios::out);
+  bool debug=false;
+  if (!debug)
+    {
+      f << "param m:=" << GetColNum() << ";" <<endl;
+      f << "param n:=" << GetRowNum()<< ";" <<endl;
+      f << "param q:=" << OptVecVARm.size()<< ";" <<endl <<endl;
+      f << "param a:=" <<  endl;
+
+      for(unsigned int i=0; i<OptVecVARm.size(); i++)
+        {
+          f << "#"<<OptVecVARm[i] << endl << "[*,*,"<<i+1<< "]:         ";
+          for(unsigned int j=0; j<(unsigned int)GetColNum(); j++)
+            {
+              f << j+1 << " ";
+            }
+          f << " := " << endl;
+
+          for(unsigned int j=0; j<(unsigned int)GetRowNum(); j++)
+            {
+              f << endl << "              "<<j+1<<"  ";
+    
+              for(unsigned int k=0; k<(unsigned int)GetColNum(); k++)
+                {
+                  // if (k==0 || k==(unsigned int)GetColNum())
+                  //   f << "0 ";
+                  // else
+                  //   {
+                  //       cout << "QQQQ" <<  OptVecVARm[i] <<" " << endl;
+                  f << FindOptPosM(OptVecVARm[i],j,k) <<" ";
+                  // }
+                }
+            };
+          f << endl<< endl;
+        }
+
+      f << ";" << endl <<"end;" << endl;
+      f.close();
+    }
+  else
+    {
+      cout << ";" << endl <<"end;" << endl;
+    }
+}
+
 bool ALattice::FindOptPos(string lit,int r, int c)
 {
   string varIN;
@@ -1179,6 +1370,31 @@ bool ALattice::FindOptPos(string lit,int r, int c)
   else
     return 0;
       
+}
+
+bool ALattice::FindOptPosM(string lit,int r, int c)
+{
+  string varIN;
+  int app=0;
+  // cout << "A" << varIN << endl;
+  //  cout << "B" << varIN <<endl;
+  // !ContentMulti[r][c].getSign()
+  for(unsigned int k=0; k<ContentMulti[r][c].size();k++) //for each site
+    {
+      if(!ContentMulti[r][c][k].getSign())
+        {
+          varIN="-" + std::to_string(ContentMulti[r][c][k].getLit());
+        }
+      else
+        {
+          varIN=std::to_string(ContentMulti[r][c][k].getLit());
+        }
+         // cout <<"  EE" << varIN <<  " " << lit << endl;
+      if (varIN==lit)
+        app=1;
+   
+    }
+  return app;
 }
 
 void ALattice::OptCost(string Filename)
@@ -1236,6 +1452,45 @@ void ALattice::OptFindVar()
     }
   // return OptVecVar;
 }
+
+
+void ALattice::OptFindVarM()
+{
+  //  vector<string> OptVecVar;
+  for(unsigned int j=0; j<ContentMulti.size();j++) //for each row
+    {
+      
+      for(unsigned int i=0; i<ContentMulti[j].size();i++) //for each column
+        {
+          for(unsigned int k=0; k<ContentMulti[j][i].size();k++) //for each site
+            {
+              string appStr;
+              if(!ContentMulti[j][i][k].getSign())
+                {
+                  appStr="-" + std::to_string(ContentMulti[j][i][k].getLit());
+                }
+              else
+                appStr= std::to_string(ContentMulti[j][i][k].getLit());
+
+              //         cout << appStr << endl;
+              std::vector<string>::iterator pos;
+              pos = find (OptVecVARm.begin(), OptVecVARm.end(), appStr);
+  
+              if (pos == OptVecVARm.end())
+                {
+                  OptVecVARm.push_back(appStr);
+                  //   cout << appStr<<"q";
+                  //cout << OptVecVar[OptVecVar.size()-1]<<endl;
+                }
+              //          else
+              //  std::cout << "Element not found in myvector\n";
+            }
+          //      cout << endl;
+        }
+      // return OptVecVar;
+    }
+}
+
 
 
 int ALattice::getNumVar()
@@ -1427,7 +1682,7 @@ AElement ALattice::FindCommonLiteral(vector<AElement> term, vector<AElement> ter
 	  {
 	    //cout << endl;
 	    return term[i]; 
-          }
+          }   
       }
 }
 
@@ -1515,8 +1770,7 @@ void ALattice::PrintLattice_multi()
       for(unsigned int i=0; i<ContentMulti[j].size();i++) //for each column
         {	 
           if (i!=0) cout << " | ";
-          for(unsigned int k=0; k
-                <ContentMulti[j][i].size();k++) //for each site
+          for(unsigned int k=0; k<ContentMulti[j][i].size();k++) //for each site
             {
               if(!ContentMulti[j][i][k].getSign())
                 cout << "-";

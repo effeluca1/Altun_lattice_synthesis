@@ -17,7 +17,6 @@ var min_zj_zv{i in I, j in J, v in J, k in K} binary ;
 
 #OBJ
 #come definisco coppie u,v wrt i.... 
-#maximize R: sum{k in K} sum{i in I,j in J,v in J: abs(v-j)=1 } x[i,j,v,k]; # controllare
 maximize R: sum{k in K} sum{i in I,j in J,v in J: abs(v-j)=1} min_zj_zv[i,j,v,k];
                                                                                    
 #CONSTR
@@ -29,7 +28,6 @@ subject to min_zj {i in I, j in J, v in J, k in K}: min_zj_zv[i,j,v,k] <= z[i,j,
 subject to min_zv {i in I, j in J, v in J, k in K}: min_zj_zv[i,j,v,k] <= z[i,v,k];
 
 subject to consistency_L{j in J}: sum{l in J} y[l,j]=1; 
-#subject to mapping {i in I, j in J, v in J, k in K}: x[i,j,v,k] <=  z[i, j, k] + z[i, v, k] - 1 ;#controllare
 
 solve;
 #display I;
