@@ -82,6 +82,8 @@ public:
   void PrintLatticeOpt_M();
   void Print2File_multi_opt_M(string FileName);
   void optimized_vec_row_M(string FileName, string FileName2);
+  void optimized_vec_col_row_M(string FileName, string FileName2, string FileName3);
+  
 };
 
 class AElement
@@ -541,7 +543,7 @@ int main(int argc, char *argv[])
           fstream f3, fo;
           fo.open(LogFile.c_str(), ios::in);
           f3.open(ResOptRow.c_str(), ios::app|ios::out);
-          f3 << inFile <<i<< " "   << app.GetRowNum()<< " " << app.GetColNum() << " "<< app.OptVecVAR.size() <<" ";
+          f3 << inFile <<i<< " "   << app.GetRowNum()<< " " << app.GetColNum() << " "<< app.OptVecVAR.size() <<"K ";
 
           string ROWstring, GAProw;
           while( getline(fo , line))
@@ -564,7 +566,7 @@ int main(int argc, char *argv[])
       if ((OPTrow==true && OPTcol==true)|| (DISOPTrow==true && DISOPTcol==true))
         {
           cout << "########## ROW & COLUMN  OPTIMIZATION(/DIS)!  ############"<< endl;
-          app.optimized_vec_col_row("app"+inFile+"Col", inFile+".lattice"+to_string(i)+"optimizedRowCol","app"+inFile+"Row");
+          app.optimized_vec_col_row_M("app"+inFile+"Col", inFile+".lattice"+to_string(i)+"optimizedRowCol","app"+inFile+"Row");
         }
       
     }
@@ -1143,6 +1145,126 @@ void ALattice::optimized_vec_col_row(string FileName, string FileName2, string F
             f2 << " ";
           f2 << Content[orderOptR[j]][orderOptC[i]].getLit();
         }
+      f2<<endl;
+    }
+  
+
+
+
+  f2.close();
+  cout<<"##"<<endl<<endl;
+}
+
+void ALattice::optimized_vec_col_row_M(string FileName, string FileName2, string FileName3)
+{
+  ContentMultiOrd = ContentMulti;
+  fstream f,fR;
+  string line;
+  vector<int> orderOptC, orderOptR;
+  f.open(FileName.c_str(), ios::in);
+  fR.open(FileName3.c_str(), ios::in);
+  while( getline(f , line))
+    {
+      orderOptC.push_back(0);
+    }
+  f.close();
+
+  while( getline(fR , line))
+    {
+      orderOptR.push_back(0);
+    }
+  fR.close();
+
+  
+  f.open(FileName.c_str(), ios::in);
+  fR.open(FileName3.c_str(), ios::in);
+  while( getline(f , line))
+    {
+      int i=0;
+      int arrive= stoi(line.substr(line.find(',')+1,line.find(']')- line.find(',')-1));
+      int start = stoi(line.substr(2, line.find(',')-2).c_str());
+      cout << "ASC "<<start<<","<< arrive<<endl;
+      //    orderOptC[start-1]=arrive-1;
+      orderOptC[start-1]=arrive-1;
+      i++;
+    }
+  f.close();
+  cout <<FileName3<< "ASR ";
+  while( getline(fR , line))
+    {
+      int i=0;
+      int arrive= stoi(line.substr(line.find(',')+1,line.find(']')- line.find(',')-1));
+      int start = stoi(line.substr(2, line.find(',')-2).c_str());
+      cout << "ASR "<<start<<","<< arrive<<endl;
+      //    orderOpt[start-1]=arrive-1;
+      orderOptR[start-1]=arrive-1;
+      i++;
+    }
+  fR.close();
+  for(unsigned int i=0; i<orderOptC.size();i++) //for each column
+    {
+      cout << "EC"<< orderOptC[i]<<endl;
+
+    }
+  for(unsigned int i=0; i<orderOptR.size();i++) //for each column
+    {
+      cout << "ER"<< orderOptR[i]<<endl;
+
+    }
+  cout << "## print optimized lattice ##" << endl;
+  for(unsigned int j=0; j<ContentMulti.size();j++) //for each row
+    {
+      for(unsigned int i=0; i<ContentMulti[j].size();i++) //for each column
+        {
+	 
+          if (i!=0) cout << " | ";
+           for(unsigned int k=0; k<ContentMulti[orderOptR[j]][orderOptC[i]].size();k++) //for each site
+            {
+          if(!ContentMulti[orderOptR[j]][orderOptC[i]][k].getSign())
+            cout << "-";
+          else
+            cout << " ";
+          cout << ContentMulti[orderOptR[j]][orderOptC[i]][k].getLit();
+
+          
+              if (k<(ContentMulti[orderOptR[j]][orderOptC[i]].size() - 1 ))
+                cout << " ; " ; 
+      
+
+            }
+        }
+      
+      cout<<endl;
+    }
+  cout<<endl<<endl;
+  
+
+  //string FileName2=FileName + "optimized";
+  cout<< FileName2;
+  fstream f2;
+  f2.open(FileName2.c_str(), ios::out);
+
+  for(unsigned int j=0; j<ContentMulti.size();j++) //for each row
+    {
+      for(unsigned int i=0; i<ContentMulti[j].size();i++) //for each column
+        {
+	 
+          if (i!=0) f2 << " | ";
+          for(unsigned int k=0; k<ContentMulti[orderOptR[j]][orderOptC[i]].size();k++) //for each site
+            {
+             if(!ContentMulti[orderOptR[j]][orderOptC[i]][k].getSign())
+            f2 << "-";
+          else
+            f2 << " ";
+          f2 << ContentMulti[orderOptR[j]][orderOptC[i]][k].getLit();
+
+              if (k<(ContentMulti[orderOptR[j]][orderOptC[i]].size() - 1 ))
+                f2 << " ; " ; 
+      
+
+            }
+        }
+      
       f2<<endl;
     }
   
