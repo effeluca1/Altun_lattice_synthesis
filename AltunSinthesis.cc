@@ -566,8 +566,21 @@ int main(int argc, char *argv[])
       if ((OPTrow==true && OPTcol==true)|| (DISOPTrow==true && DISOPTcol==true))
         {
           cout << "########## ROW & COLUMN  OPTIMIZATION(/DIS)!  ############"<< endl;
-          app.optimized_vec_col_row_M("app"+inFile+"Col", inFile+".lattice"+to_string(i)+"optimizedRowCol","app"+inFile+"Row");
+          cout << "NAME " << "app"+inFile+"Col "<<  inFile+".latticeM"+to_string(i)+"optimizedRowCol "<< "app"+inFile+"Row" << endl;
+
+          app.optimized_vec_col_row_M("app"+inFile+"Col", inFile+".latticeM"+to_string(i)+"optimizedRowCol","app"+inFile+"Row");
+          
         }
+
+      app.OptLiterals_M();
+      cout << "OPTM!" << endl;
+      app.PrintLatticeOpt_M();
+
+      ostringstream i_str;	// stream used for the conversion
+      i_str << i;
+      app.Print2File_multi_opt_M(inFile+".latticeLITOPT_ColRow_M_"+i_str.str());
+      cout << "OPTM!" << endl;
+
       
     }
 
@@ -1216,7 +1229,7 @@ void ALattice::optimized_vec_col_row_M(string FileName, string FileName2, string
     {
       for(unsigned int i=0; i<ContentMulti[j].size();i++) //for each column
         {
-	 
+	   ContentMultiOrd[j][i] =  ContentMulti[orderOptR[j]][orderOptC[i]];
           if (i!=0) cout << " | ";
            for(unsigned int k=0; k<ContentMulti[orderOptR[j]][orderOptC[i]].size();k++) //for each site
             {
@@ -1260,11 +1273,8 @@ void ALattice::optimized_vec_col_row_M(string FileName, string FileName2, string
 
               if (k<(ContentMulti[orderOptR[j]][orderOptC[i]].size() - 1 ))
                 f2 << " ; " ; 
-      
-
             }
         }
-      
       f2<<endl;
     }
   
